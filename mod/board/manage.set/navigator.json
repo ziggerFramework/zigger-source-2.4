@@ -1,0 +1,15 @@
+[
+    {
+        "title" : "생성된 게시판",
+        "href" : "result/result",
+        "data-idx-href" : [
+            "result/modify",
+            "result/board",
+            "result/write"
+        ]
+    },
+    {
+        "title" : "새로운 게시판 추가",
+        "href" : "result/regist"
+    }
+]

@@ -1,0 +1,185 @@
+.nostyle
+{
+	/* Font */
+	/* Emoji fonts are added to visualise them nicely in Internet Explorer. */
+	/* font-family: sans-serif, Arial, Verdana, "Trebuchet MS", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
+	font-size: 14px;
+
+	/* Text color */
+	color: #666;
+
+	/* Remove the background color to make it transparent. */
+	background-color: #fff;
+}
+
+.nostyle blockquote
+{
+	font-style: italic;
+	font-family: Georgia, Times, "Times New Roman", serif;
+	padding: 2px 0;
+	padding-left: 20px;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0;
+	border-left-width: 5px;
+}
+
+.nostyle a
+{
+	color: #0782C1;
+}
+
+.nostyle p
+{
+	margin: 13px 0;
+}
+
+.nostyle ol,.nostyle ul,.nostyle dl
+{
+	/* IE7: reset rtl list margin. (#7334) */
+	*margin-right: 0px;
+	/* Preserved spaces for list items with text direction different than the list. (#6249,#8049)*/
+	padding: 0 40px;
+}
+
+.nostyle h1,.nostyle h2,.nostyle h3,.nostyle h4,.nostyle h5,.nostyle h6
+{
+	font-weight: normal;
+	line-height: 1.2;
+}
+
+.nostyle hr
+{
+	border: 0px;
+	border-top: 1px solid #ccc;
+}
+
+.nostyle img.right
+{
+	border: 1px solid #ccc;
+	float: right;
+	margin-left: 15px;
+	padding: 5px;
+}
+
+.nostyle img.left
+{
+	border: 1px solid #ccc;
+	float: left;
+	margin-right: 15px;
+	padding: 5px;
+}
+
+.nostyle pre
+{
+	white-space: pre-wrap; /* CSS 2.1 */
+	word-wrap: break-word; /* IE7 */
+	-moz-tab-size: 4;
+	tab-size: 4;
+}
+
+.nostyle .marker
+{
+	background-color: Yellow;
+}
+
+.nostyle span[lang]
+{
+	font-style: italic;
+}
+
+.nostyle figure
+{
+	text-align: center;
+	outline: solid 1px #ccc;
+	background: rgba(0,0,0,0.05);
+	padding: 10px;
+	margin: 10px 20px;
+	display: inline-block;
+}
+
+.nostyle figure > figcaption
+{
+	text-align: center;
+	display: block; /* For IE8 */
+}
+
+.nostyle a > img {
+	padding: 1px;
+	margin: 1px;
+	border: none;
+	outline: 1px solid #0782C1;
+}
+
+/* Widget Styles */
+.nostyle .code-featured
+{
+	border: 5px solid red;
+}
+
+.nostyle .math-featured
+{
+	padding: 20px;
+	box-shadow: 0 0 2px rgba(200, 0, 0, 1);
+	background-color: rgba(255, 0, 0, 0.05);
+	margin: 10px;
+}
+
+.nostyle .image-clean
+{
+	border: 0;
+	background: none;
+	padding: 0;
+}
+
+.nostyle .image-clean > figcaption
+{
+	font-size: .9em;
+	text-align: right;
+}
+
+.nostyle .image-grayscale
+{
+	background-color: white;
+	color: #666;
+}
+
+.nostyle .image-grayscale img, img.image-grayscale
+{
+	filter: grayscale(100%);
+}
+
+.nostyle .embed-240p
+{
+	max-width: 426px;
+	max-height: 240px;
+	margin:0 auto;
+}
+
+.nostyle .embed-360p
+{
+	max-width: 640px;
+	max-height: 360px;
+	margin:0 auto;
+}
+
+.nostyle .embed-480p
+{
+	max-width: 854px;
+	max-height: 480px;
+	margin:0 auto;
+}
+
+.nostyle .embed-720p
+{
+	max-width: 1280px;
+	max-height: 720px;
+	margin:0 auto;
+}
+
+.nostyle .embed-1080p
+{
+	max-width: 1920px;
+	max-height: 1080px;
+	margin:0 auto;
+}

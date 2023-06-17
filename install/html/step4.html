@@ -1,0 +1,64 @@
+<form action="./finish.php" method="post">
+
+    <article id="inst-wrap">
+
+        <div class="inner">
+            <div class="tit-wrap">
+                <h1>
+                    <img src="./html/images/logo.png" />
+                    <em>Installation</em>
+                </h1>
+                <h2>Step <strong>4</strong>/4</h2>
+            </div>
+            <div class="cont-wrap">
+                <h3>관리자 정보 등록</h3>
+
+                <fieldset>
+                    <table class="tbl">
+                        <tbody>
+                            <tr>
+                                <th>Admin Name</th>
+                                <td>
+                                    <input type="text" name="name" class="inp" placeholder="관리자" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>ID</th>
+                                <td>
+                                    <input type="text" name="id" class="inp" />
+                                    <span class="tbltxt">
+                                        · 영어, 숫자 조합으로 입력<br />
+                                        · 최소 5자~최대 30자 까지 입력
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Password</th>
+                                <td>
+                                    <input type="password" name="pwd" class="inp" />
+                                    <span class="tbltxt">
+                                        · 최소 5자~최대 50자 까지 입력
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Password 확인</th>
+                                <td>
+                                    <input type="password" name="pwd2" class="inp" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </fieldset>
+
+            </div>
+        </div>
+
+    </article>
+
+    <div id="btn-wrap">
+        <button type="submit" class="btn1">Next</button>
+    </div>
+
+</form>

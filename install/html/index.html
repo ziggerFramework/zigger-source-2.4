@@ -1,0 +1,44 @@
+<form action="./step2.php" method="post">
+
+    <article id="inst-wrap">
+
+        <div class="inner">
+            <div class="tit-wrap">
+                <h1>
+                    <img src="./html/images/logo.png" />
+                    <em>Installation</em>
+                </h1>
+                <h2>Step <strong>1</strong>/4</h2>
+            </div>
+            <div class="cont-wrap">
+
+                <h3>퍼미션 체크</h3>
+                <ul class="oplist">
+                    <li <?php if (permschk("../data/") === false) { echo 'class="not"'; } ?>>'/data' 디렉토리에 쓰기 권한(707 이상)이 부여되어야 합니다. <i class="fa fa-check"></i></li>
+                    <li <?php if (permschk("../robots.txt") === false) { echo 'class="not"'; } ?>>'/robots.txt' 파일에 쓰기 권한(707 이상)이 부여되어야 합니다. <i class="fa fa-check"></i></li>
+                </ul>
+
+                <h3>PHP 체크</h3>
+                <ul class="oplist">
+                    <li <?php if( phpversions()===false) { echo 'class="not"'; } ?>>PHP Core 버전이 5.5.0 이상이어야 합니다. <i class="fa fa-check"></i></li>
+                    <li <?php if( extschk("GD")===false) { echo 'class="not"'; } ?>>'GD' extension 이 설치되어 있어야 합니다. <i class="fa fa-check"></i></li>
+                    <li <?php if( extschk("mbstring")===false) { echo 'class="not"'; } ?>>'mbstring' extension 이 설치되어 있어야 합니다. <i class="fa fa-check"></i></li>
+                    <li <?php if( extschk("PDO")===false) { echo 'class="not"'; } ?>>'PDO' extension 이 설치되어 있어야 합니다. <i class="fa fa-check"></i></li>
+                    <li <?php if( extschk("curl")===false) { echo 'class="not"'; } ?>>'curl' extension 이 설치되어 있어야 합니다. <i class="fa fa-check"></i></li>
+                    <li <?php if( extschk("OpenSSL")===false) { echo 'class="not"'; } ?>>'OpenSSL' extension 이 설치되어 있어야 합니다. <i class="fa fa-check"></i></li>
+                </ul>
+
+            </div>
+        </div>
+
+    </article>
+
+    <div id="btn-wrap">
+        <?php if (step1_chk() !== false) { ?>
+        <button type="submit" class="btn1"><i class="fa fa-check"></i> Next</button>
+        <?php } else { ?>
+        <a href="./" class="btn2"><i class="fa fa-exclamation-circle"></i> Check again</a>
+        <?php } ?>
+    </div>
+
+</form>

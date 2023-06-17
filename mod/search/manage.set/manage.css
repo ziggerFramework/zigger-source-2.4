@@ -1,0 +1,28 @@
+.searchbox {display: table;width: 100%;}
+.searchbox .lef {background: #f7f7f7;display: table-cell;padding: 20px;vertical-align: top;width: 500px;}
+.searchbox .rig {display: table-cell;padding-left: 20px;vertical-align: top;}
+.searchbox .rig form {border: 1px solid #dddddd;}
+.searchbox .sment {background: #f1faff;border: 1px solid #0073bb;border-radius: 2px;color: #333333;display: block;font-size: 14px;font-weight: bold;letter-spacing: -1px;line-height: 24px;margin-bottom: 20px;padding: 20px;}
+.searchbox .sment i {color: #0073bb;display: block;font-size: 20px;margin: 0 auto;margin-bottom: 20px;}
+.searchbox.with-ajax-cover {position: relative;}
+.searchbox .ajax-cover {background: rgba(255, 255, 255, 0.4);height: 100%;left: 0;position: absolute;top: 0;width: 100%;z-index: 30;}
+.searchbox .st-1d {background: #ffffff;border: 1px solid #dddddd;border-radius: 2px;margin-bottom: 10px;}
+.searchbox .st-1d h4 {background: #fafafa;display: block;padding: 0 15px;position: relative;}
+.searchbox .st-1d h4 a {color: #333333;display: block;font-size: 14px;font-weight: bold;line-height: 45px;text-decoration: none;}
+.searchbox .st-1d>.in {padding: 15px 0 0 0;}
+.searchbox .st-1d:hover {border-color: #232f3e;box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);cursor: move;}
+.searchbox .st-1d:hover h4 {background: #232f3e;}
+.searchbox .st-1d:hover h4 a {color: #ffffff;}
+.searchbox .st-no-cat {color: #999999;display: block;font-size: 13px;font-style: italic;letter-spacing: -1px;text-align: center;}
+.searchbox .st-add {border-radius: 2px;color: #666666;display: block;font-size: 13px;font-weight: bold;line-height: 40px;margin: 20px;padding: 0 10px;text-align: center;text-decoration: none;transition: all 0.1s cubic-bezier(0.930, 0.635, 0.650, 0.970);}
+.searchbox .st-add:hover {background: #fafafa;}
+.searchbox .st-add.no-mar {margin: 0;}
+.searchbox .add-3d {color: #000000;cursor: pointer;font-size: 11px;line-height: 28px;opacity: 0;padding: 0 10px;position: absolute;right: 25px;top: 0;transition: all 0.1s cubic-bezier(0.930, 0.635, 0.650, 0.970);visibility: hidden;z-index: 2;}
+.searchbox .add-1d {width: 100%;}
+.searchbox .del-1d {color: #ffffff;cursor: pointer;font-size: 11px;font-weight: normal;line-height: 45px;opacity: 0;padding: 0 10px;position: absolute;right: 10px;top: 0;transition: all 0.1s cubic-bezier(0.930, 0.635, 0.650, 0.970);visibility: hidden;z-index: 2;}
+.searchbox :hover>.del-1d,
+.searchbox :hover>.add-3d {opacity: 1;visibility: visible;}
+
+.search-wait {color: #333333;display: block;font-size: 18px;font-weight: bold;letter-spacing: -1px;padding: 100px 0;text-align: center;}
+.search-wait i {color: #dddddd;display: block;font-size: 50px;margin: 0 auto;margin-bottom: 20px;}
+.search-wait em {color: #999999;display: block;font-size: 14px;font-style: normal;font-weight: normal;margin-top: 15px;text-align: center;}

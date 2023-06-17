@@ -1,0 +1,28 @@
+<form action="./step3.php" method="post">
+
+    <article id="inst-wrap">
+
+        <div class="inner">
+            <div class="tit-wrap">
+                <h1>
+                    <img src="./html/images/logo.png" />
+                    <em>Installation</em>
+                </h1>
+                <h2>Step <strong>2</strong>/4</h2>
+            </div>
+            <div class="cont-wrap">
+
+                <h3>LGPL 저작권 동의</h3>
+                <div class="lgpl"><?php require_once './html/lgpl.license.html'; ?></div>
+                <label><input type="checkbox" name="lgpl_agree" value="checked" /> GNU LGPL 약소 일반 공중 사용 허가서에 동의합니다.</label>
+
+            </div>
+        </div>
+
+    </article>
+
+    <div id="btn-wrap">
+        <button type="submit" class="btn1">Next</button>
+    </div>
+
+</form>

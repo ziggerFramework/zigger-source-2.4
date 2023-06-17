@@ -1,0 +1,26 @@
+.nostyle {background-color: #fff;color: #666;font-size: 14px;}
+.nostyle blockquote {border-color: #ccc;border-left-width: 5px;border-style: solid;border-width: 0;font-family: Georgia, Times, "Times New Roman", serif;font-style: italic;padding: 2px 0;padding-left: 20px;}
+.nostyle a {color: #0782C1;}
+.nostyle p {margin: 13px 0;}
+.nostyle ol,.nostyle ul,.nostyle dl {margin-right: 0px;padding: 0 40px;}
+.nostyle h1,.nostyle h2,.nostyle h3,.nostyle h4,.nostyle h5,.nostyle h6 {font-weight: normal;line-height: 1.2;}
+.nostyle hr {border: 0px;border-top: 1px solid #ccc;}
+.nostyle img.right {border: 1px solid #ccc;float: right;margin-left: 15px;padding: 5px;}
+.nostyle img.left {border: 1px solid #ccc;float: left;margin-right: 15px;padding: 5px;}
+.nostyle pre {moz-tab-size: 4;tab-size: 4;white-space: pre-wrap;word-wrap: break-word;}
+.nostyle .marker {background-color: Yellow;}
+.nostyle span[lang] {font-style: italic;}
+.nostyle figure {background: rgba(0,0,0,0.05);display: inline-block;margin: 10px 20px;outline: solid 1px #ccc;padding: 10px;text-align: center;}
+.nostyle figure > figcaption {display: block;text-align: center;}
+.nostyle a > img {border: none;margin: 1px;outline: 1px solid #0782C1;padding: 1px;}
+.nostyle .code-featured {border: 5px solid red;}
+.nostyle .math-featured {background-color: rgba(255, 0, 0, 0.05);box-shadow: 0 0 2px rgba(200, 0, 0, 1);margin: 10px;padding: 20px;}
+.nostyle .image-clean {background: none;border: 0;padding: 0;}
+.nostyle .image-clean > figcaption {font-size: .9em;text-align: right;}
+.nostyle .image-grayscale {background-color: white;color: #666;}
+.nostyle .image-grayscale img, img.image-grayscale {filter: grayscale(100%);}
+.nostyle .embed-240p {margin: 0 auto;max-height: 240px;max-width: 426px;}
+.nostyle .embed-360p {margin: 0 auto;max-height: 360px;max-width: 640px;}
+.nostyle .embed-480p {margin: 0 auto;max-height: 480px;max-width: 854px;}
+.nostyle .embed-720p {margin: 0 auto;max-height: 720px;max-width: 1280px;}
+.nostyle .embed-1080p {margin: 0 auto;max-height: 1080px;max-width: 1920px;}

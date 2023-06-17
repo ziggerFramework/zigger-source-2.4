@@ -1,0 +1,9 @@
+[
+    {
+        "title" : "온라인 문의 내역",
+        "href" : "result/result",
+        "data-idx-href" : [
+            "result/view"
+        ]
+    }
+]

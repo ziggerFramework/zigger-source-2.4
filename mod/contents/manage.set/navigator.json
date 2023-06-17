@@ -1,0 +1,13 @@
+[
+    {
+        "title" : "생성된 콘텐츠",
+        "href" : "result/result",
+        "data-idx-href" : [
+            "result/modify"
+        ]
+    },
+    {
+        "title" : "신규 콘텐츠 생성",
+        "href" : "result/regist"
+    }
+]

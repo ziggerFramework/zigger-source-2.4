@@ -1,0 +1,90 @@
+<form action="./step4.php" method="post">
+
+    <article id="inst-wrap">
+
+        <div class="inner">
+            <div class="tit-wrap">
+                <h1>
+                    <img src="./html/images/logo.png" />
+                    <em>Installation</em>
+                </h1>
+                <h2>Step <strong>3</strong>/4</h2>
+            </div>
+            <div class="cont-wrap">
+
+                <h3>Database 설정</h3>
+
+                <fieldset>
+
+                    <?php if (!file_exists('../data/dbconn.temp.php')) { ?>
+
+                    <table class="tbl">
+                        <tbody>
+                            <tr>
+                                <th>Database</th>
+                                <td>
+                                    <select name="engine" class="slt">
+                                        <option value="mysql">MariaDB (Mysql)</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>DB Host</th>
+                                <td>
+                                    <input type="text" name="host" class="inp" value="localhost" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>DB Name</th>
+                                <td>
+                                    <input type="text" name="name" class="inp" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>User Name</th>
+                                <td>
+                                    <input type="text" name="user" class="inp" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>User Password</th>
+                                <td>
+                                    <input type="password" name="pwd" class="inp" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Table Prefix</th>
+                                <td>
+                                    <input type="text" name="pfx" class="inp" value="ph_" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <?php } else { ?>
+
+                    <table class="tbl">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    DB 설정이 이미 진행되어 있습니다.<br />
+                                    'Next' 버튼을 클릭하여 다음 절차를 진행 하세요.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <?php } ?>
+
+                </fieldset>
+
+            </div>
+        </div>
+
+    </article>
+
+    <div id="btn-wrap">
+        <button type="submit" class="btn1">Next</button>
+    </div>
+
+</form>
