@@ -11,7 +11,7 @@ $mopen = opendir($mpath);
 $midx = 0;
 
 while ($dir = readdir($mopen)) {
-    if ($dir != '.' && $dir != '..') {
+    if ($dir != '.' && $dir != '..' && !preg_match('/^\./', $dir)) {
         $MODULE[$midx] = $dir;
         $midx++;
     }
@@ -24,7 +24,7 @@ $topen = opendir($tpath);
 $tidx = 0;
 
 while ($dir = readdir($topen)) {
-    if ($dir != '.' && $dir != '..') {
+    if ($dir != '.' && $dir != '..' && !preg_match('/^\./', $dir)) {
         $THEME[$tidx] = $dir;
         $tidx++;
     }
@@ -138,6 +138,9 @@ if (IS_MEMBER && $MB['level'] > 1 && !strstr(Func::thisuri(), '/member/') && !st
     if ($CONF['use_mb_address'] == 'Y' && $MB['address'] == '||') $field = '주소';
     if (isset($field)) Func::err_location('회원정보에 필수 정보('.$field.')가 누락되어 회원관리 페이지로 이동합니다.\n정보 등록후 이용해주세요.', PH_DOMAIN.'/member/info');
 }
+
+// php_ini의 post_max_size 값 확인
+$CONF['ini_post_max_size'] = Func::ini_post_max_size();
 
 // 업데이트 초기화 확인
 Func::chk_update_config_field(

@@ -67,6 +67,7 @@ class Pdosql {
     // 문자열 password 처리
     public function set_password($str)
     {
+        $str = addslashes($str);
         $str = "concat('*', upper(sha1(unhex(sha1('$str')))))";
         return $str;
     }

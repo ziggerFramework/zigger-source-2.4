@@ -279,6 +279,20 @@ ajaxFileSubmit = {
             }
         });
 
+		var post_max_size = 0;
+		
+		$form.find('input:file').each(function() {
+			var fileInput = $(this);
+			if (fileInput[0].files.length > 0) {
+				post_max_size += (fileInput[0].files[0].size / 1024 / 1024);
+			}
+        });
+		
+		if (PH_POST_MAX_SIZE > 0 && post_max_size > PH_POST_MAX_SIZE) {
+			alert('서버의 첨부 가능한 허용 용량을 초과하였습니다.');
+			return false;
+		}
+
 		$.ajax({
             'type' : 'POST',
             'url' : ajaxAction,
@@ -465,6 +479,7 @@ set_elements_tabindex = function() {
 		if (e.keyCode == '13') {
 			e.preventDefault();
 			if ($this.prev('input').length > 0) $this.prev('input').click();
+			if ($this.next('input').length > 0) $this.next('input').click();
 			if ($this.find('input').length > 0) $this.find('input').click();
 		}
 	});

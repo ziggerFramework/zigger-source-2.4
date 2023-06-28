@@ -582,6 +582,9 @@ class Modify_submit {
                 $req['idx']
             )
         );
+        
+        if ($sql->getcount() < 1) Valid::error('', '회원이 존재하지 않습니다.');
+
         $arr = $sql->fetchs();
 
         if ($req['pwd'] != $req['pwd2']) Valid::error('pwd2', '비밀번호와 비밀번호 확인이 일치하지 않습니다.');

@@ -107,8 +107,11 @@ class Uploader {
             insert into {$sql->table("dataupload")}
             (filepath, orgfile, repfile, storage, byte, regdate)
             values
-            ('{$path}', '{$filename}', '{$replace_filename}', '{$storage}', {$this->file['size']}, now())
-            ", []
+            (:col1, :col2, :col3, :col4, :col5, now())
+            ",
+            array(
+                $path, $filename, $replace_filename, $storage, $this->file['size']
+            )
         );
     }
 
@@ -126,7 +129,8 @@ class Uploader {
             select *
             from {$sql->table("dataupload")}
             where orgfile=:col1 and repfile=:col2
-            ", array(
+            ",
+            array(
                 $fileinfo['orgfile'], $replace_filename
             )
         );
@@ -141,8 +145,11 @@ class Uploader {
             insert into {$sql->table("dataupload")}
             (filepath, orgfile, repfile, storage, byte, regdate)
             values
-            ('{$replace_path}', '{$fileinfo['orgfile']}', '{$replace_filename_name}', '{$fileinfo['storage']}', {$fileinfo['byte']}, now())
-            ", []
+            (:col1, :col2, :col3, :col4, :col5, now())
+            ",
+            array(
+                $replace_path, $fileinfo['orgfile'], $replace_filename_name, $fileinfo['storage'], $fileinfo['byte']
+            )
         );
     }
 
@@ -154,7 +161,8 @@ class Uploader {
             delete
             from {$sql->table("dataupload")}
             where repfile=:col1
-            ", array(
+            ",
+            array(
                 $replace_filename
             )
         );
@@ -293,6 +301,8 @@ class Uploader {
         global $CONF;
 
         $fileinfo = Func::get_fileinfo($file);
+
+        if (!$fileinfo) return false;
 
         // s3
         if ($fileinfo['storage'] == 'Y') {

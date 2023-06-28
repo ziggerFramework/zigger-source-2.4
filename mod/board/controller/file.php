@@ -28,7 +28,7 @@ class Down extends \Controller\Make_Controller {
         $sql->query(
             "
             select *
-            from {$sql->table("mod:board_data_".$board_id)}
+            from {$sql->table("mod:board_data_".addslashes($board_id))}
             where idx=:col1
             ",
             array(

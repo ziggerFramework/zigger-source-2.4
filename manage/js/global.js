@@ -449,7 +449,7 @@ ph_manage_script = {
     //
     'sms_tomember_script' : function() {
 
-       //내용 byte수 체크
+        //내용 byte수 체크
         var get_sms_memobyte = function(val) {
             var bytes = 0;
             for (var i = 0; i < val.length; i++) {

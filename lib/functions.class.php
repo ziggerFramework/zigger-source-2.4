@@ -469,6 +469,28 @@ class Func {
         return $return;
     }
 
+    // php_ini의 post_max_size 값 반환 (M 단위 출력)
+    static public function ini_post_max_size()
+    {
+        $max_size = @ini_get('post_max_size');
+
+        if (!$max_size) return 0;
+
+        $unit = strtoupper(substr($max_size, -1));
+        $value = substr($max_size, 0, -1);
+
+        switch ($unit) {
+            case 'G':
+                $value *= 1024;
+                break;
+            case 'K':
+                $value /= 1024;
+                break;
+        }
+
+        return $value;
+    }
+
     // 현재 PHP 파일명 반환
     static public function thispage()
     {

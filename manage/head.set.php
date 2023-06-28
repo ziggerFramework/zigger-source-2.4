@@ -27,6 +27,7 @@ var PH_DOMAIN = '<?php echo PH_DOMAIN; ?>';
 var PH_PLUGIN_DIR = '<?php echo PH_PLUGIN_DIR; ?>';
 var PH_MANAGE_DIR = '<?php echo PH_MANAGE_DIR; ?>';
 var PH_MN_HREF = '<?php echo $REL_PATH['full_path'].'/'.$REL_PATH['page_name'].'/'.$REL_PATH['class_name'] ?>';
+var PH_POST_MAX_SIZE = <?php echo $CONF['ini_post_max_size']; ?>;
 </script>
 <script src="<?php echo PH_DIR; ?>/layout/js/jquery.min.js<?php echo SET_CACHE_HASH; ?>"></script>
 <script src="<?php echo PH_DIR; ?>/layout/js/jquery.common.js<?php echo SET_CACHE_HASH; ?>"></script>
