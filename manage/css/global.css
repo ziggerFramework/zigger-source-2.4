@@ -26,6 +26,7 @@ body {background: #f1f1f1;}
 .table1 > tbody > tr > td .tmb {height: auto;max-height: 40px;max-width: 40px;width: auto;}
 .table1 > tbody:last-child {border-bottom: 1px solid #ddd;}
 .table1.list {border-top: none;}
+.table1.list tr > * > label{margin-top: -4px;}
 .table1.list > thead > tr:first-child > * {background: rgb(250,250,250);background: linear-gradient(to top, rgba(250,250,250,1) 0%, rgba(255,255,255,1) 100%);background: -o-linear-gradient(bottom, rgba(250,250,250,1) 0%, rgba(255,255,255,1) 100%);background: -webkit-linear-gradient(bottom, rgba(250,250,250,1) 0%, rgba(255,255,255,1) 100%);border-bottom: 1px solid #dedede;border-top: none;color: #666666;font-size: 14px;padding: 12px 5px;}
 .table1.list > thead > tr th:before {background: #dddddd;content: '';display: block;height: 12px;left: 0;margin-top: -6px;position: absolute;top: 50%;width: 1px;}
 .table1.list > thead > tr th:first-child:before {display: none;}
@@ -86,14 +87,17 @@ input[type=checkbox]:checked + label:before {border-color: #6963db;color: #6963d
 .btn1 {background: #6963db;border: 1px solid #6963db;border-radius: 2px;box-sizing: border-box;color: #ffffff !important;cursor: pointer;display: inline-block;font-size: 14px;height: 40px;letter-spacing: -0.5px;line-height: 38px;min-width: 100px;padding: 0 20px;text-align: center;text-decoration: none !important;transition: all 0.3s;vertical-align: top;}
 .btn1:hover {border-color: #6963db;color: #ffffff !important;}
 .btn1.small {font-size: 13px;height: 26px;line-height: 24px;min-width: 40px;padding: 0 10px;vertical-align: middle;}
+.btn1.both {font-size: 13px;height: 30px;line-height: 28px;min-width: 40px;padding: 0 10px;vertical-align: middle;}
 .btn1 > i.fa {margin-right: 3px;}
 .btn2 {background: #fafafa;border: 1px solid #999999;border-radius: 2px;box-shadow: 1px 1px 0 rgba(0,0,0,0.05);box-sizing: border-box;color: #333333 !important;cursor: pointer;display: inline-block;font-size: 14px;height: 40px;letter-spacing: -0.5px;line-height: 38px;min-width: 100px;padding: 0 20px;text-align: center;text-decoration: none !important;transition: all 0.3s;vertical-align: top;}
 .btn2:hover {background: #f1f1f1;color: #000000 !important;}
 .btn2.small {font-size: 13px;height: 26px;line-height: 24px;min-width: 40px;padding: 0 10px;vertical-align: middle;}
+.btn2.both {font-size: 13px;height: 30px;line-height: 28px;min-width: 40px;padding: 0 10px;vertical-align: middle;}
 .btn2 > i.fa {margin-right: 3px;}
 .btn3 {background: #666666;border: none;border-radius: 2px;box-sizing: border-box;color: #ffffff !important;cursor: pointer;display: inline-block;font-size: 14px;height: 40px;letter-spacing: -0.5px;line-height: 38px;min-width: 100px;padding: 0 20px;text-align: center;text-decoration: none !important;transition: all 0.3s;vertical-align: top;}
 .btn3:hover {background: #333333;}
 .btn3.small {font-size: 13px;height: 26px;line-height: 24px;min-width: 40px;padding: 0 10px;vertical-align: middle;}
+.btn3.both {font-size: 13px;height: 30px;line-height: 28px;min-width: 40px;padding: 0 10px;vertical-align: middle;}
 .btn3 > i.fa {margin-right: 3px;}
 *:disabled {opacity: 0.5;}
 
@@ -171,7 +175,7 @@ input[type=checkbox]:checked + label:before {border-color: #6963db;color: #6963d
 #list-nodata {color: #999999;display: block;font-style: italic;letter-spacing: -1px;padding: 40px 0;text-align: center;}
 #list-nodata.no-bd {border: none;}
 #content article {background: #ffffff;padding: 20px;}
-#content article > form[ajax-action] {border: 1px solid #dddddd;border-radius: 2px;box-shadow: -1px 0 0 rgba(0,0,0,0.03);overflow: hidden;}
+#content article > form[ajax-action]:not(.w-full) {border: 1px solid #dddddd;border-radius: 2px;box-shadow: -1px 0 0 rgba(0,0,0,0.03);overflow: hidden;}
 #content article .view-wrap {border: 1px solid #dddddd;}
 #atcWrap {min-height: 500px;padding-left: 390px;position: relative;}
 #atcWrap .lef {border: 1px solid #dddddd;left: 0;position: absolute;top: 0;width: 370px;}

@@ -20,7 +20,7 @@ class View extends \Controller\Make_Controller {
     {
         $sql = new Pdosql();
 
-        $req = Method::request('get', 'refmode, idx, page');
+        $req = Method::request('get', 'refmode, hash, page');
 
         Func::getlogin(SET_NOAUTH_MSG);
 
@@ -37,11 +37,11 @@ class View extends \Controller\Make_Controller {
             left outer join
             {$sql->table("member")} as tmember
             on message.to_mb_idx=tmember.mb_idx
-            where message.idx=:col1 and (message.to_mb_idx=:col2 OR message.from_mb_idx=:col2)
+            where message.hash=:col1 and (message.to_mb_idx=:col2 OR message.from_mb_idx=:col2)
             order by message.regdate desc
             ",
             array(
-                $req['idx'], MB_IDX
+                $req['hash'], MB_IDX
             )
         );
 
@@ -60,10 +60,10 @@ class View extends \Controller\Make_Controller {
                 "
                 update {$sql->table("mod:message")}
                 set chked=:col1
-                where idx=:col2 and to_mb_idx=:col3
+                where hash=:col2 and to_mb_idx=:col3
                 ",
                 array(
-                    $chked_date, $req['idx'], MB_IDX
+                    $chked_date, $req['hash'], MB_IDX
                 )
             );
             $arr['chked'] = $chked_date;
@@ -81,11 +81,11 @@ class View extends \Controller\Make_Controller {
             left outer join
             {$sql->table("member")} as member
             on message.from_mb_idx=member.mb_idx
-            where message.parent_idx=:col1 and message.regdate<:col2 and message.idx!=:col3
+            where message.parent_idx=:col1 and message.regdate<:col2 and message.hash!=:col3
             order by message.regdate desc
             ",
             array(
-                $arr['parent_idx'], $arr['regdate'], $arr['idx']
+                $arr['parent_idx'], $arr['regdate'], $arr['hash']
             )
         );
 

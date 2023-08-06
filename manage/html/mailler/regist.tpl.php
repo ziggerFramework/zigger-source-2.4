@@ -34,7 +34,10 @@
                     <td>
                         <textarea id="html" name="html" title="본문 내용"></textarea>
                         <script type="text/javascript">CKEDITOR.replace('html');</script>
-                        <span class="tbl_sment">템플릿 내용에 치환자를 사용할 수 있습니다.<br /><br />사이트명: {{site_title}}<br />메일 본문: {{article}}</span>
+                        <span class="tbl_sment">
+                            사용자 정의 템플릿을 생성합니다. 사용자 정의 템플릿은 아래와 같은 치환자를 제공합니다.<br />
+                            사이트명: <strong>{{site_title}}</strong>
+                        </span>
                     </td>
                 </tr>
             </tbody>

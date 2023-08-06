@@ -439,12 +439,30 @@ class Info_submit {
     //
     private function get_lv()
     {
-        global $MB;
+        global $MB, $req;
 
         $sql = new Pdosql();
         $uploader = new Uploader();
 
         if ($MB['adm'] == 'Y') Valid::error('', '최고 관리자는 탈퇴할 수 없습니다.');
+
+        // 비밀번호 입력 되었는지 검사
+        if (!$req['pwd'] || !$req['pwd2']) Valid::error('pwd', '탈퇴를 위해 비밀번호를 입력하세요.');
+        if ($req['pwd'] != $req['pwd2']) Valid::error('pwd2', '비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+
+        // 패스워드가 올바른지 검사
+        $sql->query(
+            "
+            select *
+            from {$sql->table("member")}
+            where mb_idx=:col1 and mb_id=:col2 and mb_pwd={$sql->set_password($req['pwd'])} and mb_dregdate is null
+            ",
+            array(
+                MB_IDX, $MB['id']
+            )
+        );
+
+        if ($sql->getcount() < 1) Valid::error('pwd', '비밀번호가 올바르지 않습니다.');
 
         // delete
         $sql->query(

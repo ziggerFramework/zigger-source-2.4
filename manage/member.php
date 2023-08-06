@@ -1169,6 +1169,7 @@ class Point extends \Controller\Make_Controller {
             ) out_total
             ", []
         );
+        
         $sort_arr['act_total'] = $sql->fetch('act_total');
         $sort_arr['in_total'] = $sql->fetch('in_total');
         $sort_arr['out_total'] = $sql->fetch('out_total');

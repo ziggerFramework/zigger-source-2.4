@@ -14,12 +14,6 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th>메일 템플릿</th>
-                    <td>
-                        <?php echo $view['template']; ?>
-                    </td>
-                </tr>
                 <?php if ($is_level_show) { ?>
                 <tr>
                     <th>수신 범위</th>

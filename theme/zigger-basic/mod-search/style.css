@@ -1,0 +1,51 @@
+@charset "utf-8";
+
+.sch-form {background: #ffffff;border: 1px solid #cccccc;box-sizing: border-box;margin: 30px auto 40px auto;overflow: hidden;width: 400px;}
+.sch-form legend {display: none;}
+.sch-form fieldset {zoom: 1;}
+.sch-form fieldset:after {clear: both;content: '';display: block;}
+.sch-form fieldset > * {float: left;}
+.sch-form fieldset .inp {background: transparent;border: none;border-right: none;color: #000000;font-size: 16px;font-weight: normal;height: 45px;letter-spacing: -0.05em;padding: 0 20px;width: calc(100% - 45px);}
+.sch-form fieldset .sbm {background: #ffffff;background: transparent;border: none;color: #000000;font-size: 16px;height: 45px;position: relative;text-indent: -999em;width: 45px;}
+.sch-form fieldset .sbm:after {content: '\f002';display: block;font-family: 'Font Awesome 5 Free';font-weight: bold;left: 0;line-height: 45px;position: absolute;text-align: center;text-indent: 0;top: 0;width: 100%;}
+
+.sch-box {margin-bottom: 50px;position: relative;}
+
+.sch-tit {padding-bottom: 30px;position: relative;}
+.sch-tit h3 {color: #333;font-size: 18px;font-weight: bold;letter-spacing: -0.05em;}
+.sch-tit .more {color: #999;font-size: 14px;letter-spacing: -0.05em;position: absolute;right: 0;top: 10px;}
+.sch-tit .more i {display: inline-block;font-size: 12px;margin-left: 5px;margin-top: -2px;vertical-align: middle;}
+
+.sch-result {border-top: 1px solid #ddd;}
+.sch-result > li {border-top: 1px solid #eee;padding: 30px 0;}
+.sch-result > li:first-child {border-top: none;}
+.sch-result > li .sbj {color: #0c43b7;display: block;font-size: 20px;font-weight: bold;letter-spacing: -0.05em;margin-bottom: 15px;}
+.sch-result > li .txt {color: #666;display: block;font-size: 15px;letter-spacing: -0.05em;line-height: 22px;word-break: break-all;}
+.sch-result .inf {margin-top: 15px;}
+.sch-result .inf li {color: #666;display: inline-block;font-size: 14px;letter-spacing: -0.05em;margin-right: 20px;vertical-align: middle;}
+
+.search-no-data {color: #999;font-style: italic;letter-spacing: -0.05em;padding: 30px;text-align: center;}
+
+/* for mobile */
+@media screen and (max-width: 1000px){
+
+    .sch-form {margin: 20px auto 40px auto;width: 100%;}
+    .sch-form fieldset .inp {font-size: 14px;height: 40px;padding: 0 10px;width: calc(100% - 40px);}
+    .sch-form fieldset .sbm {font-size: 14px;height: 40px;width: 40px;}
+    .sch-form fieldset .sbm:after {line-height: 40px;}
+
+    .sch-box {margin-bottom: 20px;}
+    .sch-tit {padding-bottom: 15px;}
+    .sch-tit h3 {font-size: 16px;}
+    .sch-tit .more {font-size: 13px;top: 3px;}
+    .sch-tit .more i {font-size: 11px;}
+
+    .sch-result > li {padding: 20px 0;}
+    .sch-result > li .sbj {font-size: 16px;margin-bottom: 10px;}
+    .sch-result > li .txt {font-size: 14px;line-height: 20px;}
+    .sch-result .inf {margin-top: 15px;}
+    .sch-result .inf li {font-size: 13px;margin-right: 15px;}
+
+    .search-no-data {font-size: 13px;padding: 20px;}
+
+}

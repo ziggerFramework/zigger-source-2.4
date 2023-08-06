@@ -5,28 +5,9 @@ ph_mod_board_manage = {
     //
     'init' : function() {
 
-        this.cnum_allchk() // 관리 checkbox 전체 선택
         this.get_ctr_popup() // 관리 팝업
         this.use_notice_opt() // 공지사항 옵션 체크시 답변알림 옵션 & 카테고리 숨김
         this.get_view_comment(); // Comment
-
-    },
-
-    //
-    // 관리 checkbox 전체 선택
-    //
-    'cnum_allchk' : function() {
-
-        $(document).on('click', 'body.mod-board-manage .cnum_allchk', function() {
-            var chked = $(this).is(':checked');
-    
-            if (chked) {
-                $('body.mod-board-manage input[name="cnum[]"]').prop('checked', true);
-    
-            } else {
-                $('body.mod-board-manage input[name="cnum[]"]').prop('checked', false);
-            }
-        });
 
     },
 

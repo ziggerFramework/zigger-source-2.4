@@ -21,7 +21,7 @@ class Read extends \Controller\Make_Controller {
     {
         $sql = new Pdosql();
 
-        $req = Method::request('get', 'alarm, allcheck, page');
+        $req = Method::request('get', 'hash, allcheck, page');
 
         Func::getlogin(SET_NOAUTH_MSG);
 
@@ -48,10 +48,10 @@ class Read extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:alarm")}
-                where to_mb_idx=:col1 and idx=:col2
+                where to_mb_idx=:col1 and hash=:col2
                 ",
                 array(
-                    MB_IDX, $req['alarm']
+                    MB_IDX, $req['hash']
                 )
             );
 
@@ -67,10 +67,10 @@ class Read extends \Controller\Make_Controller {
                 update
                 {$sql->table("mod:alarm")} set
                 chked='Y'
-                where to_mb_idx=:col1 and idx=:col2
+                where to_mb_idx=:col1 and hash=:col2
                 ",
                 array(
-                    MB_IDX, $req['alarm']
+                    MB_IDX, $req['hash']
                 )
             );
 

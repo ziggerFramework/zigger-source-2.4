@@ -56,7 +56,7 @@ class Received extends \Controller\Make_Controller {
 
                 $arr['no'] = $paging->getnum();
                 $arr['regdate'] = Func::datetime($arr['regdate']);
-                $arr[0]['view-link'] = '?mode=read&alarm='.$arr['idx'];
+                $arr[0]['view-link'] = '?mode=read&hash='.$arr['hash'];
 
                 $print_arr[] = $arr;
 

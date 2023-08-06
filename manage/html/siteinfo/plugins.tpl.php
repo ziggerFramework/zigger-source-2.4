@@ -393,6 +393,9 @@
                                     <th>수신 받을 연락처</th>
                                     <td>
                                         <input type="text" name="sms_toadm" class="inp w50p" title="SMS 수신 받을 관리자 연락처" value="<?php echo $write['sms_toadm']; ?>" placeholder="01012345678" />
+                                        <span class="tbl_sment">
+                                            여러 번호로 발송하는 경우 콤마(,)로 구분<br />ex) 01012345678,01023456789
+                                        </span>
                                     </td>
                                 </tr>
                             </tbody>

@@ -218,9 +218,9 @@ class Make_Controller {
             if (!file_exists($tpl)) Func::core_err('View 파일이 존재하지 않습니다. ('.$tpl.')');
             
             // module view가 요청된 경우 <body>에 class 추가
-            if (preg_match('/\/theme\/'.$THEME[0].'\/mod-.+?\//', $tpl, $matches)) {
+            if (preg_match('/\/theme\/'.$CONF['theme'].'\/mod-.+?\//', $tpl, $matches)) {
                 $mod_name = $matches[0];
-                $mod_name = str_replace(array('/theme/'.$THEME[0], '/'), array('', ''), $mod_name);
+                $mod_name = str_replace(array('/theme/'.$CONF['theme'], '/'), array('', ''), $mod_name);
                 if ($mod_name) Func::add_body_class($mod_name);
             }
 

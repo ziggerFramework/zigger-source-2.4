@@ -89,7 +89,9 @@
                             <li><strong>작성자</strong><?php echo $list[0]['writer']; ?></li>
                             <li><strong>날짜</strong><?php echo $list['date']; ?></li>
                             <li><strong>조회</strong><?php echo $list['view']; ?></li>
+                            <?php if ($is_likes_show) { ?>
                             <li><strong>좋아요</strong><?php echo $list['likes_cnt']; ?>/<?php echo $list['unlikes_cnt']; ?></li>
+							<?php } ?>
                         </ul>
                     </td>
 				</tr>

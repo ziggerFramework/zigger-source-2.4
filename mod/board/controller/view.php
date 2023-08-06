@@ -116,10 +116,15 @@ class View extends \Controller\Make_Controller {
         {
             $files = array();
             for ($i = 1; $i <= 2; $i++) {
+                if (!$arr['file'.$i]) {
+                    $files[$i] = null;
+                    continue;
+                }
+
                 $filetype = Func::get_filetype($arr['file'.$i]);
                 $fileinfo = Func::get_fileinfo($arr['file'.$i]);
 
-                if (Func::chkintd('match', $filetype,SET_IMGTYPE)) {
+                if (Func::chkintd('match', $filetype, SET_IMGTYPE)) {
                     if ($fileinfo['storage'] == 'N' && file_exists(MOD_BOARD_DATA_PATH.'/'.View::$boardconf['id'].'/thumb/'.$fileinfo['repfile'])) {
                         $files[$i] = '<img src=\''.MOD_BOARD_DATA_DIR.'/'.View::$boardconf['id'].'/thumb/'.$fileinfo['repfile'].'\' alt=\'첨부된 이미지파일\' />';
                         if (Func::get_filetype($fileinfo['repfile']) == 'gif') {

@@ -99,7 +99,7 @@ class Mail extends \Make\Database\Pdosql {
         $html = '';
         $body = '';
 
-        if ($this->tpl != '') {
+        if ($this->tpl) {
             $this->query(
                 "
                 select *
@@ -114,16 +114,18 @@ class Mail extends \Make\Database\Pdosql {
             $this->nl2br = 0;
             $arr = $this->fetchs();
 
-            $html = str_replace('{{site_title}}', $this->st_tit, $arr['html']);
-            $html = str_replace('{{check_url}}', $this->chk_url, $html);
-            $html = str_replace('{{id}}', $this->mb_id, $html);
-            $html = str_replace('{{password}}', $this->mb_pwd, $html);
-            $html = str_replace('{{name}}', $this->mailToArray[$email], $html);
-            $html = str_replace('{{article}}',$this->memo, $html);
-
+            $html = $arr['html'];
+            
         } else {
             $html = $this->memo;
         }
+
+        $html = str_replace('{{check_url}}', $this->chk_url, $html);
+        $html = str_replace('{{id}}', $this->mb_id, $html);
+        $html = str_replace('{{password}}', $this->mb_pwd, $html);
+        $html = str_replace('{{name}}', $this->mailToArray[$email], $html);
+        $html = str_replace('{{article}}',$this->memo, $html);
+        $html = str_replace('{{site_title}}', $this->st_tit, $html);
 
         if (count($this->mailAttachArray) > 0) {
             $body .= "--".$this->getBoundary()."\r\n";
@@ -238,16 +240,17 @@ class Mail extends \Make\Database\Pdosql {
         $this->setAttach();
         $this->setCommonHeader();
 
-        //SMTP 발송
+        // SMTP 발송
         if ($this->useSmtpServer() !== false) {
             $this->send_smtp();
 
-        //Local 발송
+        // Local 발송
         } else {
             $this->send_local();
         }
     }
 
+    // SMTP 발송
     protected function send_smtp()
     {
         $successCount = 0;
@@ -290,16 +293,15 @@ class Mail extends \Make\Database\Pdosql {
             $this->putSocket('RCPT To:'.$email);
             $this->putSocket('DATA');
             $this->putSocket($contents);
-            $result = $this->putSocket('.');
-
-            if (strpos($result, 'Message accepted for delivery') !== false) $successCount++;
-
-            $this->putSocket('QUIT');
+            $this->putSocket(".\r\n");
         }
 
+        $this->putSocket('QUIT');
+        
         return $successCount;
     }
 
+    // Local 발송
     protected function send_local()
     {
         $successCount = 0;

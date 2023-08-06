@@ -2,6 +2,13 @@
 
 html {overflow-x: hidden;}
 
+/* Webfonts */
+@font-face {font-family: ns;font-weight: 300;src: url(/layout/font/notokr-light.eot); src: local('※'), url(/layout/font/notokr-light.woff) format('woff');}
+@font-face {font-family: ns;font-weight: normal;src: url(/layout/font/notokr-regular.eot); src: local('※'), url(/layout/font/notokr-regular.woff) format('woff');}
+@font-face {font-family: ns;font-weight: 500;src: url(/layout/font/notokr-medium.eot); src: local('※'), url(/layout/font/notokr-medium.woff) format('woff');}
+@font-face {font-family: ns;font-weight: 700;src: url(/layout/font/notokr-bold.eot); src: local('※'), url(/layout/font/notokr-bold.woff) format('woff');}
+* {font-family: ns, 'Malgun Gothic', sans-serif;}
+
 /* Accessibility */
 #skip-to-article a {background: #333;color: #fff;display: block;font-size: 30px;height: 0;left: 0;letter-spacing: -1px;line-height: 80px;opacity: 0.95;overflow: hidden;position: fixed;text-align: center;text-decoration: none;top: 0;width: 0;z-index: 400;}
 #skip-to-article a:focus {height: 80px;width: 100%;}
@@ -136,7 +143,7 @@ textarea.required {background-image: url('../images/input-required-bull.png');ba
 #header .logo {font-family: empty;font-size: 0;height: 100%;left: 0;position: absolute;top: 0;}
 #header .logo:before {content: '';display: inline-block;height: 100%;vertical-align: middle;width: 0;}
 #header .logo h1 {display: inline-block;vertical-align: middle;}
-#header .logo h1 img {max-height: 60px;max-width: 200px;}
+#header .logo h1 img {max-height: 60px;max-width: 130px;}
 #header nav {background: #232f3e;box-shadow: 0 3px 10px rgba(0,0,0,0.05);height: 60px;}
 #header.type2 {border-bottom: 1px solid #eaeaea;}
 
@@ -152,7 +159,6 @@ textarea.required {background-image: url('../images/input-required-bull.png');ba
 #gnb > li.on:before {display: none;}
 #gnb > li > a {color: #ffffff;display: block;font-size: 14px;font-weight: 500;letter-spacing: -0.03em;line-height: 60px;padding: 0 45px;text-decoration: none;transition: all 0.1s;}
 #gnb > li:hover > a,
-#gnb > li.on > a {background: #6963db;}
 #gnb > li:focus-within > a,
 #gnb > li.on > a {background: #6963db;}
 #gnb > li > ul {background: #ffffff;border: 1px solid rgba(0,0,0,0.08);box-shadow: 3px 3px 3px rgba(0,0,0,0.03);left: 0;opacity: 0;position: absolute;top: 60px;transition: all 0.1s;visibility: hidden;width: 250px;}
@@ -170,7 +176,6 @@ textarea.required {background-image: url('../images/input-required-bull.png');ba
 #gnb > li > ul > li > ul {background: #fafafa;border: 1px solid rgba(0,0,0,0.08);box-shadow: 3px 3px 3px rgba(0,0,0,0.03);left: 230px;margin-left: 0;opacity: 0;position: absolute;top: 20px;transition: all 0.1s;visibility: hidden;width: 250px;}
 #gnb > li > ul > li:hover > ul,
 #gnb > li > ul > li:focus-within > ul {opacity: 1;visibility: visible;}
-#gnb > li.on > a {background: #6963db;}
 #gnb > li > ul > li > ul > li {border-top: 1px solid #eaeaea;}
 #gnb > li > ul > li > ul > li:first-child {border-top: none;}
 #gnb > li > ul > li > ul > li > a {color: #333333;display: block;font-size: 14px;font-weight: 500;letter-spacing: -0.03em;line-height: 50px;padding: 0 20px;text-decoration: none;transition: all 0.1s;}
@@ -237,6 +242,7 @@ textarea.required {background-image: url('../images/input-required-bull.png');ba
 #main .lat dl {margin: 20px;min-height: 150px;padding-left: 170px;position: relative;}
 #main .lat dl dt {left: 0;position: absolute;top: 0;}
 #main .lat dl dd {padding-top: 10px;}
+#main .lat dl dd > *{word-break: break-all;}
 #main .lat dl dd .sbj {color: #000000;display: block;font-size: 14px;font-weight: 500;margin-bottom: 15px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 #main .lat dl dd .sbj em {color: #f13039;font-size: 10px;font-style: normal;font-weight: bold;margin-left: 4px;}
 #main .lat dl dd .article {color: #999999;display: block;font-size: 14px;line-height: 22px;margin-bottom: 10px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}

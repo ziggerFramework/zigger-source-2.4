@@ -20,7 +20,7 @@
 .sch-result > li {border-top: 1px solid #eee;padding: 20px 0;}
 .sch-result > li:first-child {border-top: none;}
 .sch-result > li .sbj {color: #0c43b7;display: block;font-size: 16px;letter-spacing: -1px;margin-bottom: 10px;}
-.sch-result > li .txt {color: #666;display: block;font-size: 14px;letter-spacing: -1px;line-height: 20px;}
+.sch-result > li .txt {color: #666;display: block;font-size: 14px;letter-spacing: -1px;line-height: 20px;word-break: break-all;}
 .sch-result > li .date {color: #999;display: block;font-size: 12px;letter-spacing: -1px;}
 .sch-result .inf {margin-top: 10px;}
 .sch-result .inf li {background: #f7f7f7;border-radius: 2px;color: #666;display: inline-block;font-size: 12px;letter-spacing: -1px;line-height: 25px;margin: 0 4px 4px 0;padding: 0 8px;vertical-align: middle;}

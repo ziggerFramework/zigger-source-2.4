@@ -41,7 +41,18 @@
                 <td>
                     <textarea id="html" name="html" title="본문 내용"><?php echo $write['html']; ?></textarea>
                     <script type="text/javascript">CKEDITOR.replace('html');</script>
-                    <span class="tbl_sment">템플릿 내용에 치환자를 사용할 수 있습니다.<br /><br />사이트명: {{site_title}}<br />메일 본문: {{article}}</span>
+                    <?php if ($write['system'] == 'Y') { ?>
+                    <span class="tbl_sment">
+                        시스템 발송 템플릿인 경우 아래와 같은 치환자가 사용됩니다. 치환자가 누락된 경우 메일이 정상 발송되지 않을 수 있습니다.<br />
+                        사이트명: <strong>{{site_title}}</strong> / 메일 본문: <strong>{{article}}</strong>/ 회원이름: <strong>{{name}}</strong> / 회원ID: <strong>{{id}}</strong> / 회원임시비밀번호: <strong>{{password}}</strong> / 이메일인증URL: <strong>{{check_url}}</strong>
+                    </span>
+                    <?php } ?>
+                    <?php if ($write['system'] == 'N') { ?>
+                    <span class="tbl_sment">
+                        사용자 정의 템플릿을 관리합니다. 사용자 정의 템플릿은 아래와 같은 치환자를 제공합니다.<br />
+                        사이트명: <strong>{{site_title}}</strong>
+                    </span>
+                    <?php } ?>
                 </td>
             </tr>
         </tbody>

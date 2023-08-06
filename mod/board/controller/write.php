@@ -765,29 +765,31 @@ class Write_submit{
         // 작성된 글의 idx를 다시 가져옴
         $sql->query(
             "
-            select idx
+            select max(idx) as max_idx
             from {$sql->table("mod:board_data_".$board_id)}
-            where writer=:col1 and subject=:col2 and article=:col3
+            where writer=:col1
             ",
             array(
-                $req['writer'], $req['subject'], $req['article']
+                $req['writer']
             )
         );
 
         // 관리자 Dashboard 소식 등록
+        $feed_uri = (PH_DIR) ? str_replace(PH_DIR, '', $req['thisuri']) : $req['thisuri'];
+
         if (Write::$boardconf['use_mng_feed'] == 'Y') {
             Func::add_mng_feed(
                 array(
                     'from' => $MODULE_BOARD_CONF['title'],
                     'msg' => '<strong>'.$req['writer'].'</strong>님이 <strong>'.Write::$boardconf['title'].'</strong> 게시판에 새로운 글을 등록했습니다.',
-                    'link' => $req['thisuri'].'/'.$sql->fetch('idx')
+                    'link' => $feed_uri.'/'.$sql->fetch('max_idx')
                 )
             );
         }
 
         // return
         if ($sql->getcount() > 0) {
-            $return_url = $req['thisuri'].'/'.$sql->fetch('idx').Func::get_param_combine('?category='.urlencode($req['category']), '?');
+            $return_url = $req['thisuri'].'/'.$sql->fetch('max_idx').Func::get_param_combine('?category='.urlencode($req['category']), '?');
 
         } else {
             $return_url = $req['thisuri'].Func::get_param_combine('?category='.urlencode($req['category']), '?');
@@ -953,7 +955,7 @@ class Write_submit{
         // 작성된 글의 idx를 다시 가져옴
         $sql->query(
             "
-            select idx
+            select max(idx) as max_idx
             from {$sql->table("mod:board_data_".$board_id)}
             where writer=:col1 and subject=:col2 and article=:col3
             ",
@@ -969,7 +971,7 @@ class Write_submit{
                 회원님의 게시글에 답글이 달렸습니다.<br />
                 아래 주소를 클릭하여 확인 할 수 있습니다.<br /><br />
 
-                <a href=\''.PH_DOMAIN.$req['thisuri'].'/'.$sql->fetch('idx').Func::get_param_combine('category='.urlencode($req['category_ed']), '?').'\'>'.PH_DOMAIN.$req['thisuri'].'/'.$sql->fetch('idx').Func::get_param_combine('category='.urlencode($req['category_ed']), '?').'</a>';
+                <a href=\''.PH_DOMAIN.$req['thisuri'].'/'.$sql->fetch('max_idx').Func::get_param_combine('category='.urlencode($req['category_ed']), '?').'\'>'.PH_DOMAIN.$req['thisuri'].'/'.$sql->fetch('max_idx').Func::get_param_combine('category='.urlencode($req['category_ed']), '?').'</a>';
 
             $mail->set(
                 array(
@@ -986,15 +988,17 @@ class Write_submit{
         }
 
         // 조회수 session
-        Session::set_sess('BOARD_VIEW_'.$sql->fetch('idx'), $sql->fetch('idx'));
+        Session::set_sess('BOARD_VIEW_'.$sql->fetch('max_idx'), $sql->fetch('max_idx'));
 
         // 관리자 최근 피드에 등록
+        $feed_uri = (PH_DIR) ? str_replace(PH_DIR, '', $req['thisuri']) : $req['thisuri'];
+
         if (Write::$boardconf['use_mng_feed'] == 'Y') {
             Func::add_mng_feed(
                 array(
                     'from' => $MODULE_BOARD_CONF['title'],
                     'msg' => '<strong>'.$req['writer'].'</strong>님이 <strong>'.Write::$boardconf['title'].'</strong> 게시판에 새로운 답글을 등록했습니다.',
-                    'link' => $req['thisuri'].'/'.$sql->fetch('idx')
+                    'link' => $feed_uri.'/'.$sql->fetch('max_idx')
                 )
             );
         }
@@ -1007,14 +1011,14 @@ class Write_submit{
                     'from_mb_idx' => $MB['idx'],
                     'to_mb_idx' => $org_arr['mb_idx'],
                     'memo' => '<strong>'.$req['writer'].'</strong>님이 회원님의 게시글에 답글을 작성했습니다.',
-                    'link' => $req['thisuri'].'/'.$sql->fetch('idx')
+                    'link' => $feed_uri.'/'.$sql->fetch('max_idx')
                 )
             );
         }
 
         // return
         if ($sql->getcount() > 0) {
-            $return_url = $req['thisuri'].'/'.$sql->fetch('idx').Func::get_param_combine('page='.$req['page'].'&where='.$req['where'].'&keyword='.$req['keyword'].'&category='.urlencode($req['category_ed']), '?');
+            $return_url = $req['thisuri'].'/'.$sql->fetch('max_idx').Func::get_param_combine('page='.$req['page'].'&where='.$req['where'].'&keyword='.$req['keyword'].'&category='.urlencode($req['category_ed']), '?');
 
         } else {
             $return_url = $req['thisuri'].Func::get_param_combine('?category='.urlencode($req['category']), '?');

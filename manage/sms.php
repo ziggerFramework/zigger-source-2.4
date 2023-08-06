@@ -430,4 +430,81 @@ class History extends \Controller\Make_Controller {
         $this->set('print_arr', $print_arr);
     }
 
+    public function form()
+    {
+        $form = new \Controller\Make_View_Form();
+        $form->set('type', 'html');
+        $form->set('action', PH_MANAGE_DIR.'/sms/history-submit');
+        $form->run();
+    }
+
+}
+
+//
+// Controller for submit
+// ( History )
+//
+class History_submit {
+
+    public function init()
+    {
+        global $req;
+
+        $sql = new Pdosql();
+        $manage = new ManageFunc();
+
+        Method::security('referer');
+        Method::security('request_post');
+        $req = Method::request('post', 'mode, cnum');
+        $manage->req_hidden_inp('post');
+
+        if (!isset($req['mode']) || !$req['mode']) Valid::error('', '필수 값이 누락 되었습니다.');
+
+        // 선택 항목 검사
+        if (!isset($req['cnum']) || !$req['cnum'] || !is_array($req['cnum'])) Valid::error('', '선택된 항목이 없습니다.');
+
+        switch ($req['mode']) {
+
+            case 'del' :
+                $this->get_del();
+                break;
+
+        }
+    }
+
+    public function get_del()
+    {
+        global $req;
+
+        $sql = new Pdosql();
+
+        // where 조합
+        $cnum = array();
+
+        foreach ($req['cnum'] as $key => $value) {
+            $cnum[] = "idx='".addslashes($value)."'";
+        }
+
+        $where = implode(' or ', $cnum);
+
+        // 데이터 삭제
+        $sql->query(
+            "
+            delete
+            from {$sql->table("sentsms")}
+            where {$where} 
+            ", []
+        );
+
+        // return
+        Valid::set(
+            array(
+                'return' => 'alert->reload',
+                'msg' => '성공적으로 삭제 되었습니다.'
+            )
+        );
+        Valid::turn();
+
+    }
+
 }

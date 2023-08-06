@@ -20,6 +20,12 @@ class Layout {
         return PH_DOMAIN;
     }
 
+    // 사이트 경로 반환
+    public function site_dir()
+    {
+        return PH_DOMAIN;
+    }
+
     // 로고 이미지 경로 반환
     public function logo_src()
     {

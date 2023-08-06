@@ -52,8 +52,11 @@
                     <th>메일 템플릿 선택</th>
                     <td>
                         <select name="tpl" class="inp">
+                            <option value=""><?php echo (empty($tpl_opts_source)) ? '생성된 템플릿 없음' : '템플릿을 선택하세요.'; ?></option>
                             <?php echo $tpl_opts; ?>
                         </select>
+                        <a href="./template" target="_blank" class="btn2 both">메일 템플릿 관리</a>
+                        <span class="tbl_sment">템플릿 추가 및 변경을 원하는 경우 [메일 템플릿 관리] 를 클릭</span>
                     </td>
                 </tr>
                 <tr>
@@ -67,6 +70,10 @@
                     <td>
                         <textarea id="html" name="html" title="본문 내용"></textarea>
                         <script type="text/javascript">CKEDITOR.replace('html');</script>
+                        <span class="tbl_sment">
+                            사용자 정의 템플릿을 생성합니다. 사용자 정의 템플릿은 아래와 같은 치환자를 제공합니다.<br />
+                            사이트명: <strong>{{site_title}}</strong>
+                        </span>
                     </td>
                 </tr>
             </tbody>
@@ -80,3 +87,13 @@
     </form>
 
 </article>
+
+<script>
+var tpl_opts_source = new Array;
+<?php
+if (!empty($tpl_opts_source)) {
+    foreach ($tpl_opts_source as $key => $value) {
+?>
+tpl_opts_source['<?php echo $key; ?>'] = '<?php echo preg_replace("/[\r\n]+/", "", $value); ?>';
+<?php }} ?>
+</script>

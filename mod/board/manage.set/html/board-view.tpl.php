@@ -43,6 +43,17 @@
                     <th>글 반응</th>
                     <td>좋아요 : <strong><?php echo $view['likes_cnt']; ?></strong> / 싫어요 : <strong><?php echo $view['unlikes_cnt']; ?></strong></td>
                 </tr>
+                
+                <?php
+                for ($i = 1; $i <= 10; $i++) {
+                    if (!empty($view['data_'.$i])) {
+                ?>
+                <tr>
+                    <th>여분필드<?php echo $i; ?></th>
+                    <td><?php echo $view['data_'.$i]; ?></td>
+                </tr>
+                <?php }} ?>
+
                 <tr>
                     <td class="article-wrap" colspan="2">
 

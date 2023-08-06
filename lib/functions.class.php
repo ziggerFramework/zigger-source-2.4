@@ -37,24 +37,28 @@ class Func {
             }
 
         }
+
+        return true;
     }
 
     static public function add_stylesheet($file)
     {
         global $ob_src_css;
 
-        if (!strstr($ob_src_css,$file)) {
-            $ob_src_css .= '<link rel="stylesheet" href="'.$file.'"/>'.PHP_EOL;
-        }
+        if (strstr($ob_src_css, $file)) return false;
+        $ob_src_css .= '<link rel="stylesheet" href="'.$file.'"/>'.PHP_EOL;
+
+        return true;
     }
 
     static public function add_javascript($file)
     {
         global $ob_src_js;
 
-        if (!strstr($ob_src_js, $file)) {
-            $ob_src_js .= '<script src="'.$file.'"></script>'.PHP_EOL;
-        }
+        if (strstr($ob_src_js, $file)) return false;
+        $ob_src_js .= '<script src="'.$file.'"></script>'.PHP_EOL;
+        
+        return true;
     }
 
     static public function define_javascript($name, $val)
@@ -62,6 +66,8 @@ class Func {
         global $ob_define_js;
 
         $ob_define_js .= PHP_EOL.'var '.$name.' = "'.$val.'";';
+
+        return true;
     }
 
     static public function print_javascript($source)
@@ -71,6 +77,8 @@ class Func {
         $ob_src_js .= '<script type="text/javascript">'.PHP_EOL;
         $ob_src_js .= $source.PHP_EOL;
         $ob_src_js .= '</script>'.PHP_EOL;
+
+        return true;
     }
 
     static public function add_title($title)
@@ -79,6 +87,8 @@ class Func {
 
         $ob_title = '<title>'.$CONF['title'].' - '.$title.'</title>'.PHP_EOL;
         $ob_ogtitle = '<meta property="og:title" content="'.$CONF['og_title'].' - '.$title.'" />'.PHP_EOL;
+
+        return true;
     }
 
     static public function add_body_class($class)
@@ -87,12 +97,16 @@ class Func {
         
         if (!$ob_body_class && $class) $ob_body_class = $class;
         if ($ob_body_class && !preg_match("/.*(?:^| )".$class."(?:$| ).*/", $ob_body_class)) $ob_body_class .= ' '.$class;
+
+        return true;
     }
 
     // page key 셋팅
     static public function set_category_key($key)
     {
         define('SET_CATEGORY_KEY', $key);
+
+        return true;
     }
 
     // Date Format (날짜만)
@@ -157,6 +171,8 @@ class Func {
         if ($msg) self::alert($msg);
         $url = (!empty($url)) ? $url : $_SERVER['REQUEST_URI'];
         self::location_parent(PH_DOMAIN.'/sign/signin?redirect='.urlencode($url));
+
+        return false;
     }
 
     // 회원 level 체크
@@ -165,6 +181,8 @@ class Func {
         global $MB;
 
         if ($MB['level'] > $level) self::err_back(ERR_MSG_10);
+
+        return false;
     }
 
     // device 체크
@@ -282,6 +300,9 @@ class Func {
                 $arr['mb_idx']
             )
         );
+
+        return true;
+        
     }
 
     // 관리자 최근 피드에 등록
@@ -308,16 +329,28 @@ class Func {
         if ($CONF['use_feedsms'] == 'Y') {
             $sms = new Sms();
 
+            $sms_toadm = array();
+
+            if (strstr($CONF['sms_toadm'], ',')) {
+                $exp = explode(',', $CONF['sms_toadm']);
+                foreach ($exp as $number) {
+                    $sms_toadm[] = trim($number);
+                }
+            } else {
+                $sms_toadm[] = trim($CONF['sms_toadm']);
+            }
+
             $sms->set(
                 array(
                     'memo' => '[zigger] '.strip_tags($arr['msg']),
-                    'to' => [
-                        $CONF['sms_toadm']
-                    ]
+                    'to' => $sms_toadm
                 )
             );
             $sms->send();
         }
+
+        return true;
+
     }
 
     // parameter 조합
@@ -566,12 +599,38 @@ class Func {
         return preg_replace("/\<br(\s*)?\/?\>/i", '\n', $val);
     }
 
+    // 중복되지 않는 pk 문자열 생성 함수
+    static function make_random_char($length = 30)
+    {
+        $length = ($length < 30) ? 30 : $length;
+        $length = $length - 19;
+
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        $max = strlen($characters) - 1;
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[mt_rand(0, $max)];
+        }
+
+        $microtime = str_replace(array(' ', '.'), array('', ''), microtime());
+        
+        return str_shuffle($randomString.$microtime);
+    }
+
     // error : core error
     static public function core_err($msg, $exit = true)
     {
-        echo '<div style="border-left: 4px solid #b82e24;background: #e54d42;padding: 3px 15px;margin:15px;">';
-        echo '<p style="display: block;font-size: 13px;line-height:18px;color: #fff;letter-spacing: -1px;">Core error : '.$msg.'</p>';
-        echo '</div>';
+        global $REQUEST;
+
+        if (isset($REQUEST['rewritetype']) && $REQUEST['rewritetype'] == 'submit') {
+            echo $msg;
+
+        } else {
+            echo '<div style="border-left: 4px solid #b82e24;background: #e54d42;padding: 3px 15px;margin:15px;">';
+            echo '<p style="display: block;font-size: 13px;line-height:18px;color: #fff;letter-spacing: -1px;">Core error : '.$msg.'</p>';
+            echo '</div>';
+        }
 
         if ($exit === true) exit;
     }

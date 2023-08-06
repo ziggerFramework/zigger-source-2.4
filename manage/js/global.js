@@ -7,6 +7,7 @@ ph_manage_script = {
 
         this.make_navigator() // Navigator
         this.set_navigator_action() // Navigator Action
+        this.cnum_allchk() // list cnum all check
         this.label_active() // Label Active
         this.make_orderby() // Orderby
         this.set_ui_datepicker() // UI: datepicker
@@ -84,6 +85,24 @@ ph_manage_script = {
     
             });
         }
+
+    },
+
+    //
+    // 관리 checkbox 전체 선택
+    //
+    'cnum_allchk' : function() {
+
+        $(document).on('click', 'input:checkbox.cnum_allchk', function() {
+            var chked = $(this).is(':checked');
+    
+            if (chked) {
+                $('input:checkbox[name="cnum[]"]').prop('checked', true);
+    
+            } else {
+                $('input:checkbox[name="cnum[]"]').prop('checked', false);
+            }
+        });
 
     },
 
@@ -435,11 +454,17 @@ ph_manage_script = {
     //
     'mailler_send_script' : function() {
 
-        $('#sendmailForm input[name=type]').on({
-            'click' : function(e){
-                var type = $(this).val();
-                $('#sendmailForm table tr.hd-tr[data-type='+type+']').show().siblings('.hd-tr').hide();
-            }
+        $(document).on('click', '#sendmailForm input[name=type]', function(e) {
+            var type = $(this).val();
+            $('#sendmailForm table tr.hd-tr[data-type='+type+']').show().siblings('.hd-tr').hide();
+        });
+
+        $(document).on('change', '#sendmailForm select[name=tpl]', function(e) {
+            var template = $(this).val();
+            var soruce = '';
+            if (typeof tpl_opts_source[template] !== 'undefined') soruce = tpl_opts_source[template];
+            
+            CKEDITOR.instances.html.setData(soruce);
         });
 
     },
@@ -486,11 +511,9 @@ ph_manage_script = {
         }
 
         //수신 범위 지정
-        $('#smsSendForm input[name=type]').on({
-            'click' : function(e){
-                var type = $(this).val();
-                $('#smsSendForm table tr.hd-tr[data-type='+type+']').show().siblings('.hd-tr').hide();
-            }
+        $(document).on('click', '#smsSendForm input[name=type]', function(e) {
+            var type = $(this).val();
+            $('#smsSendForm table tr.hd-tr[data-type='+type+']').show().siblings('.hd-tr').hide();
         });
 
         //예약 발송 설정
@@ -502,21 +525,18 @@ ph_manage_script = {
                 $('#smsSendForm .resv-wrap *').attr('disabled', true);
             }
         }
-        $('#smsSendForm .resv-btn').on({
-            'click' : function() {
-                var chked = $(this).prev(':checkbox').prop('checked');
-                if (chked == false) {
-                    get_sms_resv('show');
+        $(document).on('click', '#smsSendForm .resv-btn', function(e) {
+            var chked = $(this).prev(':checkbox').prop('checked');
+            if (chked == false) {
+                get_sms_resv('show');
 
-                } else {
-                    get_sms_resv('hide');
-                }
+            } else {
+                get_sms_resv('hide');
             }
         });
         get_sms_resv('hide');
 
-    },
-
+    }
 
 }
 

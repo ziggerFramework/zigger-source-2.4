@@ -191,9 +191,9 @@ CREATE TABLE IF NOT EXISTS `{$req['pfx']}config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `{$req['pfx']}config` (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regdate`) VALUES
-('engine', 'title', 'Zigger Website', now()),
+('engine', 'title', 'zigger Website', now()),
 ('engine', 'domain', '{$protocol}{$_SERVER['HTTP_HOST']}{$realdir}', now()),
-('engine', 'description', 'Zigger Website Description', now()),
+('engine', 'description', 'zigger Website Description', now()),
 ('engine', 'use_mobile', 'Y', now()),
 ('engine', 'use_emailchk', 'Y', now()),
 ('engine', 'use_recaptcha', '', now()),
@@ -205,13 +205,13 @@ INSERT INTO `{$req['pfx']}config` (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regd
 ('engine', 'logo', '', now()),
 ('engine', 'mb_division', '최고관리자|관리자|게시판관리자|정회원|정회원|정회원|정회원|정회원|일반회원|비회원', now()),
 ('engine', 'og_type', 'website', now()),
-('engine', 'og_title', 'Zigger Website', now()),
-('engine', 'og_description', 'Zigger Website Description', now()),
+('engine', 'og_title', 'zigger Website', now()),
+('engine', 'og_description', 'zigger Website Description', now()),
 ('engine', 'og_image', '', now()),
 ('engine', 'og_url', '{$protocol}{$_SERVER['HTTP_HOST']}{$realdir}', now()),
 ('engine', 'naver_verific', '', now()),
 ('engine', 'google_verific', '', now()),
-('engine', 'theme', 'zigger-simple', now()),
+('engine', 'theme', 'zigger-basic', now()),
 ('engine', 'use_smtp', 'N', now()),
 ('engine', 'smtp_server', '', now()),
 ('engine', 'smtp_port', '', now()),
@@ -271,13 +271,13 @@ CREATE TABLE IF NOT EXISTS `{$req['pfx']}sitemap` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `{$req['pfx']}sitemap` (`idx`, `caidx`, `title`, `href`, `visible`, `children`) VALUES
-(1, '0001', 'About zigger', 'sub/view/contents', 'Y', 2),
-(2, '00010001', 'about zigger', 'sub/view/contents', 'Y', 0),
-(3, '00010002', 'zigger Manager', 'sub/view/manager', 'Y', 0),
-(4, '0002', 'Board', 'sub/board/news', 'Y', 2),
+(1, '0001', 'Introduce', 'sub/view/contents', 'Y', 2),
+(2, '00010001', 'zigger 소개', 'sub/view/contents', 'Y', 0),
+(3, '00010002', 'Manager 소개', 'sub/view/manager', 'Y', 0),
+(4, '0002', 'Community', 'sub/board/news', 'Y', 2),
 (5, '00020001', 'News', 'sub/board/news', 'Y', 0),
 (6, '00020002', 'Freeboard', 'sub/board/free', 'Y', 0),
-(7, '0003', 'Contact us', 'sub/view/contactus', 'Y', 0);
+(7, '0003', 'Contact', 'sub/view/contactus', 'Y', 0);
 
 CREATE TABLE IF NOT EXISTS `{$req['pfx']}visitcount` (
     `idx` int(11) NOT NULL auto_increment,

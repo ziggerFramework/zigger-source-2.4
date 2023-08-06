@@ -16,21 +16,24 @@ class Pdosql {
     private $REC_COUNT;
     private $pdo;
     private $stmt;
+    private $dsn;
+    private $options;
 
     // pdo 연결 초기화
     public function __construct()
     {
         try {
+            $this->dsn = 'mysql:host='.self::$DB_HOST.';dbname='.self::$DB_NAME;
+            $this->options = array(
+                \PDO::MYSQL_ATTR_INIT_COMMAND => 'set names utf8',
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            );
+
             if (!empty(self::$ALREADY_CONNECTED_PDO)) {
                 $this->pdo = self::$ALREADY_CONNECTED_PDO;
                 
             } else {
-                $dsn = 'mysql:host='.self::$DB_HOST.';dbname='.self::$DB_NAME;
-                $options = array(
-                    \PDO::MYSQL_ATTR_INIT_COMMAND => 'set names utf8',
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-                );
-                $this->pdo = new \PDO($dsn, self::$DB_USER, self::$DB_PWD, $options);
+                $this->pdo = new \PDO($this->dsn, self::$DB_USER, self::$DB_PWD, $this->options);
                 self::$ALREADY_CONNECTED_PDO = $this->pdo;
             }
             

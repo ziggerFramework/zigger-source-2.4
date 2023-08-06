@@ -346,13 +346,15 @@ class Comment_submit {
 
         // 게시글 작성자에게 알림 발송
         if ($view['mb_idx'] > 0 && $view['mb_idx'] != $MB['idx']) {
+            $feed_uri = (PH_DIR) ? str_replace(PH_DIR, '', $req['thisuri']) : $req['thisuri'];
+            
             $Alarm_Library->get_add_alarm(
                 array(
                     'msg_from' => '게시판 ('.$boardconf['title'].')',
                     'from_mb_idx' => $MB['idx'],
                     'to_mb_idx' => $view['mb_idx'],
                     'memo' => '<strong>'.$writer.'</strong>님이 회원님의 게시글에 댓글을 남겼습니다.',
-                    'link' => $req['thisuri'].'/'.$req['read']
+                    'link' => $feed_uri.'/'.$req['read']
                 )
             );
         }
@@ -481,13 +483,15 @@ class Comment_submit {
 
         // 부모 댓글 작성자에게 알림 발송
         if ($comm_arr['mb_idx'] > 0 && $comm_arr['mb_idx'] != $MB['idx']) {
+            $feed_uri = (PH_DIR) ? str_replace(PH_DIR, '', $req['thisuri']) : $req['thisuri'];
+
             $Alarm_Library->get_add_alarm(
                 array(
                     'msg_from' => '게시판 ('.$boardconf['title'].')',
                     'from_mb_idx' => $MB['idx'],
                     'to_mb_idx' => $comm_arr['mb_idx'],
                     'memo' => '<strong>'.$writer.'</strong>님이 회원님의 댓글에 대댓글을 남겼습니다.',
-                    'link' => $req['thisuri'].'/'.$req['read']
+                    'link' => $feed_uri.'/'.$req['read']
                 )
             );
         }

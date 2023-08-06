@@ -109,12 +109,12 @@ class Message_send_submit {
         $sql->query(
             "
             insert into {$sql->table("mod:message")}
-            (from_mb_idx, to_mb_idx, parent_idx, article, regdate)
+            (hash, from_mb_idx, to_mb_idx, parent_idx, article, regdate)
             values
-            (:col1, :col2, :col3, :col4, now())
+            (:col1, :col2, :col3, :col4, :col5, now())
             ",
             array(
-                MB_IDX, $to_mb_idx, $reply_parent_idx, $req['article']
+                Func::make_random_char(), MB_IDX, $to_mb_idx, $reply_parent_idx, $req['article']
             )
         );
 

@@ -60,7 +60,7 @@ class Received extends \Controller\Make_Controller {
                 $arr['article'] = Func::strcut($arr['article'], 0, 50);
                 $arr['regdate'] = Func::date($arr['regdate']);
                 $arr['chked'] = Func::date($arr['chked']);
-                $arr[0]['view-link'] = Func::get_param_combine('mode=view&refmode=received&idx='.$arr['idx'].'&page='.$req['page'], '?');
+                $arr[0]['view-link'] = Func::get_param_combine('mode=view&refmode=received&hash='.$arr['hash'].'&page='.$req['page'], '?');
 
                 $print_arr[] = $arr;
 

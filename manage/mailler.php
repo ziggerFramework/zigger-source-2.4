@@ -430,7 +430,7 @@ class Send extends \Controller\Make_Controller {
 
     public function func()
     {
-        function tpl_opts()
+        function tpl_opts($type = 'title')
         {
             $sql = new Pdosql();
 
@@ -438,20 +438,30 @@ class Send extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mailtpl")}
-                where system='N' or type='default'
+                where system='N'
                 order by type asc
                 ", []
             );
 
             $opts = '';
+            $opts_source = array();
 
             if ($sql->getcount() > 0) {
                 do {
+                    $sql->specialchars = 1;
+                    $sql->nl2br = 1;
                     $arr = $sql->fetchs();
+                    $sql->specialchars = 0;
+                    $sql->nl2br = 0;
+                    $arr['html'] = $sql->fetch('html');
+
                     $opts .= '<option value="'.$arr['type'].'">'.$arr['type'].' ('.$arr['title'].')</option>';
+                    if ($arr['type'] != 'default') $opts_source[$arr['type']] = $arr['html'];
+                    
                 } while ($sql->nextRec());
             }
-            return $opts;
+
+            return ($type == 'title') ? $opts : $opts_source;
         }
     }
 
@@ -463,7 +473,8 @@ class Send extends \Controller\Make_Controller {
 
         $this->set('manage', $manage);
         $this->set('mailto', $req['mailto']);
-        $this->set('tpl_opts', tpl_opts());
+        $this->set('tpl_opts', tpl_opts('title'));
+        $this->set('tpl_opts_source', tpl_opts('source'));
     }
 
     public function form()
@@ -491,7 +502,7 @@ class Send_submit{
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post', 'type, to_mb, level_from, level_to, tpl, subject, html');
+        $req = Method::request('post', 'type, to_mb, level_from, level_to, subject, html');
         $manage->req_hidden_inp('post');
 
         if ($req['type'] == 1) {
@@ -505,8 +516,6 @@ class Send_submit{
         } else if ($req['level_from'] > $req['level_to']) {
             Valid::error('level_to', '수신 종료 level 보다 시작 level이 클 수 없습니다.');
         }
-
-        if (!$req['tpl']) Valid::error('tpl', '메일 템플릿이 존재하지 않거나 선택되지 않았습니다.');
 
         Valid::get(
             array(
@@ -575,7 +584,7 @@ class Send_submit{
 
         $mail->set(
             array(
-                'tpl' => $req['tpl'],
+                'tpl' => null,
                 'to' => $rcv_email,
                 'subject' => $req['subject'],
                 'memo' => stripslashes($req['html'])
@@ -586,12 +595,12 @@ class Send_submit{
         $sql->query(
             "
             insert into {$sql->table("sentmail")}
-            (template, to_mb, level_from, level_to, subject, html, regdate)
+            (to_mb, level_from, level_to, subject, html, regdate)
             VALUES
-            (:col1, :col2, :col3, :col4, :col5, :col6, now())
+            (:col1, :col2, :col3, :col4, :col5, now())
             ",
             array(
-                $req['tpl'], $req['to_mb'], $req['level_from'], $req['level_to'], $req['subject'], $req['html']
+                $req['to_mb'], $req['level_from'], $req['level_to'], $req['subject'], $req['html']
             )
         );
 
@@ -754,6 +763,83 @@ class History extends \Controller\Make_Controller {
         $this->set('level_from_total', level_from_total($sort_arr));
         $this->set('pagingprint', $paging->pagingprint($manage->pag_def_param()));
         $this->set('print_arr', $print_arr);
+    }
+
+    public function form()
+    {
+        $form = new \Controller\Make_View_Form();
+        $form->set('type', 'html');
+        $form->set('action', PH_MANAGE_DIR.'/mailler/history-submit');
+        $form->run();
+    }
+
+}
+
+//
+// Controller for submit
+// ( History )
+//
+class History_submit {
+
+    public function init()
+    {
+        global $req;
+
+        $sql = new Pdosql();
+        $manage = new ManageFunc();
+
+        Method::security('referer');
+        Method::security('request_post');
+        $req = Method::request('post', 'mode, cnum');
+        $manage->req_hidden_inp('post');
+
+        if (!isset($req['mode']) || !$req['mode']) Valid::error('', '필수 값이 누락 되었습니다.');
+
+        // 선택 항목 검사
+        if (!isset($req['cnum']) || !$req['cnum'] || !is_array($req['cnum'])) Valid::error('', '선택된 항목이 없습니다.');
+
+        switch ($req['mode']) {
+
+            case 'del' :
+                $this->get_del();
+                break;
+
+        }
+    }
+
+    public function get_del()
+    {
+        global $req;
+
+        $sql = new Pdosql();
+
+        // where 조합
+        $cnum = array();
+
+        foreach ($req['cnum'] as $key => $value) {
+            $cnum[] = "idx='".addslashes($value)."'";
+        }
+
+        $where = implode(' or ', $cnum);
+
+        // 데이터 삭제
+        $sql->query(
+            "
+            delete
+            from {$sql->table("sentmail")}
+            where {$where} 
+            ", []
+        );
+
+        // return
+        Valid::set(
+            array(
+                'return' => 'alert->reload',
+                'msg' => '성공적으로 삭제 되었습니다.'
+            )
+        );
+        Valid::turn();
+
     }
 
 }
