@@ -38,17 +38,17 @@
         <ul id="gnb">
             <?php foreach ($SITEMAP as $gnb) { ?>
             <li>
-                <a href="<?php echo $gnb['href']; ?>" data-category-key="<?php echo $gnb['idx']; ?>"><?php echo $gnb['title']; ?></a>
+                <a href="<?php echo $gnb['href']; ?>" data-category-key="<?php echo $gnb['idx']; ?>" target="<?php echo $gnb['target']; ?>"><?php echo $gnb['title']; ?></a>
                 <?php if (count($gnb['2d']) > 0) { ?>
                 <div class="sound_only_ele">하위 메뉴</div>
                 <ul>
                     <?php foreach ($gnb['2d'] as $gnb2) { ?>
                     <li>
-                        <a href="<?php echo $gnb2['href']; ?>" data-category-key="<?php echo $gnb2['idx']; ?>"><?php echo $gnb2['title']; ?></a>
+                        <a href="<?php echo $gnb2['href']; ?>" data-category-key="<?php echo $gnb2['idx']; ?>" target="<?php echo $gnb2['target']; ?>"><?php echo $gnb2['title']; ?></a>
                         <?php if (count($gnb2['3d']) > 0) { ?>
                         <ul>
                             <?php foreach ($gnb2['3d'] as $gnb3) { ?>
-                            <li><a href="<?php echo $gnb3['href']; ?>" data-category-key="<?php echo $gnb3['idx']; ?>"><?php echo $gnb3['title']; ?></a></li>
+                            <li><a href="<?php echo $gnb3['href']; ?>" data-category-key="<?php echo $gnb3['idx']; ?>" target="<?php echo $gnb3['target']; ?>"><?php echo $gnb3['title']; ?></a></li>
                             <?php } ?>
                         </ul>
                         <?php } ?>
@@ -109,19 +109,19 @@
         </div>
 
         <ul id="mo-gnb">
-            <?php foreach($SITEMAP as $gnb){ ?>
-            <li>
-                <a href="<?php echo $gnb['href']; ?>" data-category-key="<?php echo $gnb['idx']; ?>"><?php echo $gnb['title']; ?></a>
-                <?php if(count($gnb['2d'])>0){ ?>
+            <?php foreach($SITEMAP as $gnb) { ?>
+             <li>
+                <a href="<?php echo $gnb['href']; ?>" data-category-key="<?php echo $gnb['idx']; ?>" target="<?php echo $gnb['target']; ?>"><?php echo $gnb['title']; ?></a>
+                <?php if (count($gnb['2d']) > 0) { ?>
                 <div class="sound_only_ele">하위 메뉴</div>
                 <ul>
-                    <?php foreach($gnb['2d'] as $gnb2){ ?>
+                    <?php foreach ($gnb['2d'] as $gnb2) { ?>
                     <li>
-                        <a href="<?php echo $gnb2['href']; ?>" data-category-key="<?php echo $gnb2['idx']; ?>"><?php echo $gnb2['title']; ?></a>
-                        <?php if(count($gnb2['3d'])>0){ ?>
+                        <a href="<?php echo $gnb2['href']; ?>" data-category-key="<?php echo $gnb2['idx']; ?>" target="<?php echo $gnb2['target']; ?>"><?php echo $gnb2['title']; ?></a>
+                        <?php if (count($gnb2['3d']) > 0) { ?>
                         <ul>
-                            <?php foreach($gnb2['3d'] as $gnb3){ ?>
-                            <li><a href="<?php echo $gnb3['href']; ?>" data-category-key="<?php echo $gnb3['idx']; ?>"><?php echo $gnb3['title']; ?></a></li>
+                            <?php foreach ($gnb2['3d'] as $gnb3) { ?>
+                            <li><a href="<?php echo $gnb3['href']; ?>" data-category-key="<?php echo $gnb3['idx']; ?>" target="<?php echo $gnb3['target']; ?>"><?php echo $gnb3['title']; ?></a></li>
                             <?php } ?>
                         </ul>
                         <?php } ?>

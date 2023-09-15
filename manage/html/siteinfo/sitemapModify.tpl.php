@@ -24,7 +24,14 @@
             <th>연결 page</th>
             <td>
                 <?php echo PH_DOMAIN; ?>/ <input type="text" name="href" class="inp w50p" title="연결 page" value="<?php echo $write['href']; ?>" />
-                <span class="tbl_sment">'/app/' 경로에 위치한 경로 입력.<br />'/app/folder/file.php' 의 {Hello} Class 로 정의한 경우 - '/folder/file/hello' 입력</span>
+                <span class="tbl_sment">
+                    '/app/' 경로에 위치한 경로 입력.<br />
+                    '/app/folder/file.php' 에 {Hello} Class 로 정의한 경우 - '/folder/file/hello' 입력<br />
+                </span>
+                <span class="tbl_sment">
+                    외부링크로 설정 하려는 경우 앞에 '@'를 붙여 외부 URL 입력(외부링크는 클릭시 새창으로 연결)<br />
+                    ex) @https://www.zigger.net
+                </span>
             </td>
         </tr>
         <tr>

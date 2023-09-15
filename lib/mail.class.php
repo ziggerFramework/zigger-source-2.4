@@ -24,8 +24,36 @@ class Mail extends \Make\Database\Pdosql {
     protected $mailHeaderArray = array();
     protected $mailAttachArray = array();
 
+    // mail init
+    private function init()
+    {
+        $this->tpl = 'default';
+        $this->to = array();
+        $this->from = array();
+        $this->chk_url = '';
+        $this->mb_id  = '';
+        $this->mb_pwd  = '';
+        $this->subject = '';
+        $this->memo = '';
+        $this->st_tit = '';
+        $this->smtp_sock = '';
+        $this->smtp_id = '';
+        $this->smtp_pwd = '';
+        $this->smtp_server = '';
+        $this->smtp_port = '';
+        $this->attach = array();
+        $this->mailBoundary = '';
+        $this->mailFromArray = array();
+        $this->mailToArray = array();
+        $this->mailHeaderArray = array();
+        $this->mailAttachArray = array();
+    }
+
+    // mail set
     public function set($arr)
     {
+        $this->init();
+
         foreach($arr as $key => $value) {
             $this->{$key} = $value;
         }

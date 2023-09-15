@@ -111,15 +111,15 @@
     
     #mo-gnb {margin: 0 -20px;}
     #mo-gnb > li {border-bottom: 1px solid #eaeaea;}
-    #mo-gnb > li > a {color: #000000;display: block;font-size: 14px;font-weight: bold;letter-spacing: -0.05em;line-height: 45px;padding: 0 15px 0 35px;position: relative;text-decoration: none;}
+    #mo-gnb > li > a {color: #000000;display: block;font-size: 14px;font-weight: bold;letter-spacing: -0.05em;line-height: 45px;overflow: hidden;padding: 0 15px 0 35px;position: relative;text-decoration: none;text-overflow: ellipsis;white-space: nowrap;}
     #mo-gnb > li > ul {background: #f7f7f7;display: none;padding: 0;}
     #mo-gnb > li > ul > li {border-top: 1px solid #ddd;}
-    #mo-gnb > li > ul > li > a {color: #333;display: block;font-size: 14px;letter-spacing: -0.05em;line-height: 45px;padding: 0 15px 0 35px;position: relative;text-decoration: none;}
+    #mo-gnb > li > ul > li > a {color: #333;display: block;font-size: 14px;letter-spacing: -0.05em;line-height: 45px;overflow: hidden;padding: 0 15px 0 35px;position: relative;text-decoration: none;text-overflow: ellipsis;white-space: nowrap;}
     #mo-gnb > li.on > ul {display: block;}
     #mo-gnb > li > ul > li > ul {background: #eee;display: none;}
     #mo-gnb > li > ul > li.on > ul {display: block;}
     #mo-gnb > li > ul > li > ul > li {border-top: 1px solid #ddd;}
-    #mo-gnb > li > ul > li > ul > li > a {color: #333;font-size: 14px;letter-spacing: -0.05em;line-height: 45px;padding: 0 15px 0 35px;text-decoration: none;}
+    #mo-gnb > li > ul > li > ul > li > a {color: #333;font-size: 14px;letter-spacing: -0.05em;line-height: 45px;overflow: hidden;padding: 0 15px 0 35px;text-decoration: none;text-overflow: ellipsis;white-space: nowrap;}
     #mo-gnb li > a.have-children:before {color: #333333;content: '\f0d7';display: block;font-family: 'Font Awesome 5 Free';font-size: 13px;font-weight: bold;left: 20px;position: absolute;top: 0;transform: rotate(0);}
     #mo-gnb li.on > a.have-children:before {transform: rotate(180deg);}
 

@@ -238,7 +238,8 @@ ul.tbltxt li:before {background: #cccccc;content: '';display: block;height: 2px;
 #main .lat ul li .sbj em {color: #f13039;font-size: 13px;font-style: normal;font-weight: bold;margin-left: 4px;}
 #main .lat ul li .writer {color: #999999;font-size: 14px;letter-spacing: -0.05em;line-height: 50px;position: absolute;right: 85px;top: 0;}
 #main .lat ul li .date {color: #999999;font-size: 14px;letter-spacing: -0.05em;line-height: 50px;position: absolute;right: 0;top: 0;}
-#main .lat dl {align-items: center;display: flex;flex-wrap: wrap;justify-content: space-between;padding: 20px 15px;}
+#main .lat dl {align-items: center;border-top: 1px solid #eeeeee;display: flex;flex-wrap: wrap;justify-content: space-between;padding: 20px 15px;}
+#main .lat dl:first-child {border-top: none;}
 #main .lat dl dt {width: 140px;}
 #main .lat dl dt img{height: auto;width: 100%;}
 #main .lat dl dd {width: calc(100% - 170px);}

@@ -21,7 +21,9 @@ if ($list_cnt > 0) {
     do {
         $arr = $stsql->fetchs();
 
-        $arr['href'] = $link_dir.$arr['href'];
+        $firstChar = substr($arr['href'], 0, 1);
+        $arr['href'] = ($firstChar == '@') ? substr($arr['href'], 1) : $link_dir.$arr['href'];
+        $arr['target'] = ($firstChar == '@') ? '_blank' : '_self';
 
         //depth 2
         $gnb_arr2 = array();
@@ -44,8 +46,10 @@ if ($list_cnt > 0) {
             if ($stsql2->getcount() > 0) {
                 do {
                     $arr2 = $stsql2->fetchs();
-
-                    $arr2['href'] = $link_dir.$arr2['href'];
+                    
+                    $firstChar = substr($arr2['href'], 0, 1);
+                    $arr2['href'] = ($firstChar == '@') ? substr($arr2['href'], 1) : $link_dir.$arr2['href'];
+                    $arr2['target'] = ($firstChar == '@') ? '_blank' : '_self';
 
                     //depth 3
                     $gnb_arr3 = array();
@@ -69,7 +73,9 @@ if ($list_cnt > 0) {
                             do {
                                 $arr3 = $stsql3->fetchs();
 
-                                $arr3['href'] = $link_dir.$arr3['href'];
+                                $firstChar = substr($arr3['href'], 0, 1);
+                                $arr3['href'] = ($firstChar == '@') ? substr($arr3['href'], 1) : $link_dir.$arr3['href'];
+                                $arr3['target'] = ($firstChar == '@') ? '_blank' : '_self';
 
                                 $gnb_arr3[] = $arr3;
 

@@ -193,9 +193,11 @@
     #board-list table tr {display: block;position: relative;}
     #board-list table tr > * {border: none;border-bottom: 1px solid #ddd;font-size: 13px;letter-spacing: -0.05em;padding: 15px 10px;}
     #board-list table thead th {display: none;}
+    #board-list table tbody tr:hover > * {background: none;}
+    #board-list table tbody.notice td {background: none;}
     #board-list table td {display: none;}
     #board-list table td.chk {border: none;display: block;position: absolute;right: 0;text-align: right;top: 6px;width: 30px;}
-    #board-list table td.sbj {border-bottom: none;display: block;padding: 10px 35px 7px 10px;width: auto;}
+    #board-list table td.sbj {border-bottom: none;display: block;padding: 20px 35px 5px 10px;width: auto;}
     #board-list table td.sbj a {color: #333;display: block;font-size: 16px;font-weight: bold;line-height: 19px;}
     #board-list table td.sbj .cat {display: block;font-size: 13px;margin-right: 0;padding-right: 0;}
     #board-list table td.sbj .cat:after {display: none;}
@@ -204,7 +206,7 @@
     #board-list table td.sbj img.reply-ico {height: 13px;margin-top: -3px;width: 13px;}
     #board-list table th.like,
     #board-list table td.like {display: none;}
-    #board-list table td.mobile-info {border-top: none;display: block;margin-bottom: -1px;padding-bottom: 15px;padding-top: 0;text-align: left;width: 100%;}
+    #board-list table td.mobile-info {border-top: none;box-sizing: border-box;display: block;margin-bottom: -1px;padding-bottom: 20px;padding-top: 0;text-align: left;width: 100%;}
     #board-list table td.mobile-info ul li {color: #999999;display: inline-block;font-size: 13px;letter-spacing: -0.05em;margin-right: 12px;vertical-align: top;}
     #board-list table td.mobile-info ul li a {font-size: 13px;}
     #board-list table td.mobile-info ul li > strong {color: #666666;font-weight: bold;margin-right: 5px;}

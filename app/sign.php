@@ -264,7 +264,7 @@ class signup_submit {
                 'input' => 'pwd',
                 'value' => $req['pwd'],
                 'check' => array(
-                    'defined' => 'passwrod'
+                    'defined' => 'password'
                 )
             )
         );
@@ -273,7 +273,7 @@ class signup_submit {
                 'input' => 'pwd2',
                 'value' => $req['pwd2'],
                 'check' => array(
-                    'defined' => 'passwrod'
+                    'defined' => 'password'
                 )
             )
         );

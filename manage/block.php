@@ -8,7 +8,7 @@ use Manage\ManageFunc;
 
 //
 // Controller for display
-// https://{domain}/manage/clock/ip
+// https://{domain}/manage/block/ip
 //
 class Ip extends \Controller\Make_Controller {
 
@@ -273,7 +273,7 @@ class Member extends \Controller\Make_Controller {
             "
             select
             (
-                select COUNT(*)
+                select count(*)
                 from {$sql->table("blockmb")}
                 where mb_id is not null and mb_id!=''
             ) total

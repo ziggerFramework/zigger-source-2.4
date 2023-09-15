@@ -64,9 +64,7 @@ var PH_DIR = '<?php echo PH_DIR; ?>';
 var PH_DOMAIN = '<?php echo PH_DOMAIN; ?>';
 var PH_PLUGIN_DIR = '<?php echo PH_PLUGIN_DIR; ?>';
 var PH_NOW_TABINDEX = 0;
-<?php if ($CONF['use_mb_address'] != 'N') { ?>
 var PH_KPOSTCODE_API_URL = '<?php echo SET_KPOSTCODE_URL; ?>';
-<?php } ?>
 var PH_POST_MAX_SIZE = <?php echo $CONF['ini_post_max_size']; ?>;
 </script>
 <script src="<?php echo PH_DIR; ?>/layout/js/jquery.min.js<?php echo SET_CACHE_HASH; ?>"></script>

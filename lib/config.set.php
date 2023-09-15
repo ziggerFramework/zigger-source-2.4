@@ -101,6 +101,8 @@ define('SET_GRECAPTCHA_URL', array('https://www.google.com/recaptcha/api.js', 'h
 define('SET_KPOSTCODE_URL', 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'); // kakao postcode rest api url
 
 // PHP ini 설정
+ini_set('session.cookie_samesite', 'None');
+ini_set('session.cookie_secure', true);
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
 ini_set("session.gc_maxlifetime", SET_SESS_LIFE);

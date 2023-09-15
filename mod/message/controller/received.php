@@ -37,7 +37,7 @@ class Received extends \Controller\Make_Controller {
                 {$sql->table("member")} as member
                 on message.from_mb_idx=member.mb_idx
                 where message.to_mb_idx=:col1
-                order by message.regdate desc
+                order by message.idx desc
                 ",
                 array(
                     MB_IDX

@@ -3,10 +3,10 @@
 html {overflow-x: hidden;}
 
 /* Webfonts */
-@font-face {font-family: ns;font-weight: 300;src: url(/layout/font/notokr-light.eot); src: local('※'), url(/layout/font/notokr-light.woff) format('woff');}
-@font-face {font-family: ns;font-weight: normal;src: url(/layout/font/notokr-regular.eot); src: local('※'), url(/layout/font/notokr-regular.woff) format('woff');}
-@font-face {font-family: ns;font-weight: 500;src: url(/layout/font/notokr-medium.eot); src: local('※'), url(/layout/font/notokr-medium.woff) format('woff');}
-@font-face {font-family: ns;font-weight: 700;src: url(/layout/font/notokr-bold.eot); src: local('※'), url(/layout/font/notokr-bold.woff) format('woff');}
+@font-face {font-family: ns;font-weight: 300;src: url(../../../../layout/font/notokr-light.eot); src: local('※'), url(../../../../layout/font/notokr-light.woff) format('woff');}
+@font-face {font-family: ns;font-weight: normal;src: url(../../../../layout/font/notokr-regular.eot); src: local('※'), url(../../../../layout/font/notokr-regular.woff) format('woff');}
+@font-face {font-family: ns;font-weight: 500;src: url(../../../../layout/font/notokr-medium.eot); src: local('※'), url(../../../../layout/font/notokr-medium.woff) format('woff');}
+@font-face {font-family: ns;font-weight: 700;src: url(../../../../layout/font/notokr-bold.eot); src: local('※'), url(../../../../layout/font/notokr-bold.woff) format('woff');}
 * {font-family: ns, 'Malgun Gothic', sans-serif;}
 
 /* Accessibility */
@@ -233,13 +233,15 @@ textarea.required {background-image: url('../images/input-required-bull.png');ba
 #main .lat h4 {background: #fafafa;border-bottom: 1px solid #eeeeee;}
 #main .lat h4 a {color: #333333;display: block;font-size: 14px;font-weight: 700;letter-spacing: -0.03em;line-height: 50px;padding: 0 20px;text-decoration: none;}
 #main .lat ul {padding: 20px;}
-#main .lat ul li {padding-right: 120px;position: relative;}
+#main .lat ul li {border-top: 1px solid #eeeeee;padding-right: 120px;position: relative;}
+#main .lat ul li:first-child {border-top: none;}
 #main .lat ul li .sbj {color: #000000;display: block;font-size: 14px;line-height: 30px;overflow: hidden;padding-left: 15px;text-overflow: ellipsis;white-space: nowrap;}
 #main .lat ul li .sbj:before {background: #000000;content: '';display: block;height: 1px;left: 0;position: absolute;top: 50%;width: 4px;}
 #main .lat ul li .sbj em {color: #f13039;font-size: 10px;font-style: normal;font-weight: bold;margin-left: 4px;}
 #main .lat ul li .writer {color: #999999;font-size: 13px;letter-spacing: -0.03em;line-height: 30px;position: absolute;right: 75px;top: 0;}
 #main .lat ul li .date {color: #999999;font-size: 13px;letter-spacing: -0.03em;line-height: 30px;position: absolute;right: 0;top: 0;}
-#main .lat dl {margin: 20px;min-height: 150px;padding-left: 170px;position: relative;}
+#main .lat dl {border-top: 1px solid #eeeeee;margin: 20px;min-height: 150px;padding-left: 170px;position: relative;}
+#main .lat dl:first-child {border-top: none;}
 #main .lat dl dt {left: 0;position: absolute;top: 0;}
 #main .lat dl dd {padding-top: 10px;}
 #main .lat dl dd > *{word-break: break-all;}

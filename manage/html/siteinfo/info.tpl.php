@@ -243,13 +243,15 @@
                 <tr>
                     <th>개인정보처리방침</th>
                     <td>
-                        <textarea name="privacy"><?php echo $write['privacy']; ?></textarea>
+                        <textarea id="privacy" name="privacy"><?php echo $write['privacy']; ?></textarea>
+                        <script type="text/javascript">CKEDITOR.replace('privacy');</script>
                     </td>
                 </tr>
                 <tr>
                     <th>이용약관</th>
                     <td>
-                        <textarea name="policy"><?php echo $write['policy']; ?></textarea>
+                        <textarea id="policy" name="policy"><?php echo $write['policy']; ?></textarea>
+                        <script type="text/javascript">CKEDITOR.replace('policy');</script>
                     </td>
                 </tr>
             </tbody>

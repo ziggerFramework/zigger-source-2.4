@@ -34,7 +34,7 @@ class Received extends \Controller\Make_Controller {
                 select *
                 from {$sql->table("mod:alarm")}
                 where to_mb_idx=:col1
-                order by regdate DESC
+                order by idx desc
                 ",
                 array(
                     MB_IDX

@@ -33,7 +33,7 @@ class Dash extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("member")}
-            where mb_adm!='Y' and mb_dregdate IS NULL
+            where mb_adm!='Y' and mb_dregdate is null
             order by mb_regdate desc
             limit 5
             ", []
@@ -89,7 +89,7 @@ class Dash extends \Controller\Make_Controller {
             left outer join
             {$sql->table("member")} member
             on sess.mb_idx=member.mb_idx
-            where regdate>=DATE_SUB(now(), interval 10 minute)
+            where regdate>=date_sub(now(), interval 10 minute)
             order by regdate desc
             ", []
         );
@@ -153,7 +153,7 @@ class Dash extends \Controller\Make_Controller {
                     where chked='N'
                 ) as total
                 from {$sql->table("mng_feeds")}
-                order by regdate desc
+                order by idx desc
                 ", []
             )
         );

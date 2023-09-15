@@ -523,7 +523,7 @@ class Point extends \Controller\Make_Controller {
                 select *
                 from {$sql->table("mbpoint")}
                 where mb_idx=:col1
-                order by regdate desc
+                order by idx desc
                 ",
                 array(
                     MB_IDX

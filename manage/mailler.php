@@ -438,7 +438,7 @@ class Send extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mailtpl")}
-                where system='N'
+                where system='N' or type='default'
                 order by type asc
                 ", []
             );
@@ -456,7 +456,7 @@ class Send extends \Controller\Make_Controller {
                     $arr['html'] = $sql->fetch('html');
 
                     $opts .= '<option value="'.$arr['type'].'">'.$arr['type'].' ('.$arr['title'].')</option>';
-                    if ($arr['type'] != 'default') $opts_source[$arr['type']] = $arr['html'];
+                    $opts_source[$arr['type']] = $arr['html'];
                     
                 } while ($sql->nextRec());
             }

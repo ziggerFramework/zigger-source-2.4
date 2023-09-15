@@ -37,7 +37,7 @@ class View extends \Controller\Make_Controller {
             left outer join
             {$sql->table("member")} as tmember
             on message.to_mb_idx=tmember.mb_idx
-            where message.hash=:col1 and (message.to_mb_idx=:col2 OR message.from_mb_idx=:col2)
+            where message.hash=:col1 and (message.to_mb_idx=:col2 or message.from_mb_idx=:col2)
             order by message.regdate desc
             ",
             array(

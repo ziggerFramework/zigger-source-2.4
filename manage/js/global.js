@@ -38,11 +38,6 @@ ph_manage_script = {
                 $(this).next().stop().slideToggle(100).parents('li').toggleClass('on');
             }
         });
-        $('#gnb .menu > li').each(function() {
-            if ($(this).hasClass('active')) {
-                $(this).find('a').click();
-            }
-        });
 
     },
 
@@ -52,20 +47,19 @@ ph_manage_script = {
     'set_navigator_action' : function() {
 
         var href = window.document.location.href;
-        href = href.replace(PH_DOMAIN, '', href);
+        href = PH_DIR +href.replace(PH_DOMAIN, '', href);
     
         if (href.indexOf('?') !== -1) {
             href = PH_DIR + href.replace(PH_DOMAIN, '', href);
-            href = href.replace(href.substr(href.indexOf('?')), '' ,href);
+            href = href.replace(href.substring(href.indexOf('?')), '');
         }
         if (href.indexOf('#') !== -1) {
             href = PH_DIR + href.replace(PH_DOMAIN, '', href);
-            href = href.replace(href.substr(href.indexOf('#')), '' ,href);
+            href = href.replace(href.substring(href.indexOf('#')), '');
         }
         if (href.indexOf('/manage/mod') !== -1) {
             $('#side .tab a[data-tab="mod"]').click();
         }
-    
         if ($('#side #gnb .menu a[href="' + href + '"]').length > 0){
             $('#side #gnb .menu a[href="' + href + '"]')
             .closest('li').addClass('on')
@@ -125,7 +119,8 @@ ph_manage_script = {
             $('input[type=radio], input[type=checkbox]').each(function(i) {
                 var $this = $(this);
                 var $label = $this.parent('label');
-                var label_for = $(this).attr('name') + '_' + Math.floor(Math.random() * 9999) + '_' + i;
+                var label_name = ($(this).attr('name')) ? $(this).attr('name') : 'label';
+                var label_for = label_name + '_' + Math.floor(Math.random() * 9999) + '_' + i;
         
                 if ($label.length && !$label.hasClass('added_labelCustom') && !$label.hasClass('__label')) {
                     var $this_clone = $this.clone().attr('id', label_for);

@@ -35,7 +35,7 @@ class Sent extends \Controller\Make_Controller {
                 {$sql->table("member")} as member
                 on message.to_mb_idx=member.mb_idx
                 where message.from_mb_idx=:col1
-                order by message.regdate DESC
+                order by message.idx desc
                 ",
                 array(
                     MB_IDX
