@@ -3,7 +3,7 @@ namespace Corelib;
 
 class Session {
 
-    static function set_sess($name,$val)
+    static function set_sess($name, $val)
     {
         if ($name == 'MB_IDX') SessionHandler::$dbinfo['mb_idx'] = $val;
         $_SESSION[$name] = $val;

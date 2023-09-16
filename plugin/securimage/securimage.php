@@ -1032,6 +1032,11 @@ class Securimage
      *     $img = new Securimage($options);
      *
      */
+
+    private $gdnoisecolor;
+    private $code_entered;
+    private $correct_code;
+    
     public function __construct($options = array())
     {
         $this->securimage_path = dirname(__FILE__);
@@ -2240,9 +2245,9 @@ class Securimage
         $amp      = array(); // amplitude
         $x        = ($this->image_width / 4); // lowest x coordinate of a pole
         $maxX     = $this->image_width - $x;  // maximum x coordinate of a pole
-        $dx       = mt_rand($x / 10, $x);     // horizontal distance between poles
-        $y        = mt_rand(20, $this->image_height - 20);  // random y coord
-        $dy       = mt_rand(20, $this->image_height * 0.7); // y distance
+        $dx       = mt_rand(intval($x / 10), $x);     // horizontal distance between poles
+        $y        = mt_rand(20, intval($this->image_height - 20));  // random y coord
+        $dy       = mt_rand(20, intval($this->image_height * 0.7)); // y distance
         $minY     = 20;                                     // minimum y coordinate
         $maxY     = $this->image_height - 20;               // maximum y cooddinate
 
@@ -2283,7 +2288,7 @@ class Securimage
                 $x *= $this->iscale;
                 $y *= $this->iscale;
                 if ($x >= 0 && $x < $width2 && $y >= 0 && $y < $height2) {
-                    $c = imagecolorat($this->tmpimg, $x, $y);
+                    $c = imagecolorat($this->tmpimg, intval($x), intval($y));
                 }
                 if ($c != $bgCol) { // only copy pixels of letters to preserve any background image
                     imagesetpixel($this->im, $ix, $iy, $c);

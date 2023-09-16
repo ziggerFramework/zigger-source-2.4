@@ -16,8 +16,8 @@ class Paging {
     public $addParam;
     public $listno = 0;
     public $thispage;
-    private $firstPage;
-    private $lastPage;
+    private $startPage;
+    private $endPage;
     private $prePage;
     private $nextPage;
 

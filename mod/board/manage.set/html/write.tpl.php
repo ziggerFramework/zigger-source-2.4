@@ -163,7 +163,7 @@
                         <span class="tbl_sment">(<?php echo $print_filesize; ?> 까지 첨부 가능)</span>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
 
                 <?php if ($is_filename_show[1]) { ?>
                 <tr>
@@ -176,7 +176,7 @@
                         <label class="mt10"><input type="checkbox" name="file1_del" value="checked" />첨부파일 삭제</label>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
 
                 <?php if ($is_file_show[2]) { ?>
                 <tr>
@@ -188,7 +188,7 @@
                         <span class="tbl_sment">(<?php echo $print_filesize; ?> 까지 첨부 가능)</span>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
 
                 <?php if ($is_filename_show[2]) { ?>
                 <tr>
@@ -201,7 +201,7 @@
                         <label class="mt10"><input type="checkbox" name="file2_del" value="checked">삭제</label>
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
             </tbody>
         </table>
 

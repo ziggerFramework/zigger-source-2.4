@@ -339,13 +339,13 @@ class Result extends \Controller\Make_Controller {
         }
 
         // 카테고리 처리
-        $category = urldecode($req['category']);
+        $category = (!empty($req['category'])) ? urldecode($req['category']) : '';
         $search = '';
 
         if ($category) $search = 'and board.category=\''.$req['category'].'\'';
 
         //검색 키워드 처리
-        $keyword = htmlspecialchars(urlencode($req['keyword']));
+        $keyword = (!empty($req['keyword'])) ? htmlspecialchars(urlencode($req['keyword'])) : '';
 
         if ($keyword) {
             $keyword = urldecode($req['keyword']);

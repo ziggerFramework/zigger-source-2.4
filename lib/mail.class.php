@@ -148,12 +148,12 @@ class Mail extends \Make\Database\Pdosql {
             $html = $this->memo;
         }
 
-        $html = str_replace('{{check_url}}', $this->chk_url, $html);
-        $html = str_replace('{{id}}', $this->mb_id, $html);
-        $html = str_replace('{{password}}', $this->mb_pwd, $html);
-        $html = str_replace('{{name}}', $this->mailToArray[$email], $html);
-        $html = str_replace('{{article}}',$this->memo, $html);
-        $html = str_replace('{{site_title}}', $this->st_tit, $html);
+        $html = str_replace('{{check_url}}', ($this->chk_url) ? $this->chk_url : '', $html);
+        $html = str_replace('{{id}}', ($this->mb_id) ? $this->mb_id : '', $html);
+        $html = str_replace('{{password}}', ($this->mb_pwd) ? $this->mb_pwd : '', $html);
+        $html = str_replace('{{name}}', ($this->mailToArray[$email]) ? $this->mailToArray[$email] : '', $html);
+        $html = str_replace('{{article}}', ($this->memo) ? $this->memo : '', $html);
+        $html = str_replace('{{site_title}}', ($this->st_tit) ? $this->st_tit : '', $html);
 
         if (count($this->mailAttachArray) > 0) {
             $body .= "--".$this->getBoundary()."\r\n";

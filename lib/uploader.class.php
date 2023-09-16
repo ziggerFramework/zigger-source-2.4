@@ -8,6 +8,7 @@ use Aws\S3\Exception\S3Exception;
 
 class Uploader {
 
+    private $file_upload;
     public $path;
     public $file;
     public $intdict = SET_INTDICT_FILE;

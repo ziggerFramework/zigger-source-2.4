@@ -21,7 +21,7 @@ class Make_Controller extends \Controller\Make_Module_Controller {
         }
 
         $run = new $run();
-        $run->CONF = $this->configure();
+        $this->configure();
 
         if (method_exists($run, 'func') !== false) {
             $run->func();

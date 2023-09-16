@@ -76,7 +76,9 @@ class View extends \Controller\Make_Controller {
             }
 
             if ($is_btn_show) {
-                return '<a href="'.Func::thisuri('&mode=view&read='.$req['read']).Func::get_param_combine('mode=write&wrmode=modify&category='.urlencode($req['category']).'&read='.$req['read'].'&page='.$req['page'].'&where='.$req['where'].'&keyword='.urlencode($req['keyword']), '?').'" class="btn1">수정</a>';
+                $req['category'] = (!empty($req['category'])) ? urlencode($req['category']) : '';
+                $req['keyword'] = (!empty($req['keyword'])) ? urlencode($req['keyword']) : '';
+                return '<a href="'.Func::thisuri('&mode=view&read='.$req['read']).Func::get_param_combine('mode=write&wrmode=modify&category='.$req['category'].'&read='.$req['read'].'&page='.$req['page'].'&where='.$req['where'].'&keyword='.$req['keyword'], '?').'" class="btn1">수정</a>';
             }
         }
 
@@ -93,22 +95,26 @@ class View extends \Controller\Make_Controller {
             }
 
             if ($is_btn_show) {
-                return '<a href="'.Func::thisuri('&mode=view&read='.$req['read']).Func::get_param_combine('mode=write&wrmode=reply&category='.urlencode($req['category']).'&read='.$req['read'].'&page='.$req['page'].'&where='.$req['where'].'&keyword='.urlencode($req['keyword']), '?').'" class="btn1">답글</a>';
+                $req['category'] = (!empty($req['category'])) ? urlencode($req['category']) : '';
+                $req['keyword'] = (!empty($req['keyword'])) ? urlencode($req['keyword']) : '';
+                return '<a href="'.Func::thisuri('&mode=view&read='.$req['read']).Func::get_param_combine('mode=write&wrmode=reply&category='.$req['category'].'&read='.$req['read'].'&page='.$req['page'].'&where='.$req['where'].'&keyword='.$req['keyword'], '?').'" class="btn1">답글</a>';
             }
         }
 
         // 리스트 버튼
         function list_btn($req)
         {
-            return '<a href="'.Func::thisuri('&mode=view&read='.$req['read']).Func::get_param_combine('category='.urlencode($req['category']).'&page='.$req['page'].'&where='.$req['where'].'&keyword='.urlencode($req['keyword']), '?').'" class="btn2">리스트</a>';
+            $req['category'] = (!empty($req['category'])) ? urlencode($req['category']) : '';
+            $req['keyword'] = (!empty($req['keyword'])) ? urlencode($req['keyword']) : '';
+            return '<a href="'.Func::thisuri('&mode=view&read='.$req['read']).Func::get_param_combine('category='.$req['category'].'&page='.$req['page'].'&where='.$req['where'].'&keyword='.$req['keyword'], '?').'" class="btn2">리스트</a>';
         }
 
         // 이전/다음글 링크
         function seek_get_link($arr, $req)
         {
-            $link = $arr['idx'].Func::get_param_combine('page='.$req['page'].'&category='.urlencode($req['category']).'&where='.$req['where'].'&keyword='.urlencode($req['keyword']), '?');
-
-            return $link;
+            $req['category'] = (!empty($req['category'])) ? urlencode($req['category']) : '';
+            $req['keyword'] = (!empty($req['keyword'])) ? urlencode($req['keyword']) : '';
+            return $arr['idx'].Func::get_param_combine('page='.$req['page'].'&category='.$req['category'].'&where='.$req['where'].'&keyword='.$req['keyword'], '?');
         }
 
         // 첨부 이미지 출력

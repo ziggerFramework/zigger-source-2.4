@@ -45,7 +45,7 @@ class Func {
     {
         global $ob_src_css;
 
-        if (strstr($ob_src_css, $file)) return false;
+        if (strstr((!empty($ob_src_css)) ? $ob_src_css : '', $file)) return false;
         $ob_src_css .= '<link rel="stylesheet" href="'.$file.'"/>'.PHP_EOL;
 
         return true;
@@ -55,7 +55,7 @@ class Func {
     {
         global $ob_src_js;
 
-        if (strstr($ob_src_js, $file)) return false;
+        if (strstr((!empty($ob_src_js)) ? $ob_src_js : '', $file)) return false;
         $ob_src_js .= '<script src="'.$file.'"></script>'.PHP_EOL;
         
         return true;

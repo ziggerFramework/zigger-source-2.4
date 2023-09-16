@@ -452,6 +452,8 @@ class Regist_submit {
         $req['txt_limit'] = $req['txt_limit'].'|'.$req['m_txt_limit'];
         $req['ico_hot_case'] = $req['ico_hot_case_1'].'|'.$req['ico_hot_case_3'].'|'.$req['ico_hot_case_2'];
 
+        if ($sql->table_exists('mod:board_data_'.$board_id) > 0) Valid::error('id', '이미 존재하는 게시판 id 입니다.');
+        
         $sql->query(
             "
             create table if not exists {$sql->table("mod:board_data_")}$board_id (
@@ -572,18 +574,20 @@ class Regist_submit {
             'conf_exp' => $conf_exp
         );
 
+        $insert_qry = array();
         foreach ($data as $key => $value) {
-            $sql->query(
-                "
-                insert into {$sql->table("config")}
-                (cfg_type, cfg_key, cfg_value, cfg_regdate)
-                values
-                ('mod:board:config:{$req['id']}', :col1, :col2, now())
-                ", array(
-                    $key, $value
-                )
-            );
+            $insert_qry[] = "('mod:board:config:{$req['id']}', '".addslashes($key)."', '".addslashes($value)."', now())";
         }
+        $insert_qry = implode(',', $insert_qry);
+
+        $sql->query(
+            "
+            insert into {$sql->table("config")}
+            (cfg_type, cfg_key, cfg_value, cfg_regdate)
+            values
+            {$insert_qry}
+            ", []
+        );
 
         Valid::set(
             array(
@@ -1326,13 +1330,13 @@ class Board extends \Controller\Make_Controller {
         $thisuri = Func::thisuri();
 
         // 카테고리 처리
-        $category = urldecode($req['category']);
+        $category = (!empty($req['category'])) ? urldecode($req['category']) : '';
         $search = '';
 
         if ($category) $search = 'and board.category=\''.addslashes($req['category']).'\'';
 
         // 검색 키워드 처리
-        $keyword = htmlspecialchars(urlencode($PARAM['keyword']));
+        $keyword = (!empty($PARAM['keyword'])) ? htmlspecialchars(urlencode($PARAM['keyword'])) : '';
 
         if ($keyword) {
             $keyword = urldecode($PARAM['keyword']);
@@ -1505,7 +1509,7 @@ class Write extends \Controller\Make_Controller {
                 for ($i = 1; $i <= 2; $i++) {
                     $files[$i] = '';
 
-                    if (isset($arr['file'.$i])) {
+                    if (!empty($arr['file'.$i])) {
                         $fileinfo = Func::get_fileinfo($arr['file'.$i]);
                         $files[$i] = $fileinfo['orgfile'];
                     }

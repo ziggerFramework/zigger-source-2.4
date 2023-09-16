@@ -104,7 +104,7 @@
 						<input type="file" name="file1" id="file1" title="첨부파일1" /><span class="bytetxt"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
 					</td>
 				</tr>
-				<? } ?>
+				<?php } ?>
 
 				<?php if ($is_filename_show[1]) { ?>
 				<tr>
@@ -116,7 +116,7 @@
 						<label><input type="checkbox" name="file1_del" value="checked" alt="첨부파일1 삭제" />삭제</label>
 					</td>
 				</tr>
-				<? } ?>
+				<?php } ?>
 
 				<?php if ($is_file_show[2]) { ?>
 				<tr>
@@ -128,7 +128,7 @@
 						<input type="file" name="file2" id="file2" title="첨부파일2" /><span class="bytetxt"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
 					</td>
 				</tr>
-				<? } ?>
+				<?php } ?>
 
 				<?php if ($is_filename_show[2]) { ?>
 				<tr>
@@ -140,7 +140,7 @@
 						<label><input type="checkbox" name="file2_del" value="checked" alt="첨부파일2 삭제">삭제</label>
 					</td>
 				</tr>
-				<? } ?>
+				<?php } ?>
 
 				<?php if ($is_captcha_show) { ?>
 				<tr>
@@ -150,7 +150,7 @@
                         <label for="captcha" class="sound_only_ele">스팸방지 코드 입력</label>
 					</td>
 				</tr>
-				<? } ?>
+				<?php } ?>
 
 			</tbody>
 		</table>

@@ -185,7 +185,7 @@ class Regist_submit{
             )
         );
 
-        if (!$file['pc_img']['name'] || !$file['mo_img']['name']) Valid::error('', '배너 이미지가 첨부되지 않았습니다.');
+        if (empty($file['pc_img']['name']) || empty($file['mo_img']['name'])) Valid::error('', '배너 이미지가 첨부되지 않았습니다.');
 
         $uploader->path= PH_DATA_PATH.'/manage';
         $uploader->chkpath();
@@ -445,7 +445,7 @@ class Modify_submit{
         }
 
         if (isset($file['mo_img']) && $arr['mo_img'] != '') $uploader->drop($arr['mo_img']);
-        if ($arr['mo_img'] != '' && !$file['mo_img']['name']) $mo_img_name = $arr['mo_img'];
+        if ($arr['mo_img'] != '' && empty($file['mo_img']['name'])) $mo_img_name = $arr['mo_img'];
 
         $sql->query(
             "

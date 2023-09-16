@@ -21,9 +21,9 @@ class ManageFunc{
             Func::chklevel(1);
         }
 
-        $keyword = urldecode(addslashes($PARAM['keyword']));
-
-        $searchby = (trim(addslashes($PARAM['keyword'])) != '') ? 'AND '.addslashes($PARAM['where']).' like \'%'.addslashes($PARAM['keyword']).'%\'' : '';
+        $keyword = (!empty($PARAM['keyword'])) ? urldecode(addslashes($PARAM['keyword'])) : '';
+        $searchby = '';
+        if (!empty($PARAM['keyword']) && trim(addslashes($PARAM['keyword'])) != '') $searchby = 'AND '.addslashes($PARAM['where']).' like \'%'.$keyword.'%\'';
 
     }
 
@@ -109,14 +109,14 @@ class ManageFunc{
     {
         global $PARAM;
 
-        return '&sort='.$PARAM['sort'].'&ordtg='.$PARAM['ordtg'].'&ordsc='.$PARAM['ordsc'].'&where='.$PARAM['where'].'&keyword='.urlencode($PARAM['keyword']);
+        return '&sort='.$PARAM['sort'].'&ordtg='.$PARAM['ordtg'].'&ordsc='.$PARAM['ordsc'].'&where='.$PARAM['where'].'&keyword='.urlencode(!empty($PARAM['keyword']) ? $PARAM['keyword'] : '');
     }
 
     public function lnk_def_param($params = '')
     {
         global $PARAM;
 
-        return '?page='.$PARAM['page'].'&sort='.$PARAM['sort'].'&ordtg='.$PARAM['ordtg'].'&ordsc='.$PARAM['ordsc'].'&where='.$PARAM['where'].'&keyword='.urlencode($PARAM['keyword']).$params;
+        return '?page='.$PARAM['page'].'&sort='.$PARAM['sort'].'&ordtg='.$PARAM['ordtg'].'&ordsc='.$PARAM['ordsc'].'&where='.$PARAM['where'].'&keyword='.urlencode(!empty($PARAM['keyword']) ? $PARAM['keyword'] : '').$params;
     }
 
     public function print_hidden_inp()

@@ -125,7 +125,8 @@ class Write extends \Controller\Make_Controller {
         // 취소 버튼
         function cancel_btn($page, $category, $where, $keyword)
         {
-            return '<a href="'.Func::thisuri().Func::get_param_combine('page='.$page.'&category='.$category.'&where='.$where.'&keyword='.urlencode($keyword), '?').'" class="btn2">취소</a>';
+            $keyword = (!empty($keyword)) ? urlencode($keyword) : '';
+            return '<a href="'.Func::thisuri().Func::get_param_combine('page='.$page.'&category='.$category.'&where='.$where.'&keyword='.$keyword, '?').'" class="btn2">취소</a>';
         }
 
         // 글쓰기 타이틀
@@ -788,14 +789,16 @@ class Write_submit{
         }
 
         // return
+        $req['category'] = (!empty($req['category'])) ? urlencode($req['category']) : '';
+
         if ($sql->getcount() > 0) {
-            $return_url = $req['thisuri'].'/'.$sql->fetch('max_idx').Func::get_param_combine('?category='.urlencode($req['category']), '?');
+            $return_url = $req['thisuri'].'/'.$sql->fetch('max_idx').Func::get_param_combine('?category='.$req['category'], '?');
 
         } else {
             $return_url = $req['thisuri'].Func::get_param_combine('?category='.urlencode($req['category']), '?');
         }
 
-        if (isset($req['request']) && $req['request'] == 'manage') $return_url = './board?id='.$board_id.'&category='.urlencode($req['category']);
+        if (isset($req['request']) && $req['request'] == 'manage') $return_url = './board?id='.$board_id.'&category='.$req['category'];
 
         Valid::set(
             array(

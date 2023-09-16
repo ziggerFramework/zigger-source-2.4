@@ -37,11 +37,11 @@ class Imgresize {
         $org_height = $sizeinfo[1];
 
         if ($org_width > $this->width) {
-            $height = $this->width * ($org_height / $org_width);
+            $height = intval($this->width * ($org_height / $org_width));
 
         } else {
-            $this->width = $org_width;
-            $height = $org_height;
+            $this->width = intval($org_width);
+            $height = intval($org_height);
         }
 
         $this->tmpnew = imagecreatetruecolor($this->width,$height);
@@ -66,7 +66,12 @@ class Imgresize {
         );
         
         $output = isset($outputFn[$this->type]) ? $outputFn[$this->type] : 'imagejpeg';
-        $output($this->tmpnew, $this->newimg, ($output == 'imagejpeg') ? $this->quality : null);
+        
+        if (in_array($output, array('imagejpeg'))) {
+            $output($this->tmpnew, $this->newimg, $this->quality);
+        } else {
+            $output($this->tmpnew, $this->newimg);
+        }
 
         $this->destroy();
     }

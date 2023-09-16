@@ -12,12 +12,15 @@ class Pdosql {
     static private $DB_PREFIX = DB_PREFIX;
     static private $ALREADY_CONNECTED_PDO;
     private $ROW = 0;
+    private $ROW_RE;
     private $ROW_NUM = 0;
     private $REC_COUNT;
     private $pdo;
     private $stmt;
     private $dsn;
     private $options;
+    public $specialchars;
+    public $nl2br;
 
     // pdo 연결 초기화
     public function __construct()
@@ -107,7 +110,7 @@ class Pdosql {
                 for ($i = 1; $i <= count($param); $i++) {
                     if (!strstr($query, ':col'.$i)) continue;
                     
-                    $value = addslashes($param[$i-1]);
+                    $value = addslashes(isset($param[$i-1]) ? $param[$i-1] : '');
 
                     if (is_null($param[$i-1])) {
                         $this->stmt->bindValue(':col'.$i, null, \PDO::PARAM_NULL);
