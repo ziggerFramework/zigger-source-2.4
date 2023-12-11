@@ -474,12 +474,12 @@ class Ctrl_submit {
                                 "
                                 insert into
                                 {$cp_sql2->table("mod:board_cmt_".$t_board_id)}
-                                (ln, rn, bo_idx, mb_idx, writer, comment, ip, regdate, cmt_1, cmt_2, cmt_3, cmt_4, cmt_5, cmt_6, cmt_7, cmt_8, cmt_9, cmt_10)
+                                (ln, rn, bo_idx, mb_idx, writer, parent_writer, parent_mb_idx, comment, ip, regdate, cmt_1, cmt_2, cmt_3, cmt_4, cmt_5, cmt_6, cmt_7, cmt_8, cmt_9, cmt_10)
                                 values
-                                (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18)
+                                (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, :col20)
                                 ",
                                 array(
-                                    $cmt_arr['ln'], $cmt_arr['rn'], $cped_idx, $cmt_arr['mb_idx'], $cmt_arr['writer'], $cmt_arr['comment'], $cmt_arr['ip'], $cmt_arr['regdate'],
+                                    $cmt_arr['ln'], $cmt_arr['rn'], $cped_idx, $cmt_arr['mb_idx'], $cmt_arr['writer'], $cmt_arr['parent_writer'], $cmt_arr['parent_mb_idx'], $cmt_arr['comment'], $cmt_arr['ip'], $cmt_arr['regdate'],
                                     $cmt_arr['cmt_1'], $cmt_arr['cmt_2'], $cmt_arr['cmt_3'], $cmt_arr['cmt_4'], $cmt_arr['cmt_5'], $cmt_arr['cmt_6'], $cmt_arr['cmt_7'], $cmt_arr['cmt_8'], $cmt_arr['cmt_9'], $cmt_arr['cmt_10']
                                 )
                             );
