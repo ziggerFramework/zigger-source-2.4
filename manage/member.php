@@ -286,7 +286,7 @@ class Regist_submit {
 
         $mbchk_var = ($CONF['use_emailchk'] == 'Y') ? 'N' : 'Y';
 
-        $mb_exp = $sql->etcfd_exp(implode('|', $req['mb_exp']));
+        $mb_exp = $sql->etcfd_exp(implode('{|}', $req['mb_exp']));
 
         $sql->query(
             "
@@ -645,7 +645,7 @@ class Modify_submit {
         if ((isset($file['profileimg']) && $arr['mb_profileimg'] != '')) $uploader->drop($arr['mb_profileimg']);
         if ($arr['mb_profileimg'] != '' && !isset($file['profileimg'])) $profileimg_name = $arr['mb_profileimg'];
 
-        $mb_exp = $sql->etcfd_exp(implode('|', $req['mb_exp']));
+        $mb_exp = $sql->etcfd_exp(implode('{|}', $req['mb_exp']));
 
         if ($req['pwd'] != '') {
 
@@ -784,7 +784,7 @@ class Unsigned extends \Controller\Make_Controller {
         $sort_arr['mb_total'] = $sql->fetch('mb_total');
 
         // orderby
-        if (!$PARAM['ordtg']) $PARAM['ordtg'] = 'mb_regdate';
+        if (!$PARAM['ordtg']) $PARAM['ordtg'] = 'mb_dregdate';
         if (!$PARAM['ordsc']) $PARAM['ordsc'] = 'desc';
         $orderby = $PARAM['ordtg'].' '.$PARAM['ordsc'];
 

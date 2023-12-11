@@ -342,7 +342,7 @@ class Result extends \Controller\Make_Controller {
         $category = (!empty($req['category'])) ? urldecode($req['category']) : '';
         $search = '';
 
-        if ($category) $search = 'and board.category=\''.$req['category'].'\'';
+        if ($category) $search = 'and board.category=\''.addslashes($req['category']).'\'';
 
         //검색 키워드 처리
         $keyword = (!empty($req['keyword'])) ? htmlspecialchars(urlencode($req['keyword'])) : '';
@@ -363,7 +363,7 @@ class Result extends \Controller\Make_Controller {
                 case 'article' :
                 case 'writer' :
                 case 'mb_id' :
-                    $search .= 'and board.'.$req['where'].' like \'%'.addslashes($req['keyword']).'%\'';
+                    $search .= 'and board.'.addslashes($req['where']).' like \'%'.addslashes($req['keyword']).'%\'';
                     break;
 
                 default :

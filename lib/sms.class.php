@@ -29,8 +29,7 @@ class Sms {
     protected function getApiUrl()
     {
         global $CONF;
-
-        return ($CONF['sms_key1']) ? $CONF['sms_key1'] : $CONF['sms_key1'];
+        return $CONF['sms_key1'];
     }
 
     // accesskey

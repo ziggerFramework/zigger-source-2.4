@@ -223,7 +223,7 @@ class Info_submit {
 
         // update
         $mb_division = implode('|', $req['mb_division']);
-        $st_exp = $sql->etcfd_exp(implode('|', $req['st_exp']));
+        $st_exp = $sql->etcfd_exp(implode('{|}', $req['st_exp']));
 
         $data = array(
             'title' => $req['title'],

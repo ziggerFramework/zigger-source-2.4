@@ -137,7 +137,7 @@ ph_mod_board_manage = {
             var comment_read = $('body.mod-board-manage #board-readForm input[name=read]').val();
             var comment_thisuri = $('body.mod-board-manage #board-readForm input[name=thisuri]').val();
             
-            $('body.mod-board-manage #board-comment').load(MOD_BOARD_DIR + '/controller/comment/load?board_id=' + comment_board_id + '&read=' + comment_read + '&thisuri=' + comment_thisuri,function() {
+            $('body.mod-board-manage #board-comment').load(MOD_BOARD_DIR + '/controller/comment/load?request=manage&board_id=' + comment_board_id + '&read=' + comment_read + '&thisuri=' + comment_thisuri,function() {
                 if ($('.g-recaptcha').length < 1) {
                     return false;
                 }

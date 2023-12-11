@@ -198,10 +198,11 @@ class Pdosql {
     // 여분필드 설명 처리
     public function etcfd_exp($exp)
     {
-        $ex = explode('|', $exp);
+        $ex = explode('{|}', $exp);
 
         for ($i = 0; $i < 10; $i++) {
             if (!isset($ex[$i])) $ex[$i] = '';
+            $ex[$i] = str_replace('|', '&vert;', $ex[$i]);
         }
         
         return implode('|', $ex);

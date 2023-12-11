@@ -110,7 +110,7 @@
 
         <ul id="mo-gnb">
             <?php foreach($SITEMAP as $gnb) { ?>
-             <li>
+            <li>
                 <a href="<?php echo $gnb['href']; ?>" data-category-key="<?php echo $gnb['idx']; ?>" target="<?php echo $gnb['target']; ?>"><?php echo $gnb['title']; ?></a>
                 <?php if (count($gnb['2d']) > 0) { ?>
                 <div class="sound_only_ele">하위 메뉴</div>

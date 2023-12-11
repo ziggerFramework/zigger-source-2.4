@@ -32,7 +32,7 @@
 		<?php
 		foreach ($print_arr as $list) {
 		?>
-		<li class="comm-list-li" style="<?php echo $list[0]['reply_style']; ?>">
+		<li class="comm-list-li <?php echo ($list['rn'] > 0) ? 'reply' : ''; ?>">
 			<div class="comm-btn">
 				<?php echo $list[0]['reply_btn']; ?><?php echo $list[0]['modify_btn']; ?><?php echo $list[0]['delete_btn']; ?>
 			</div>
@@ -47,7 +47,8 @@
 				<span class="date"><?php echo $list['datetime']; ?></span>
 			</div>
 			<div class="comment">
-				<p><?php echo $list['comment']; ?></p>
+				<?php if ($list[0]['parent_writer']) echo $list[0]['parent_writer']; ?>
+				<p><?php echo $list['comment']; // p 내부에는 여백 등 다른 소스코드가 입력되면 안됩니다. ?></p>
 			</div>
 		</li>
 		<?php } ?>

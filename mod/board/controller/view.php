@@ -282,6 +282,8 @@ class View extends \Controller\Make_Controller {
             );
 
             if ($sql->getcount() > 0) {
+                $sql->specialchars = 1;
+                $sql->nl2br = 1;
                 $arr[0][$value] = $sql->fetchs();
                 $arr[0][$value]['date'] = Func::date($arr[0][$value]['regdate']);
                 $arr[0][$value]['datetime'] = Func::datetime($arr[0][$value]['regdate']);

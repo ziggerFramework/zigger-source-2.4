@@ -45,6 +45,10 @@ class Imgresize {
         }
 
         $this->tmpnew = imagecreatetruecolor($this->width,$height);
+        if ($this->type == 'png') {
+            imagealphablending($this->tmpnew, false);
+            imagesavealpha($this->tmpnew, true);
+        }
         imagecopyresampled($this->tmpnew, $this->tmporg, 0, 0, 0, 0, $this->width, $height, $org_width, $org_height);
     }
 

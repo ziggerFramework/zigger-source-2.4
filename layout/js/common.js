@@ -426,12 +426,8 @@ formBeforeConfirm = {
             for (var i=0; i < val_exp.length; i++) {
                 val_exp[i] = val_exp[i].replace(/^\s+|\s+$/g, '');
             }
-
-            if (val_exp[0] === '') {
-                return false;
-            }
-
-            var confirmed = confirm(val_exp[0]);
+			
+			var confirmed = (val_exp[0]) ? confirm(val_exp[0]) : true;
 
             if (confirmed) {
                 var $form = $this.closest('form')

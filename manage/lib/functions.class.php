@@ -13,6 +13,19 @@ class ManageFunc{
 
         $PARAM = Method::request('get', 'mod, href, p, sort, ordtg, ordsc, where, keyword, page');
 
+        foreach ($PARAM as $key => $value) {
+            if (!empty($value)) {
+                if (in_array($key, array('sort', 'ordtg', 'where', 'ordsc')) && !preg_match('/^[a-zA-Z0-9._-]+$/', $value)) {
+                    $PARAM[$key] = null;
+                    if ($key == 'where') $PARAM['keyword'] = null;
+                    if ($key == 'ordtg') $PARAM['ordsc'] = null;
+                }
+                if (in_array($key, array('ordsc')) && !in_array(strtolower($value), array('asc', 'desc'))) {
+                    $PARAM[$key] = 'desc';
+                }
+            } 
+        }
+
         if ($REQUEST['rewritetype'] == 'submit') {
             if ($MB['level'] > 1) Valid::error('', '관리자만 접근 가능합니다.');
 

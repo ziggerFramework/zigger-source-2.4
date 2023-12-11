@@ -26,7 +26,7 @@ RewriteRule ^(.*)/([0-9]+)$ index.php?rewritepage=$1&mode=view&read=$2&%1 [L]
 RewriteRule ^($|/.*) - [L]
 RewriteRule ^(.*)/$ index.php?rewritepage=$1 [L]
 
-RewriteCond %{REQUEST_URI} !(robots.txt|\.(?i:php|css|js|png|jpg|jpeg|gif|bmp|tiff|webp|woff|woff2|eot|svg))$ [NC]
+RewriteCond %{REQUEST_URI} !(robots.txt|\.(?i:html|php|css|js|png|jpg|jpeg|gif|bmp|tiff|webp|woff|woff2|eot|svg|ico|zip))$ [NC]
 RewriteCond %{QUERY_STRING} ^(.*)$ [NC]
 RewriteRule ^(.*)$ index.php?rewritepage=$1&%1 [L]
 

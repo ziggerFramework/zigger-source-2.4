@@ -47,7 +47,7 @@ ph_manage_script = {
     'set_navigator_action' : function() {
 
         var href = window.document.location.href;
-        href = PH_DIR +href.replace(PH_DOMAIN, '', href);
+        href = PH_DIR + href.replace(PH_DOMAIN, '', href);
     
         if (href.indexOf('?') !== -1) {
             href = PH_DIR + href.replace(PH_DOMAIN, '', href);

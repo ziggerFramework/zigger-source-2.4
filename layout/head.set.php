@@ -44,6 +44,7 @@ if ($use_respd === true) {
 <?php if ($CONF['favicon']) { ?>
 <link rel="icon" href="<?php echo $CONF['favicon']?>" />
 <link rel="shortcut icon" href="<?php echo $CONF['favicon']; ?>" />
+<link rel="apple-touch-icon" href="<?php echo $CONF['favicon']; ?>" />
 <?php } ?>
 <link rel="stylesheet" href="<?php echo PH_DIR; ?>/layout/css/jquery.common.css<?php echo SET_CACHE_HASH; ?>" />
 <link rel="stylesheet" href="<?php echo PH_DIR; ?>/layout/css/common.css<?php echo SET_CACHE_HASH; ?>" />

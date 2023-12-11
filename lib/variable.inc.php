@@ -46,7 +46,10 @@ if ($varsql->getcount() > 0) {
         $cfg = $varsql->fetchs();
         $CONF[$cfg['cfg_key']] = $cfg['cfg_value'];
 
-        if ($cfg['cfg_key'] == 'script' || $cfg['cfg_key'] == 'meta') {
+        $varsql->specialchars = 1;
+        $varsql->nl2br = 1;
+
+        if (in_array($cfg['cfg_key'], array('script', 'meta'))) {
             $varsql->specialchars = 0;
             $varsql->nl2br = 0;
 

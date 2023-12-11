@@ -149,9 +149,11 @@
 #comm-list .info .date {color: #999999;font-size: 12px;}
 #comm-list .info img {height: 13px;width: 13px;}
 #comm-list .comment {background: #f7f7f7;line-height: 22px;padding: 15px;}
-#comm-list .comment > p {display: block;}
-#comm-list .comment #comm-re-form {margin: 0;padding: 0;}
+#comm-list .comment > a[data-profile] {color: #000000;font-weight: bold;}
+#comm-list .comment > p {display: inline;}
+#comm-list .comment #comm-re-form {margin: 5px 0;padding: 0;}
 #comm-list .comment #comm-re-form .rep-ico {display: none;}
+#comm-list .comm-list-li.reply{margin-left: 20px;}
 
 #board-nodata {border-bottom: 1px solid #f1f1f1;color: #999999;display: block;margin-top: -1px;padding: 40px 0;text-align: center;}
 

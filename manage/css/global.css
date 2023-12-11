@@ -124,7 +124,7 @@ input[type=checkbox]:checked + label:before {border-color: #6b52e9;color: #6b52e
 #wrap {display: table;min-height: 100vh;width: 100%;}
 #wrap > * {display: table-cell;}
 #side {background: #ffffff;border-right: 1px solid #ccc;box-shadow: 2px 0 0 rgba(0,0,0,0.03);position: relative;vertical-align: top;width: 250px;z-index: 90;}
-#side .tab {background: #f6f6f6;border-bottom: 1px solid #dddddd;height: 50px;position: sticky;top: 0;}
+#side .tab {background: #f6f6f6;border-bottom: 1px solid #dddddd;height: 50px;position: sticky;top: 0;z-index: 2;}
 #side .tab li {box-sizing: border-box;display: inline-block;position: relative;transition: background 0.1s;vertical-align: top;width: 50%;}
 #side .tab li:first-child {border-right: 1px solid #dddddd;}
 #side .tab li a {color: #666666;display: block;font-weight: bold;letter-spacing: -1px;line-height: 50px;padding: 0 20px;text-align: center;text-decoration: none;}

@@ -277,6 +277,8 @@ class Result_clone_submit{
             bo_idx int(11) default null,
             mb_idx int(11) default '0',
             writer varchar(255) default null,
+            parent_mb_idx int(11) default '0',
+            parent_writer varchar(255) default null,
             comment text,
             ip varchar(255) default null,
             regdate datetime default null,
@@ -444,7 +446,7 @@ class Regist_submit {
         if (!$req['read_point']) $req['read_point'] = 0;
         if (!$req['write_point']) $req['write_point'] = 0;
 
-        $conf_exp = $sql->etcfd_exp(implode('|', $req['conf_exp']));
+        $conf_exp = $sql->etcfd_exp(implode('{|}', $req['conf_exp']));
 
         $req['use_list'] = $req['use_list'].'|'.$req['m_use_list'];
         $req['list_limit'] = $req['list_limit'].'|'.$req['m_list_limit'];
@@ -504,6 +506,8 @@ class Regist_submit {
             bo_idx int(11) default null,
             mb_idx int(11) default '0',
             writer varchar(255) default null,
+            parent_mb_idx int(11) default '0',
+            parent_writer varchar(255) default null,
             comment text,
             ip varchar(255) default null,
             regdate datetime default null,
@@ -915,7 +919,7 @@ class Modify_submit {
         if (!$req['read_point']) $req['read_point'] = 0;
         if (!$req['write_point']) $req['write_point'] = 0;
 
-        $conf_exp = $sql->etcfd_exp(implode('|', $req['conf_exp']));
+        $conf_exp = $sql->etcfd_exp(implode('{|}', $req['conf_exp']));
 
         $req['use_list'] = $req['use_list'].'|'.$req['m_use_list'];
         $req['list_limit'] = $req['list_limit'].'|'.$req['m_list_limit'];

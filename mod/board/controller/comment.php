@@ -93,16 +93,21 @@ class Load extends \Controller\Make_Controller {
             }
         }
 
-        // 대댓글인 경우 들여쓰기 클래스 부여
-        function reply_style($arr)
+        // 대댓글인 경우 원본 댓글의 회원 이름
+        function print_parent_writer($arr)
         {
-            if ($arr['rn'] > 0) {
-                $ml = 20;
+            global $req;
 
-                if (Func::chkdevice() == 'mobile') $ml = 10;
-                $style = 'margin-left: '.($arr['rn'] * $ml).'px;';
+            if (!empty($arr['parent_writer'])) {
+                if (isset($req['request']) && $req['request'] == 'manage') {
+                    return '<a href="'.PH_MANAGE_DIR.'/member/modify?idx='.$arr['parent_mb_idx'].'" target="_blank">@'.$arr['parent_writer'].'</a>';
 
-                return $style;
+                } else {
+                    return '<a href="#" data-profile="'.$arr['parent_mb_idx'].'">@'.$arr['parent_writer'].'</a>';
+                }
+
+            } else {
+                return '';
             }
         }
 
@@ -164,7 +169,7 @@ class Load extends \Controller\Make_Controller {
                 left outer join {$sql->table("member")} member
                 on comment.mb_idx=member.mb_idx
                 where bo_idx=:col1
-                order by ln asc, rn asc, regdate asc
+                order by ln asc, regdate asc
                 ",
                 array(
                     $req['read']
@@ -180,12 +185,12 @@ class Load extends \Controller\Make_Controller {
                     $arr['comment'] = replace_comment($arr);
                     $arr['date'] = Func::date($arr['regdate']);
                     $arr['datetime'] = Func::datetime($arr['regdate']);
-                    $arr[0]['reply_style'] = reply_style($arr);
                     $arr[0]['reply_btn'] = reply_btn($arr, $view);
                     $arr[0]['modify_btn'] = modify_btn($arr, $view);
                     $arr[0]['delete_btn'] = delete_btn($arr, $view);
                     $arr[0]['profileimg'] = print_profileimg($arr);
                     $arr[0]['writer'] = print_writer($arr);
+                    $arr[0]['parent_writer'] = print_parent_writer($arr);
 
                     $print_arr[] = $arr;
 
@@ -427,56 +432,35 @@ class Comment_submit {
         $ln = (int)$sql->fetch('ln');
         $ln_min = (int)(floor($ln / 1000) * 1000);
         $ln_next = (int)$ln_min + 1000;
-
-        // 같은 레벨중 바로 아래 답글의 ln 값을 불러옴
+        
+        // 같은 레벨의 최대 ln값 가져옴
         $sql->query(
             "
             select
-            if( min(ln)>:col1,min(ln),:col2 ) ln
+            max(ln) as max_ln
             from {$sql->table("mod:board_cmt_".$board_id)}
-            where ln<:col2 and ln>:col1 and rn=:col3 and bo_idx=:col4
+            where ln>=:col1 and ln<:col2 and bo_idx=:col4
             ",
             array(
                 $ln, $ln_next, $rn, $bo_idx
             )
         );
-        $ln_tar = $sql->fetch('ln');
+        $ln_isrt = $sql->fetch('max_ln') + 1;
 
-        // 댓글의 ln값 부여, 다른 댓글의 ln 정렬
-        $sql->query(
-            "
-            select if( max(ln)>:col1,max(ln),:col1 ) ln
-            from {$sql->table("mod:board_cmt_".$board_id)}
-            where bo_idx=:col2 and ln>:col1 and ln<:col3 and rn>:col4
-            ",
-            array(
-                $ln, $bo_idx, $ln_tar, $rn
-            )
-        );
-
-        $ln_isrt = $sql->fetch('ln') + 1;
-
-        $sql->query(
-            "
-            update {$sql->table("mod:board_cmt_".$board_id)}
-            set ln=ln+1
-            where ln<:col1 and ln>=:col2 and rn>0
-            ",
-            array(
-                $ln_next, $ln_isrt
-            )
-        );
+        // 부모 댓글의 회원 이름
+        $parent_mb_idx = ($rn_next > 1 && !empty($comm_arr['mb_idx'])) ? $comm_arr['mb_idx'] : 0;
+        $parent_writer = ($rn_next > 1 && !empty($comm_arr['writer'])) ? $comm_arr['writer'] : null;
 
         // insert
         $sql->query(
             "
             insert into {$sql->table("mod:board_cmt_".$board_id)}
-            (ln, rn, bo_idx, mb_idx, writer, comment, ip, regdate, cmt_1, cmt_2, cmt_3, cmt_4, cmt_5, cmt_6, cmt_7, cmt_8, cmt_9, cmt_10)
+            (parent_mb_idx, parent_writer, ln, rn, bo_idx, mb_idx, writer, comment, ip, regdate, cmt_1, cmt_2, cmt_3, cmt_4, cmt_5, cmt_6, cmt_7, cmt_8, cmt_9, cmt_10)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, '{$_SERVER['REMOTE_ADDR']}', now(), :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16)
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, '{$_SERVER['REMOTE_ADDR']}', now(), :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18)
             ",
             array(
-                $ln_isrt, $rn_next, $req['read'], $mb_idx, $writer, $req['re_comment'], $req['cmt_1'], $req['cmt_2'], $req['cmt_3'], $req['cmt_4'], $req['cmt_5'],
+                $parent_mb_idx, $parent_writer, $ln_isrt, $rn_next, $req['read'], $mb_idx, $writer, $req['re_comment'], $req['cmt_1'], $req['cmt_2'], $req['cmt_3'], $req['cmt_4'], $req['cmt_5'],
                 $req['cmt_6'], $req['cmt_7'], $req['cmt_8'], $req['cmt_9'], $req['cmt_10']
             )
         );
