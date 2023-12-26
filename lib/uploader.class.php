@@ -106,7 +106,7 @@ class Uploader {
         $sql->query(
             "
             insert into {$sql->table("dataupload")}
-            (`filepath`, `orgfile`, `repfile`, st`orage, `byte`, `regdate`)
+            (`filepath`, `orgfile`, `repfile`, `storage`, `byte`, `regdate`)
             values
             (:col1, :col2, :col3, :col4, :col5, now())
             ",
