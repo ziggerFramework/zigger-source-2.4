@@ -78,7 +78,7 @@ class Message_send_submit {
             "
             select *
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_dregdate is null
+            where `mb_id`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $req['to_mb_id']
@@ -109,7 +109,7 @@ class Message_send_submit {
         $sql->query(
             "
             insert into {$sql->table("mod:message")}
-            (hash, from_mb_idx, to_mb_idx, parent_idx, article, regdate)
+            (`hash`, `from_mb_idx`, `to_mb_idx`, `parent_idx`, `article`, `regdate`)
             values
             (:col1, :col2, :col3, :col4, :col5, now())
             ",
@@ -122,8 +122,8 @@ class Message_send_submit {
         $sql->query(
             "
             update {$sql->table("mod:message")}
-            set parent_idx=idx
-            where parent_idx=0 or parent_idx is null
+            set `parent_idx`=idx
+            where `parent_idx`=0 or `parent_idx` is null
             ", []
         );
 

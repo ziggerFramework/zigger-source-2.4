@@ -130,7 +130,7 @@ class Tomember_submit{
                 "
                 select *
                 from {$sql->table("member")}
-                where mb_id=:col1 and mb_dregdate is null
+                where `mb_id`=:col1 and `mb_dregdate` is null
                 ",
                 array(
                     $req['to_mb']
@@ -156,8 +156,8 @@ class Tomember_submit{
                 "
                 select *
                 from {$sql->table("member")}
-                where mb_level>=:col1 and mb_level<=:col2 and mb_phone is not null and mb_phone!='' and mb_dregdate is null
-                order by mb_idx ASC
+                where `mb_level`>=:col1 and `mb_level`<=:col2 and `mb_phone` is not null and `mb_phone`!='' and `mb_dregdate` is null
+                order by `mb_idx` ASC
                 ",
                 array(
                     $req['level_from'], $req['level_to']
@@ -247,7 +247,7 @@ class Tomember_submit{
         $sql->query(
             "
             insert into {$sql->table("sentsms")}
-            (sendtype, to_mb, level_from, level_to, subject, memo, use_resv, resv_date, resv_hour, resv_min, to_phone, regdate)
+            (`sendtype`, `to_mb`, `level_from`, `level_to`, `subject`, `memo`, `use_resv`, `resv_date`, `resv_hour`, `resv_min`, `to_phone`, `regdate`)
             values
             (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, now())
             ",
@@ -349,17 +349,17 @@ class History extends \Controller\Make_Controller {
             (
                 select count(*)
                 from {$sql->table("sentsms")}
-                where to_mb is not null and to_mb!=''
+                where `to_mb` is not null and `to_mb`!=''
             ) to_mb_total,
             (
                 select count(*)
                 from {$sql->table("sentsms")}
-                where (to_mb is null OR to_mb='') and (to_phone is null OR to_phone='')
+                where (`to_mb` is null or `to_mb`='') and (`to_phone` is null or `to_phone`='')
             ) level_from_total,
             (
                 select count(*)
                 from {$sql->table("sentsms")}
-                where to_phone is not null and to_phone!=''
+                where `to_phone` is not null and `to_phone`!=''
             ) to_phone_total
             ", []
         );

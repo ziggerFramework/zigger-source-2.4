@@ -57,7 +57,7 @@ class Make_Controller {
             "
             select *
             from {$sql->table("sitemap")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $key
@@ -73,7 +73,7 @@ class Make_Controller {
                 "
                 select *
                 from {$sql->table("sitemap")}
-                where caidx=:col1
+                where `caidx`=:col1
                 ",
                 array(
                     substr($caidx, 0, 4 * $i)

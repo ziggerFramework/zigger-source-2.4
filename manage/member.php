@@ -57,12 +57,12 @@ class Result extends \Controller\Make_Controller {
             (
                 select count(*)
                 from {$sql->table("member")}
-                where mb_adm!='Y' and mb_dregdate is null
+                where `mb_adm`!='Y' and `mb_dregdate` is null
             ) mb_total,
             (
                 select count(*)
                 from {$sql->table("member")}
-                where mb_email_chk='Y' and mb_adm!='Y' and mb_dregdate is null
+                where `mb_email_chk`='Y' and `mb_adm`!='Y' and `mb_dregdate` is null
             ) emchk_total
             ", []
         );
@@ -94,7 +94,7 @@ class Result extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("member")}
-                where mb_adm!='Y' and mb_dregdate is null $sortby $searchby
+                where `mb_adm`!='Y' and `mb_dregdate` is null $sortby $searchby
                 order by $orderby
                 ", []
             )
@@ -262,7 +262,7 @@ class Regist_submit {
             "
             select *
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_dregdate is null
+            where `mb_id`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $req['id']
@@ -275,7 +275,7 @@ class Regist_submit {
             "
             select *
             from {$sql->table("member")}
-            where mb_email=:col1 and mb_dregdate is null
+            where `mb_email`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $req['email']
@@ -291,7 +291,7 @@ class Regist_submit {
         $sql->query(
             "
             insert into {$sql->table("member")}
-            (mb_id, mb_email, mb_pwd, mb_name, mb_level, mb_gender, mb_phone, mb_telephone, mb_address, mb_email_chk, mb_regdate, mb_1, mb_2, mb_3, mb_4, mb_5, mb_6, mb_7, mb_8, mb_9, mb_10, mb_exp)
+            (`mb_id`, `mb_email`, `mb_pwd`, `mb_name`, `mb_level`, `mb_gender`, `mb_phone`, `mb_telephone`, `mb_address`, `mb_email_chk`, `mb_regdate`, `mb_1`, `mb_2`, `mb_3`, `mb_4`, `mb_5`, `mb_6`, `mb_7`, `mb_8`, `mb_9`, `mb_10`, `mb_exp`)
             values
             (:col1, :col2, {$sql->set_password($req['pwd'])}, :col3, :col4, :col5, :col6, :col7, :col8, :col9, now(), :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, :col20)
             ",
@@ -303,9 +303,9 @@ class Regist_submit {
 
         $sql->query(
             "
-            select mb_idx
+            select `mb_idx`
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_pwd={$sql->set_password($req['pwd'])} and mb_dregdate is null
+            where `mb_id`=:col1 and `mb_pwd`={$sql->set_password($req['pwd'])} and `mb_dregdate` is null
             ",
             array(
                 $req['id']
@@ -344,7 +344,7 @@ class Regist_submit {
             $sql->query(
                 "
                 insert into {$sql->table("mbchk")}
-                (mb_idx, chk_code, chk_chk, chk_regdate)
+                (`mb_idx`, `chk_code`, `chk_chk`, `chk_regdate`)
                 values
                 (:col1, :col2, 'N', now())
                 ",
@@ -406,7 +406,7 @@ class Modify extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("member")}
-            where mb_adm!='Y' and mb_dregdate is null and mb_idx=:col1
+            where `mb_adm`!='Y' and `mb_dregdate` is null and `mb_idx`=:col1
             limit 1
             ",
             array(
@@ -562,7 +562,7 @@ class Modify_submit {
             "
             select *
             from {$sql->table("member")}
-            where mb_dregdate is null and mb_email=:col1 and mb_idx!=:col2
+            where `mb_dregdate` is null and `mb_email`=:col1 and `mb_idx`!=:col2
             ",
             array(
                 $req['email'],
@@ -575,7 +575,7 @@ class Modify_submit {
             "
             select *
             from {$sql->table("member")}
-            where mb_adm!='Y' and mb_dregdate is null and mb_idx=:col1
+            where `mb_adm`!='Y' and `mb_dregdate` is null and `mb_idx`=:col1
             limit 1
             ",
             array(
@@ -652,9 +652,9 @@ class Modify_submit {
             $sql->query(
                 "
                 update {$sql->table("member")}
-                set mb_pwd={$sql->set_password($req['pwd'])}, mb_name=:col2, mb_gender=:col3, mb_phone=:col4, mb_telephone=:col5, mb_address=:col6, mb_point=:col7, mb_profileimg=:col8, mb_level=:col9,
-                mb_email=:col10, mb_email_chk=:col11, mb_1=:col12, mb_2=:col13, mb_3=:col14, mb_4=:col15, mb_5=:col16, mb_6=:col17, mb_7=:col18, mb_8=:col19, mb_9=:col20, mb_10=:col21, mb_exp=:col22
-                where mb_adm!='Y' and mb_dregdate is null and mb_idx=:col1
+                set `mb_pwd`={$sql->set_password($req['pwd'])}, `mb_name`=:col2, `mb_gender`=:col3, `mb_phone`=:col4, `mb_telephone`=:col5, `mb_address`=:col6, `mb_point`=:col7, `mb_profileimg`=:col8, `mb_level`=:col9,
+                `mb_email`=:col10, `mb_email_chk`=:col11, `mb_1`=:col12, `mb_2`=:col13, `mb_3`=:col14, `mb_4`=:col15, `mb_5`=:col16, `mb_6`=:col17, `mb_7`=:col18, `mb_8`=:col19, `mb_9`=:col20, `mb_10`=:col21, `mb_exp`=:col22
+                where `mb_adm`!='Y' and `mb_dregdate` is null and `mb_idx`=:col1
                 ",
                 array(
                     $req['idx'], $req['name'], $req['gender'], $req['phone'], $req['telephone'], $req['address1'].'|'.$req['address2'].'|'.$req['address3'], $req['point'], $profileimg_name, $req['level'],
@@ -668,9 +668,9 @@ class Modify_submit {
             $sql->query(
                 "
                 update {$sql->table("member")}
-                set mb_pwd=:col2, mb_name=:col3, mb_gender=:col4, mb_phone=:col5, mb_telephone=:col6, mb_address=:col7, mb_point=:col8, mb_profileimg=:col9, mb_level=:col10,
-                mb_email=:col11, mb_email_chk=:col12, mb_1=:col13, mb_2=:col14, mb_3=:col15, mb_4=:col16, mb_5=:col17, mb_6=:col18, mb_7=:col19, mb_8=:col20, mb_9=:col21, mb_10=:col22, mb_exp=:col23
-                where mb_adm!='Y' and mb_dregdate is null and mb_idx=:col1
+                set `mb_pwd`=:col2, `mb_name`=:col3, `mb_gender`=:col4, `mb_phone`=:col5, `mb_telephone`=:col6, `mb_address`=:col7, `mb_point`=:col8, `mb_profileimg`=:col9, `mb_level`=:col10,
+                `mb_email`=:col11, `mb_email_chk`=:col12, `mb_1`=:col13, `mb_2`=:col14, `mb_3`=:col15, `mb_4`=:col16, `mb_5`=:col17, `mb_6`=:col18, `mb_7`=:col19, `mb_8`=:col20, `mb_9`=:col21, `mb_10`=:col22, `mb_exp`=:col23
+                where `mb_adm`!='Y' and `mb_dregdate` is null and `mb_idx`=:col1
                 ",
                 array(
                     $req['idx'], $arr['mb_pwd'], $req['name'], $req['gender'], $req['phone'], $req['telephone'], $req['address1'].'|'.$req['address2'].'|'.$req['address3'], $req['point'], $profileimg_name, $req['level'],
@@ -705,7 +705,7 @@ class Modify_submit {
             "
             select *
             from {$sql->table("member")}
-            where mb_adm!='Y' and mb_dregdate is null and mb_idx=:col1
+            where `mb_adm`!='Y' and `mb_dregdate` is null and `mb_idx`=:col1
             limit 1
             ",
             array(
@@ -722,8 +722,8 @@ class Modify_submit {
         $sql->query(
             "
             update {$sql->table("member")}
-            set mb_dregdate=now()
-            where mb_dregdate is null and mb_idx=:col1
+            set `mb_dregdate`=now()
+            where `mb_dregdate` is null and `mb_idx`=:col1
             ",
             array(
                 $req['idx']
@@ -777,7 +777,7 @@ class Unsigned extends \Controller\Make_Controller {
             (
                 select count(*)
                 from {$sql->table("member")}
-                where mb_adm!='Y' and mb_dregdate is not null
+                where `mb_adm`!='Y' and `mb_dregdate` is not null
             ) mb_total
             ", []
         );
@@ -794,7 +794,7 @@ class Unsigned extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("member")}
-                where mb_adm!='Y' and mb_dregdate is not null $sortby $searchby
+                where `mb_adm`!='Y' and `mb_dregdate` is not null $sortby $searchby
                 order by $orderby
                 ", []
             )
@@ -937,17 +937,17 @@ class Record extends \Controller\Make_Controller {
             (
                 select count(*)
                 from {$sql->table("visitcount")}
-                where date_format(regdate,'%Y-%m-%d') between :col1 and :col2
+                where date_format(`regdate`, '%Y-%m-%d') between :col1 and :col2
             ) device_total,
             (
                 select count(*)
                 from {$sql->table("visitcount")}
-                where date_format(regdate,'%Y-%m-%d') between :col1 and :col2 and device='pc'
+                where date_format(`regdate`, '%Y-%m-%d') between :col1 and :col2 and `device`='pc'
             ) device_pc,
             (
                 select count(*)
                 from {$sql->table("visitcount")}
-                where date_format(regdate,'%Y-%m-%d') between :col1 and :col2 and mb_idx!=0
+                where date_format(`regdate`, '%Y-%m-%d') between :col1 and :col2 and `mb_idx`!=0
             ) member_total
             ",
             array(
@@ -973,11 +973,11 @@ class Record extends \Controller\Make_Controller {
         $sql->query(
             $paging->query(
                 "
-                select visit.*,IFNULL(member.mb_level,10) mb_level
+                select visit.*, ifnull(member.mb_level,10) mb_level
                 from {$sql->table("visitcount")} visit
                 left outer join {$sql->table("member")} member
                 on visit.mb_idx=member.mb_idx
-                where date_format(visit.regdate,'%Y-%m-%d') between date('{$req['fdate']}') and date('{$req['tdate']}') $sortby $searchby
+                where date_format(visit.regdate, '%Y-%m-%d') between date('{$req['fdate']}') and date('{$req['tdate']}') $sortby $searchby
                 order by $orderby
                 ", []
             )
@@ -1054,7 +1054,7 @@ class Session extends \Controller\Make_Controller {
             (
                 select count(*)
                 from {$sql->table("session")}
-                where regdate>=date_sub(now(),interval 10 minute)
+                where `regdate`>=date_sub(now(), interval 10 minute)
             ) stat_total
             ", []
         );
@@ -1069,12 +1069,12 @@ class Session extends \Controller\Make_Controller {
         $sql->query(
             $paging->query(
                 "
-                select sess.*,member.*,IFNULL(member.mb_level,10) mb_level
+                select sess.*, member.*, ifnull(member.mb_level, 10) mb_level
                 from {$sql->table("session")} sess
                 left outer join
                 {$sql->table("member")} member
                 on sess.mb_idx=member.mb_idx
-                where regdate>=date_sub(now(),interval 10 minute) $sortby $searchby
+                where `regdate`>=date_sub(now(), interval 10 minute) $sortby $searchby
                 order by $orderby
                 ", []
             ),''
@@ -1158,14 +1158,14 @@ class Point extends \Controller\Make_Controller {
                 from {$sql->table("mbpoint")}
             ) act_total,
             (
-                select sum(p_in)
+                select sum(`p_in`)
                 from {$sql->table("mbpoint")}
-                where p_in>0
+                where `p_in`>0
             ) in_total,
             (
-                select sum(p_out)
+                select sum(`p_out`)
                 from {$sql->table("mbpoint")}
-                where p_out>0
+                where `p_out`>0
             ) out_total
             ", []
         );
@@ -1185,7 +1185,7 @@ class Point extends \Controller\Make_Controller {
         $sql->query(
             $paging->query(
                 "
-                select mbpoint.*,member.*
+                select mbpoint.*, member.*
                 from {$sql->table("mbpoint")} mbpoint
                 left outer join
                 {$sql->table("member")} member
@@ -1289,7 +1289,7 @@ class Point_submit{
             "
             select mb_idx
             from {$sql->table("member")}
-            where mb_dregdate is null and ($id_qry)
+            where `mb_dregdate` is null and ($id_qry)
             ", []
         );
 

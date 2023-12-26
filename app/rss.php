@@ -18,7 +18,7 @@ class Index {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='engine'
+            where `cfg_type`='engine'
             ", []
         );
 
@@ -52,7 +52,7 @@ class Index {
                 "
                 select *
                 from {$sql->table("config")}
-                where cfg_type='mod:board:config:{$value['board_id']}' and cfg_key='id' and cfg_value=:col1
+                where `cfg_type`='mod:board:config:{$value['board_id']}' and `cfg_key`='id' and `cfg_value`=:col1
                 ", array(
                     $value['board_id']
                 )
@@ -72,7 +72,7 @@ class Index {
                 "
                 select *
                 from {$sql->table("mod:board_data_{$value['board_id']}")}
-                order by regdate desc
+                order by `regdate` desc
                 limit 20
                 ", []
             );

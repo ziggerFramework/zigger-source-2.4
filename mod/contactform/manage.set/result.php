@@ -54,9 +54,9 @@ class Result extends \Controller\Make_Controller {
             "
             select
             (
-            select COUNT(*)
+            select count(*)
             from {$sql->table("mod:contactform")}
-            where name is not null
+            where `name` is not null
             ) contactform_total
             ", []
         );
@@ -73,7 +73,7 @@ class Result extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:contactform")}
-                where name is not null $sortby $searchby
+                where `name` is not null $sortby $searchby
                 order by $orderby
                 ", []
             )
@@ -147,7 +147,7 @@ class View extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mod:contactform")}
-            where idx=:col1
+            where `idx`=:col1
             limit 1
             ",
             array(
@@ -187,7 +187,7 @@ class View extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:contactform")}
-                where idx=:col1
+                where `idx`=:col1
                 limit 1
                 ",
                 array(
@@ -282,9 +282,9 @@ class View_submit{
             "
             insert into
             {$sql->table("mod:contactform")}
-            (article,regdate)
+            (`article`, `regdate`)
             values
-            (:col1,now())
+            (:col1, now())
             ",
             array(
                 $req['article']
@@ -293,9 +293,9 @@ class View_submit{
 
         $sql->query(
             "
-            select idx
+            select `idx`
             from {$sql->table("mod:contactform")}
-            where article=:col1
+            where `article`=:col1
             ",
             array(
                 $req['article']
@@ -306,8 +306,8 @@ class View_submit{
         $sql->query(
             "
             update {$sql->table("mod:contactform")}
-            SET rep_idx=:col1
-            where idx=:col2
+            SET `rep_idx`=:col1
+            where `idx`=:col2
             ",
             array(
                 $rep_idx,
@@ -319,7 +319,7 @@ class View_submit{
             "
             select *
             from {$sql->table("mod:contactform")}
-            where idx=:col1
+            where `idx`=:col1
             limit 1
             ",
             array(
@@ -374,7 +374,7 @@ class View_submit{
             "
             select *
             from {$sql->table("mod:contactform")}
-            where idx=:col1
+            where `idx`=:col1
             limit 1
             ",
             array(
@@ -390,7 +390,7 @@ class View_submit{
             "
             delete
             from {$sql->table("mod:contactform")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -401,7 +401,7 @@ class View_submit{
             "
             delete
             from {$sql->table("mod:contactform")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $rep_idx

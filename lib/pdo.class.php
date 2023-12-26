@@ -62,8 +62,8 @@ class Pdosql {
             "
             select count(*) booleans
             from Information_schema.tables
-            where table_schema = '".self::$DB_NAME."'
-            and table_name = '".$this->table($tblName)."'
+            where `table_schema` = '".self::$DB_NAME."'
+            and `table_name` = '".$this->table($tblName)."'
             "
         );
 

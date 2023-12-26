@@ -160,8 +160,8 @@ class Regist_submit{
             "
             select *
             from {$sql->table("mailtpl")}
-            where type=:col1
-            order by regdate DESC
+            where `type`=:col1
+            order by `regdate` DESC
             ",
             array(
                 $req['type']
@@ -173,7 +173,7 @@ class Regist_submit{
         $sql->query(
             "
             insert into {$sql->table("mailtpl")}
-            (type, title, html, regdate)
+            (`type`, `title`, `html`, `regdate`)
             VALUES
             (:col1, :col2, :col3, now())
             ",
@@ -186,8 +186,8 @@ class Regist_submit{
             "
             select *
             from {$sql->table("mailtpl")}
-            where type=:col1
-            order by regdate DESC
+            where `type`=:col1
+            order by `regdate` DESC
             ",
             array(
                 $req['type']
@@ -231,7 +231,7 @@ class Modify extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mailtpl")}
-            where idx=:col1
+            where `idx`=:col1
             limit 1
             ",
             array(
@@ -315,7 +315,7 @@ class Modify_submit{
             "
             select *
             from {$sql->table("mailtpl")}
-            where idx=:col1
+            where `idx`=:col1
             limit 1
             ",
             array(
@@ -335,8 +335,8 @@ class Modify_submit{
             $sql->query(
                 "
                 update {$sql->table("mailtpl")}
-                set html=:col1
-                where idx=:col2
+                set `html`=:col1
+                where `idx`=:col2
                 ",
                 array(
                     $req['html'], $req['idx']
@@ -348,8 +348,8 @@ class Modify_submit{
             $sql->query(
                 "
                 update {$sql->table("mailtpl")}
-                set title=:col1,html=:col2
-                where idx=:col3
+                set `title`=:col1, `html`=:col2
+                where `idx`=:col3
                 ",
                 array(
                     $req['title'], $req['html'], $req['idx']
@@ -381,7 +381,7 @@ class Modify_submit{
             "
             select *
             from {$sql->table("mailtpl")}
-            where idx=:col1
+            where `idx`=:col1
             limit 1
             ",
             array(
@@ -396,7 +396,7 @@ class Modify_submit{
             "
             delete
             from {$sql->table("mailtpl")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -438,8 +438,8 @@ class Send extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mailtpl")}
-                where system='N' or type='default'
-                order by type asc
+                where `system`='N' or `type`='default'
+                order by `type` asc
                 ", []
             );
 
@@ -538,7 +538,7 @@ class Send_submit{
                 "
                 select *
                 from {$sql->table("member")}
-                where mb_id=:col1 and mb_dregdate is null
+                where `mb_id`=:col1 and `mb_dregdate` is null
                 ",
                 array(
                     $req['to_mb']
@@ -561,8 +561,8 @@ class Send_submit{
                 "
                 select *
                 from {$sql->table("member")}
-                where mb_level>=:col1 and mb_level<=:col2 and mb_dregdate is null
-                order by mb_idx asc
+                where `mb_level`>=:col1 and `mb_level`<=:col2 and `mb_dregdate` is null
+                order by `mb_idx` asc
                 ",
                 array(
                     $req['level_from'],
@@ -595,7 +595,7 @@ class Send_submit{
         $sql->query(
             "
             insert into {$sql->table("sentmail")}
-            (to_mb, level_from, level_to, subject, html, regdate)
+            (`to_mb`, `level_from`, `level_to`, `subject`, `html`, `regdate`)
             VALUES
             (:col1, :col2, :col3, :col4, :col5, now())
             ",
@@ -606,10 +606,10 @@ class Send_submit{
 
         $sql->query(
             "
-            select idx
+            select `idx`
             from {$sql->table("sentmail")}
-            where subject=:col1
-            order by regdate DESC
+            where `subject`=:col1
+            order by `regdate` DESC
             limit 1
             ",
             array(
@@ -698,12 +698,12 @@ class History extends \Controller\Make_Controller {
             (
                 select count(*)
                 from {$sql->table("sentmail")}
-                where to_mb is not null and to_mb!=''
+                where `to_mb` is not null and `to_mb`!=''
             ) to_mb_total,
             (
                 select count(*)
                 from {$sql->table("sentmail")}
-                where to_mb is null or to_mb=''
+                where `to_mb` is null or `to_mb`=''
             ) level_from_total
             ", []
         );
@@ -878,7 +878,7 @@ class Historyview extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("sentmail")}
-            where idx=:col1
+            where `idx`=:col1
             limit 1
             ",
             array(

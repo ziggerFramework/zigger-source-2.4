@@ -132,7 +132,7 @@ class Mail extends \Make\Database\Pdosql {
                 "
                 select *
                 from {$this->table("mailtpl")}
-                where type=:col1
+                where `type`=:col1
                 ",
                 array(
                     $this->tpl

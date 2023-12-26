@@ -138,7 +138,7 @@ class Load extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mod:board_data_".$board_id)}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['read']
@@ -168,8 +168,8 @@ class Load extends \Controller\Make_Controller {
                 from {$sql->table("mod:board_cmt_".$board_id)} comment
                 left outer join {$sql->table("member")} member
                 on comment.mb_idx=member.mb_idx
-                where bo_idx=:col1
-                order by ln asc, regdate asc
+                where `bo_idx`=:col1
+                order by `ln` asc, `regdate` asc
                 ",
                 array(
                     $req['read']
@@ -247,7 +247,7 @@ class Comment_submit {
             "
             select *
             from {$sql->table("mod:board_data_".$board_id)}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['read']
@@ -323,9 +323,9 @@ class Comment_submit {
         // ln값 처리
         $sql->query(
             "
-            select max(ln)+1000 as ln_max
+            select max(`ln`)+1000 as ln_max
             from {$sql->table("mod:board_cmt_".$board_id)}
-            where bo_idx=:col1
+            where `bo_idx`=:col1
             ",
             array(
                 $req['read']
@@ -339,7 +339,7 @@ class Comment_submit {
         $sql->query(
             "
             insert into {$sql->table("mod:board_cmt_".$board_id)}
-            (ln, rn, bo_idx, mb_idx, writer, comment, ip, regdate, cmt_1, cmt_2, cmt_3, cmt_4, cmt_5, cmt_6, cmt_7, cmt_8, cmt_9, cmt_10)
+            (`ln`, `rn`, `bo_idx`, `mb_idx`, `writer`, `comment`, `ip`, `regdate`, `cmt_1`, `cmt_2`, `cmt_3`, `cmt_4`, `cmt_5`, `cmt_6`, `cmt_7`, `cmt_8`, `cmt_9`, `cmt_10`)
             values
             (:col1, :col2, :col3, :col4, :col5, :col6, '{$_SERVER['REMOTE_ADDR']}', now(), :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16)
             ",
@@ -415,7 +415,7 @@ class Comment_submit {
             "
             select *
             from {$sql->table("mod:board_cmt_".$board_id)}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['cidx']
@@ -437,9 +437,9 @@ class Comment_submit {
         $sql->query(
             "
             select
-            max(ln) as max_ln
+            max(`ln`) as max_ln
             from {$sql->table("mod:board_cmt_".$board_id)}
-            where ln>=:col1 and ln<:col2 and bo_idx=:col4
+            where `ln`>=:col1 and `ln`<:col2 and `bo_idx`=:col4
             ",
             array(
                 $ln, $ln_next, $rn, $bo_idx
@@ -455,7 +455,7 @@ class Comment_submit {
         $sql->query(
             "
             insert into {$sql->table("mod:board_cmt_".$board_id)}
-            (parent_mb_idx, parent_writer, ln, rn, bo_idx, mb_idx, writer, comment, ip, regdate, cmt_1, cmt_2, cmt_3, cmt_4, cmt_5, cmt_6, cmt_7, cmt_8, cmt_9, cmt_10)
+            (`parent_mb_idx`, `parent_writer`, `ln`, `rn`, `bo_idx`, `mb_idx`, `writer`, `comment`, `ip`, `regdate`, `cmt_1`, `cmt_2`, `cmt_3`, `cmt_4`, `cmt_5`, `cmt_6`, `cmt_7`, `cmt_8`, `cmt_9`, `cmt_10`)
             values
             (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, '{$_SERVER['REMOTE_ADDR']}', now(), :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18)
             ",
@@ -504,7 +504,7 @@ class Comment_submit {
             "
             select *
             from {$sql->table("mod:board_cmt_".$board_id)}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['cidx']
@@ -533,8 +533,8 @@ class Comment_submit {
         $sql->query(
             "
             update {$sql->table("mod:board_cmt_".$board_id)}
-            set writer=:col2, comment=:col3, ip='{$_SERVER['REMOTE_ADDR']}', cmt_1=:col4, cmt_2=:col5, cmt_3=:col6, cmt_4=:col7, cmt_5=:col8, cmt_6=:col9, cmt_7=:col10, cmt_8=:col11, cmt_9=:col12, cmt_10=:col13
-            where idx=:col1
+            set `writer`=:col2, `comment`=:col3, ip='{$_SERVER['REMOTE_ADDR']}', `cmt_1`=:col4, `cmt_2`=:col5, `cmt_3`=:col6, `cmt_4`=:col7, `cmt_5`=:col8, `cmt_6`=:col9, `cmt_7`=:col10, `cmt_8`=:col11, `cmt_9`=:col12, `cmt_10`=:col13
+            where `idx`=:col1
             ",
             array(
                 $req['cidx'], $writer, $req['re_comment'], $req['cmt_1'], $req['cmt_2'], $req['cmt_3'], $req['cmt_4'], $req['cmt_5'], $req['cmt_6'], $req['cmt_7'], $req['cmt_8'], $req['cmt_9'], $req['cmt_10']
@@ -565,7 +565,7 @@ class Comment_submit {
             "
             select *
             from {$sql->table("mod:board_cmt_".$board_id)}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['cidx']
@@ -586,7 +586,7 @@ class Comment_submit {
                 "
                 select *
                 from {$sql->table("mod:board_cmt_".$board_id)}
-                where ln<:col1 and ln>:col2 and rn>=:col3 and bo_idx=:col4
+                where `ln`<:col1 and `ln`>:col2 and `rn`>=:col3 and `bo_idx`=:col4
                 ",
                 array(
                     $ln_max, $ln_min, 0, $req['read']
@@ -600,7 +600,7 @@ class Comment_submit {
                 "
                 select *
                 from {$sql->table("mod:board_cmt_".$board_id)}
-                where ln<:col1 and ln>:col2 and rn=:col3 and bo_idx=:col4
+                where `ln`<:col1 and `ln`>:col2 and `rn`=:col3 and `bo_idx`=:col4
                 ",
                 array(
                     $ln_max, $arr['ln'], $arr['rn'], $req['read']
@@ -614,7 +614,7 @@ class Comment_submit {
                 "
                 select *
                 from {$sql->table("mod:board_cmt_".$board_id)}
-                where ln<:col1 and ln>:col2 and rn>=:col3 and bo_idx=:col4
+                where `ln`<:col1 and `ln`>:col2 and `rn`>=:col3 and `bo_idx`=:col4
                 ",
                 array(
                     $wr_ln, $arr['ln'], $arr['rn'], $req['read']
@@ -629,7 +629,7 @@ class Comment_submit {
             "
             delete
             from {$sql->table("mod:board_cmt_".$board_id)}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['cidx']

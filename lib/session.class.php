@@ -57,7 +57,7 @@ class SessionHandler extends \Make\Database\Pdosql {
             "
             select *
             from {$this->table("session")}
-            where sesskey=:col1 and expiry>
+            where `sesskey`=:col1 and `expiry`>
             ".time(),
             array(
                 $key
@@ -74,7 +74,7 @@ class SessionHandler extends \Make\Database\Pdosql {
             $this->query(
                 "
                 insert into {$this->table("session")}
-                (sesskey, expiry, value, mb_idx, ip, regdate)
+                (`sesskey`, `expiry`, `value`, `mb_idx`, `ip`, `regdate`)
                 VALUES
                 (:col1, :col2, 0, 0, :col3, now())
                 ",
@@ -99,8 +99,8 @@ class SessionHandler extends \Make\Database\Pdosql {
             $this->query(
                 "
                 update {$this->table("session")}
-                set expiry=:col1, value=:col2, regdate=now(), mb_idx=:col3
-                where sesskey=:col4 and expiry>
+                set `expiry`=:col1, `value`=:col2, `regdate`=now(), `mb_idx`=:col3
+                where `sesskey`=:col4 and `expiry`>
                 ".time(),
                 array(
                     $this->expiry,
@@ -114,8 +114,8 @@ class SessionHandler extends \Make\Database\Pdosql {
             $this->query(
                 "
                 update {$this->table("session")}
-                set expiry=:col1, value=:col2, regdate=now()
-                where sesskey=:col3 and expiry>
+                set `expiry`=:col1, `value`=:col2, `regdate`=now()
+                where `sesskey`=:col3 and `expiry`>
                 ".time(),
                 array(
                     $this->expiry,
@@ -133,7 +133,7 @@ class SessionHandler extends \Make\Database\Pdosql {
             "
             delete
             from {$this->table("session")}
-            where sesskey=:col1
+            where `sesskey`=:col1
             ",
             array(
                 $key
@@ -147,7 +147,7 @@ class SessionHandler extends \Make\Database\Pdosql {
             "
             delete
             from {$this->table("session")}
-            where expiry<
+            where `expiry`<
             ".time(), ''
         );
 

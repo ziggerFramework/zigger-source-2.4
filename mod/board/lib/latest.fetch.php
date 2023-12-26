@@ -112,7 +112,7 @@ class Latest_fetch extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='mod:board:config:{$FETCH_CONF['id']}'
+            where `cfg_type`='mod:board:config:{$FETCH_CONF['id']}'
             ", []
         );
 
@@ -167,8 +167,8 @@ class Latest_fetch extends \Controller\Make_Controller {
             $sql->query(
                 "
                 select *,
-                ( select count(*) from {$sql->table("mod:board_cmt_".$boardinfo['id'])} where bo_idx=board.idx ) comment_cnt,
-                ( select count(*) from {$sql->table("mod:board_like")} where id='{$boardinfo['id']}' and data_idx=board.idx and likes>0 ) likes_cnt
+                ( select count(*) from {$sql->table("mod:board_cmt_".$boardinfo['id'])} where `bo_idx`=board.idx ) comment_cnt,
+                ( select count(*) from {$sql->table("mod:board_like")} where `id`='{$boardinfo['id']}' and `data_idx`=board.idx and `likes`>0 ) likes_cnt
                 from {$sql->table("mod:board_data_".$boardinfo['id'])} board
                 where board.rn=0 and board.dregdate is null
                 order by $orderby

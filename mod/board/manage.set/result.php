@@ -42,7 +42,7 @@ class Result extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:board_data_".$board_id)}
-                where use_notice='Y' or use_notice='N'
+                where `use_notice`='Y' or `use_notice`='N'
                 ",
                 array(
                     $board_id
@@ -64,7 +64,7 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            ( select count(*) from {$sql->table("config")} where cfg_type like 'mod:board:config:%' and cfg_key='id' ) board_total
+            ( select count(*) from {$sql->table("config")} where `cfg_type` like 'mod:board:config:%' and `cfg_key`='id' ) board_total
             ", []
         );
         $sort_arr['board_total'] = $sql->fetch('board_total');
@@ -78,7 +78,7 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             $paging->query(
                 "
-                select config.*,board_name_tbl.cfg_value AS board_name
+                select config.*,board_name_tbl.cfg_value as board_name
                 from {$sql->table("config")} config
                 left outer join {$sql->table("config")} board_name_tbl
                 on config.cfg_type=board_name_tbl.cfg_type and board_name_tbl.cfg_key='title'
@@ -99,7 +99,7 @@ class Result extends \Controller\Make_Controller {
                     "
                     select *
                     from {$sql2->table("config")}
-                    where cfg_type='mod:board:config:{$arr['cfg_value']}'
+                    where `cfg_type`='mod:board:config:{$arr['cfg_value']}'
                     ", []
                 );
 
@@ -186,7 +186,7 @@ class Result_clone_submit{
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='mod:board:config:{$board_id}'
+            where `cfg_type`='mod:board:config:{$board_id}'
             ", []
         );
 
@@ -204,7 +204,7 @@ class Result_clone_submit{
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='mod:board:config:{$clone_id}'
+            where `cfg_type`='mod:board:config:{$clone_id}'
             ", []
         );
 
@@ -218,7 +218,7 @@ class Result_clone_submit{
             $sql->query(
                 "
                 insert into {$sql->table("config")}
-                (cfg_type, cfg_key, cfg_value, cfg_regdate)
+                (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regdate`)
                 values
                 ('mod:board:config:{$clone_id}', :col1, :col2, now())
                 ", array(
@@ -230,40 +230,40 @@ class Result_clone_submit{
         $sql->query(
             "
             create table if not exists {$sql->table("mod:board_data_")}$clone_id (
-            idx int(11) not null auto_increment,
-            category varchar(255) default null,
-            ln int(11) default '0',
-            rn int(11) default '0',
-            mb_idx int(11) default '0',
-            mb_id varchar(255) default null,
-            writer varchar(255) default null,
-            pwd text,
-            email varchar(255) default null,
-            article text,
-            subject varchar(255) default null,
-            file1 text,
-            file1_cnt int(11) default '0',
-            file2 text,
-            file2_cnt int(11) default '0',
-            use_secret char(1) default 'N',
-            use_notice char(1) default 'N',
-            use_html char(1) default 'Y',
-            use_email char(1) default 'Y',
-            view int(11) default '0',
-            ip varchar(255) default null,
-            regdate datetime default null,
-            dregdate datetime default null,
-            data_1 text,
-            data_2 text,
-            data_3 text,
-            data_4 text,
-            data_5 text,
-            data_6 text,
-            data_7 text,
-            data_8 text,
-            data_9 text,
-            data_10 text,
-            primary key(idx)
+            `idx` int(11) not null auto_increment,
+            `category` varchar(255) default null,
+            `ln` int(11) default '0',
+            `rn` int(11) default '0',
+            `mb_idx` int(11) default '0',
+            `mb_id` varchar(255) default null,
+            `writer` varchar(255) default null,
+            `pwd` text,
+            `email` varchar(255) default null,
+            `article` text,
+            `subject` varchar(255) default null,
+            `file1` text,
+            `file1_cnt` int(11) default '0',
+            `file2` text,
+            `file2_cnt` int(11) default '0',
+            `use_secret` char(1) default 'N',
+            `use_notice` char(1) default 'N',
+            `use_html` char(1) default 'Y',
+            `use_email` char(1) default 'Y',
+            `view` int(11) default '0',
+            `ip` varchar(255) default null,
+            `regdate` datetime default null,
+            `dregdate` datetime default null,
+            `data_1` text,
+            `data_2` text,
+            `data_3` text,
+            `data_4` text,
+            `data_5` text,
+            `data_6` text,
+            `data_7` text,
+            `data_8` text,
+            `data_9` text,
+            `data_10` text,
+            primary key(`idx`)
             )engine=InnoDB default charset=utf8;
             ", []
         );
@@ -271,28 +271,28 @@ class Result_clone_submit{
         $sql->query(
             "
             create table if not exists {$sql->table("mod:board_cmt_")}$clone_id (
-            idx int(11) not null auto_increment,
-            ln int(11) default '0',
-            rn int(11) default '0',
-            bo_idx int(11) default null,
-            mb_idx int(11) default '0',
-            writer varchar(255) default null,
-            parent_mb_idx int(11) default '0',
-            parent_writer varchar(255) default null,
-            comment text,
-            ip varchar(255) default null,
-            regdate datetime default null,
-            cmt_1 text,
-            cmt_2 text,
-            cmt_3 text,
-            cmt_4 text,
-            cmt_5 text,
-            cmt_6 text,
-            cmt_7 text,
-            cmt_8 text,
-            cmt_9 text,
-            cmt_10 text,
-            primary key(idx)
+            `idx` int(11) not null auto_increment,
+            `ln` int(11) default '0',
+            `rn` int(11) default '0',
+            `bo_idx` int(11) default null,
+            `mb_idx` int(11) default '0',
+            `writer` varchar(255) default null,
+            `parent_mb_idx` int(11) default '0',
+            `parent_writer` varchar(255) default null,
+            `comment` text,
+            `ip` varchar(255) default null,
+            `regdate` datetime default null,
+            `cmt_1` text,
+            `cmt_2` text,
+            `cmt_3` text,
+            `cmt_4` text,
+            `cmt_5` text,
+            `cmt_6` text,
+            `cmt_7` text,
+            `cmt_8` text,
+            `cmt_9` text,
+            `cmt_10` text,
+            primary key(`idx`)
             )engine=InnoDB default charset=utf8;
             ", []
         );
@@ -459,40 +459,40 @@ class Regist_submit {
         $sql->query(
             "
             create table if not exists {$sql->table("mod:board_data_")}$board_id (
-            idx int(11) not null auto_increment,
-            category varchar(255) default null,
-            ln int(11) default '0',
-            rn int(11) default '0',
-            mb_idx int(11) default '0',
-            mb_id varchar(255) default null,
-            writer varchar(255) default null,
-            pwd text,
-            email varchar(255) default null,
-            article text,
-            subject varchar(255) default null,
-            file1 text,
-            file1_cnt int(11) default '0',
-            file2 text,
-            file2_cnt int(11) default '0',
-            use_secret char(1) default 'N',
-            use_notice char(1) default 'N',
-            use_html char(1) default 'Y',
-            use_email char(1) default 'Y',
-            view int(11) default '0',
-            ip varchar(255) default null,
-            regdate datetime default null,
-            dregdate datetime default null,
-            data_1 text,
-            data_2 text,
-            data_3 text,
-            data_4 text,
-            data_5 text,
-            data_6 text,
-            data_7 text,
-            data_8 text,
-            data_9 text,
-            data_10 text,
-            primary key(idx)
+            `idx` int(11) not null auto_increment,
+            `category` varchar(255) default null,
+            `ln` int(11) default '0',
+            `rn` int(11) default '0',
+            `mb_idx` int(11) default '0',
+            `mb_id` varchar(255) default null,
+            `writer` varchar(255) default null,
+            `pwd` text,
+            `email` varchar(255) default null,
+            `article` text,
+            `subject` varchar(255) default null,
+            `file1` text,
+            `file1_cnt` int(11) default '0',
+            `file2` text,
+            `file2_cnt` int(11) default '0',
+            `use_secret` char(1) default 'N',
+            `use_notice` char(1) default 'N',
+            `use_html` char(1) default 'Y',
+            `use_email` char(1) default 'Y',
+            `view` int(11) default '0',
+            `ip` varchar(255) default null,
+            `regdate` datetime default null,
+            `dregdate` datetime default null,
+            `data_1` text,
+            `data_2` text,
+            `data_3` text,
+            `data_4` text,
+            `data_5` text,
+            `data_6` text,
+            `data_7` text,
+            `data_8` text,
+            `data_9` text,
+            `data_10` text,
+            primary key(`idx`)
             )engine=InnoDB default charset=utf8;
             ", []
         );
@@ -500,28 +500,28 @@ class Regist_submit {
         $sql->query(
             "
             create table if not exists {$sql->table("mod:board_cmt_")}$board_id (
-            idx int(11) not null auto_increment,
-            ln int(11) default '0',
-            rn int(11) default '0',
-            bo_idx int(11) default null,
-            mb_idx int(11) default '0',
-            writer varchar(255) default null,
-            parent_mb_idx int(11) default '0',
-            parent_writer varchar(255) default null,
-            comment text,
-            ip varchar(255) default null,
-            regdate datetime default null,
-            cmt_1 text,
-            cmt_2 text,
-            cmt_3 text,
-            cmt_4 text,
-            cmt_5 text,
-            cmt_6 text,
-            cmt_7 text,
-            cmt_8 text,
-            cmt_9 text,
-            cmt_10 text,
-            primary key(idx)
+            `idx` int(11) not null auto_increment,
+            `ln` int(11) default '0',
+            `rn` int(11) default '0',
+            `bo_idx` int(11) default null,
+            `mb_idx` int(11) default '0',
+            `writer` varchar(255) default null,
+            `parent_mb_idx` int(11) default '0',
+            `parent_writer` varchar(255) default null,
+            `comment` text,
+            `ip` varchar(255) default null,
+            `regdate` datetime default null,
+            `cmt_1` text,
+            `cmt_2` text,
+            `cmt_3` text,
+            `cmt_4` text,
+            `cmt_5` text,
+            `cmt_6` text,
+            `cmt_7` text,
+            `cmt_8` text,
+            `cmt_9` text,
+            `cmt_10` text,
+            primary key(`idx`)
             )engine=InnoDB default charset=utf8;
             ", []
         );
@@ -587,7 +587,7 @@ class Regist_submit {
         $sql->query(
             "
             insert into {$sql->table("config")}
-            (cfg_type, cfg_key, cfg_value, cfg_regdate)
+            (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regdate`)
             values
             {$insert_qry}
             ", []
@@ -668,7 +668,7 @@ class Modify extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='mod:board:config:{$req['id']}'
+            where `cfg_type`='mod:board:config:{$req['id']}'
             ", []
         );
 
@@ -983,7 +983,7 @@ class Modify_submit {
                 "
                 select *
                 from {$sql->table("config")}
-                where cfg_type='mod:board:config:{$req['id']}' and cfg_key=:col1
+                where `cfg_type`='mod:board:config:{$req['id']}' and `cfg_key`=:col1
                 ",
                 array(
                     $key
@@ -994,7 +994,7 @@ class Modify_submit {
                     "
                     insert into
                     {$sql->table("config")}
-                    (cfg_type, cfg_key)
+                    (`cfg_type`, `cfg_key`)
                     values
                     ('mod:board:config:{$req['id']}', :col1)
                     ",
@@ -1008,8 +1008,8 @@ class Modify_submit {
                 update
                 {$sql->table("config")}
                 set
-                cfg_value=:col1
-                where cfg_type='mod:board:config:{$req['id']}' and cfg_key=:col2
+                `cfg_value`=:col1
+                where `cfg_type`='mod:board:config:{$req['id']}' and `cfg_key`=:col2
                 ",
                 array(
                     $value, $key
@@ -1041,7 +1041,7 @@ class Modify_submit {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='mod:board:config:{$req['id']}' and cfg_key='id' and cfg_value='{$req['id']}'
+            where `cfg_type`='mod:board:config:{$req['id']}' and `cfg_key`='id' and `cfg_value`='{$req['id']}'
             ", []
         );
 
@@ -1053,7 +1053,7 @@ class Modify_submit {
             "
             delete
             from {$sql->table("config")}
-            where cfg_type='mod:board:config:{$board_id}'
+            where `cfg_type`='mod:board:config:{$board_id}'
             ", []
         );
 
@@ -1118,7 +1118,7 @@ class Board extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:board_data_".$req['id'])}
-                where use_notice='Y' or use_notice='N'
+                where `use_notice`='Y' or `use_notice`='N'
                 ", []
             );
             return Func::number($sql->getcount());
@@ -1378,9 +1378,9 @@ class Board extends \Controller\Make_Controller {
         $sql->query(
             "
             select *,
-            ( select count(*) from {$sql->table("mod:board_cmt_".$board_id)} where bo_idx=board.idx ) comment_cnt,
-            ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=board.idx and likes>0 ) likes_cnt,
-            ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=board.idx and unlikes>0 ) unlikes_cnt
+            ( select count(*) from {$sql->table("mod:board_cmt_".$board_id)} where `bo_idx`=board.idx ) comment_cnt,
+            ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=board.idx and `likes`>0 ) likes_cnt,
+            ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=board.idx and `unlikes`>0 ) unlikes_cnt
             from {$sql->table("mod:board_data_".$board_id)} board
             left outer join {$sql->table("member")} member
             on board.mb_idx=member.mb_idx
@@ -1408,8 +1408,8 @@ class Board extends \Controller\Make_Controller {
                 "
                 select *,
                 ( select count(*) from {$sql->table("mod:board_cmt_".$board_id)} where bo_idx=board.idx ) comment_cnt,
-                ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=board.idx and likes>0 ) likes_cnt,
-                ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=board.idx and unlikes>0 ) unlikes_cnt
+                ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=board.idx and `likes`>0 ) likes_cnt,
+                ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=board.idx and `unlikes`>0 ) unlikes_cnt
                 from {$sql->table("mod:board_data_".$board_id)} board
                 left outer join {$sql->table("member")} member
                 on board.mb_idx=member.mb_idx
@@ -1631,8 +1631,8 @@ class Write extends \Controller\Make_Controller {
         if ($req['wrmode'] == 'modify' || $req['wrmode'] == 'reply') {
             $sql->query(
                 "
-                select board.*,ceil(board.ln) ceil_ln,
-                ( select count(*) from {$sql->table("mod:board_data_".$board_id)} where ln<=((ceil_ln/1000)*1000) and ln>((ceil_ln/1000)*1000)-1000 and rn>0 ) reply_cnt
+                select board.*, ceil(board.ln) ceil_ln,
+                ( select count(*) from {$sql->table("mod:board_data_".$board_id)} where `ln`<=((ceil_ln/1000)*1000) and `ln`>((ceil_ln/1000)*1000)-1000 and `rn`>0 ) reply_cnt
                 from {$sql->table("mod:board_data_".$board_id)} board
                 where board.idx=:col1
                 ",
@@ -1894,8 +1894,8 @@ class Board_view extends \Controller\Make_Controller {
         $sql->query(
             "
             select member.mb_profileimg,
-            ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=:col1 and likes>0 ) likes_cnt,
-            ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=:col1 and unlikes>0 ) unlikes_cnt,
+            ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=:col1 and `likes`>0 ) likes_cnt,
+            ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=:col1 and `unlikes`>0 ) unlikes_cnt,
             board.*
             from {$sql->table("mod:board_data_".$board_id)} board
             left outer join {$sql->table("member")} member
@@ -1922,8 +1922,8 @@ class Board_view extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:board_data_".$board_id)}
-                where ln>:col1 and rn=:col2
-                order by ln asc
+                where `ln`>:col1 and `rn`=:col2
+                order by `ln` asc
                 limit 1
                 ",
                 array(

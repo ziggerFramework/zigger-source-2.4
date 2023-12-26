@@ -60,7 +60,7 @@ class Delete extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mod:board_data_".$board_id)}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['read']
@@ -128,7 +128,7 @@ class Delete extends \Controller\Make_Controller {
                     "
                     select *
                     from {$sql->table("mod:board_data_".$board_id)}
-                    where ln<=:col1 and ln>:col2 and rn>=:col3
+                    where `ln`<=:col1 and `ln`>:col2 and `rn`>=:col3
                     ",
                     array(
                         $ln_max, $ln_min, '0'
@@ -139,10 +139,10 @@ class Delete extends \Controller\Make_Controller {
 
                 $sql->query(
                     "
-                    select ln
+                    select `ln`
                     from {$sql->table("mod:board_data_".$board_id)}
-                    where ln>=:col1 and ln<:col2 and rn=:col3
-                    order by ln desc
+                    where `ln`>=:col1 and `ln`<:col2 and `rn`=:col3
+                    order by `ln` desc
                     limit 1
                     ",
                     array(
@@ -157,7 +157,7 @@ class Delete extends \Controller\Make_Controller {
                         "
                         select *
                         from {$sql->table("mod:board_data_".$board_id)}
-                        where ln<=:col1 and ln>:col2 and rn>=:col3
+                        where `ln`<=:col1 and `ln`>:col2 and `rn`>=:col3
                         ",
                         array(
                             $arr['ln'], $ln_min, $arr['rn']
@@ -170,7 +170,7 @@ class Delete extends \Controller\Make_Controller {
                         "
                         select *
                         from {$sql->table("mod:board_data_".$board_id)}
-                        where ln<=:col1 and ln>:col2 and rn>=:col3
+                        where `ln`<=:col1 and `ln`>:col2 and `rn`>=:col3
                         ",
                         array(
                             $arr['ln'], $ln_arr['ln'], $arr['rn']
@@ -187,7 +187,7 @@ class Delete extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:board_data_".$board_id)}
-                where idx=:col1
+                where `idx`=:col1
                 ",
                 array(
                     $req['read']
@@ -217,7 +217,7 @@ class Delete extends \Controller\Make_Controller {
                     "
                     delete
                     from {$sql->table("mod:board_cmt_".$board_id)}
-                    where bo_idx=:col1
+                    where `bo_idx`=:col1
                     ",
                     array(
                         $bo_idx
@@ -231,7 +231,7 @@ class Delete extends \Controller\Make_Controller {
                     "
                     delete
                     from {$sql->table("mod:board_data_".$board_id)}
-                    where idx=:col1
+                    where `idx`=:col1
                     ",
                     array(
                         $req['read']
@@ -244,8 +244,8 @@ class Delete extends \Controller\Make_Controller {
                 $sql->query(
                     "
                     update {$sql->table("mod:board_data_".$board_id)}
-                    set dregdate=now(), file1='', file2=''
-                    where idx=:col1
+                    set `dregdate`=now(), `file1`='', `file2`=''
+                    where `idx`=:col1
                     ",
                     array(
                         $req['read']

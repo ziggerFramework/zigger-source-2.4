@@ -59,8 +59,8 @@ class View extends \Controller\Make_Controller {
             $sql->query(
                 "
                 update {$sql->table("mod:message")}
-                set chked=:col1
-                where hash=:col2 and to_mb_idx=:col3
+                set `chked`=:col1
+                where `hash`=:col2 and `to_mb_idx`=:col3
                 ",
                 array(
                     $chked_date, $req['hash'], MB_IDX

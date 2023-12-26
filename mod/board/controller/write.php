@@ -191,7 +191,7 @@ class Write extends \Controller\Make_Controller {
             $sql->query(
                 "
                 select board.*,ceil(board.ln) ceil_ln,
-                ( select count(*) from {$sql->table("mod:board_data_".$board_id)} where ln<=((ceil_ln/1000)*1000) and ln>((ceil_ln/1000)*1000)-1000 and rn>0 ) reply_cnt
+                ( select count(*) from {$sql->table("mod:board_data_".$board_id)} where `ln`<=((ceil_ln/1000)*1000) and `ln`>((ceil_ln/1000)*1000)-1000 and `rn`>0 ) reply_cnt
                 from {$sql->table("mod:board_data_".$board_id)} board
                 where board.idx=:col1
                 ",
@@ -418,7 +418,7 @@ class Write_submit{
             $sql->query(
                 "
                 select board.*,ceil(board.ln) ceil_ln,
-                ( select count(*) from {$sql->table("mod:board_data_".$board_id)} where ln<=((ceil_ln/1000)*1000) and ln>((ceil_ln/1000)*1000)-1000 and rn>0 ) reply_cnt
+                ( select count(*) from {$sql->table("mod:board_data_".$board_id)} where `ln`<=((ceil_ln/1000)*1000) and `ln`>((ceil_ln/1000)*1000)-1000 and `rn`>0 ) reply_cnt
                 from {$sql->table("mod:board_data_".$board_id)} board
                 where board.idx=:col1
                 ",
@@ -585,7 +585,7 @@ class Write_submit{
                 "
                 select *
                 from {$sql->table("mod:board_data_".$board_id)}
-                where article=:col1
+                where `article`=:col1
                 ",
                 array(
                     $req['article']
@@ -724,7 +724,7 @@ class Write_submit{
         // ln값 처리
         $sql->query(
             "
-            select max(ln)+1000 as ln_max
+            select max(`ln`)+1000 as ln_max
             from {$sql->table("mod:board_data_".$board_id)}
             ", []
         );
@@ -752,7 +752,7 @@ class Write_submit{
         $sql->query(
             "
             insert into {$sql->table("mod:board_data_".$board_id)}
-            (category, mb_idx, mb_id, writer, pwd, email, article, subject, file1, file2, use_secret, use_notice, use_html, use_email, ip, ln, rn, data_1, data_2, data_3, data_4, data_5, data_6, data_7, data_8, data_9, data_10, regdate)
+            (`category`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `file1`, `file2`, `use_secret`, `use_notice`, `use_html`, `use_email`, `ip`, `ln`, `rn`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`, `regdate`)
             values
             (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, '{$_SERVER['REMOTE_ADDR']}', :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25, :col26)
             ",
@@ -766,9 +766,9 @@ class Write_submit{
         // 작성된 글의 idx를 다시 가져옴
         $sql->query(
             "
-            select max(idx) as max_idx
+            select max(`idx`) as max_idx
             from {$sql->table("mod:board_data_".$board_id)}
-            where writer=:col1
+            where `writer`=:col1
             ",
             array(
                 $req['writer']
@@ -829,7 +829,7 @@ class Write_submit{
                 "
                 select *
                 from {$sql->table("mod:board_data_".$board_id)}
-                where ln>:col1 and ln<=:col2
+                where `ln`>:col1 and `ln`<=:col2
                 ",
                 array(
                     $ln_min, $ln_max
@@ -861,9 +861,9 @@ class Write_submit{
         $sql->query(
             "
             update {$sql->table("mod:board_data_".$board_id)}
-            set category=:col2, writer=:col3, pwd=:col4, email=:col5, article=:col6, subject=:col7, file1=:col8, file2=:col9, use_secret=:col10, use_notice=:col11,
-            use_html='Y', use_email=:col12, ip='{$_SERVER['REMOTE_ADDR']}', regdate=:col13, data_1=:col14, data_2=:col15, data_3=:col16, data_4=:col17, data_5=:col18, data_6=:col19, data_7=:col20, data_8=:col21, data_9=:col22, data_10=:col23
-            where idx=:col1
+            set `category`=:col2, `writer`=:col3, `pwd`=:col4, `email`=:col5, `article`=:col6, `subject`=:col7, `file1`=:col8, `file2`=:col9, `use_secret`=:col10, `use_notice`=:col11,
+            use_html='Y', `use_email`=:col12, `ip`='{$_SERVER['REMOTE_ADDR']}', `regdate`=:col13, `data_1`=:col14, `data_2`=:col15, `data_3`=:col16, `data_4`=:col17, `data_5`=:col18, `data_6`=:col19, `data_7`=:col20, `data_8`=:col21, `data_9`=:col22, `data_10`=:col23
+            where `idx`=:col1
             ",
             array(
                 $req['read'], $category, $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'],
@@ -908,8 +908,8 @@ class Write_submit{
         $sql->query(
             "
             update {$sql->table("mod:board_data_".$board_id)}
-            set ln=ln-1
-            where ln<:col1 and ln>:col2 and rn>0
+            set `ln`=`ln`-1
+            where `ln`<:col1 and `ln`>:col2 and `rn`>0
             ",
             array(
                 $ln_max, $ln_min
@@ -919,9 +919,9 @@ class Write_submit{
         // rn값 처리
         $sql->query(
             "
-            select rn+1 as rn_max
+            select `rn`+1 as rn_max
             from {$sql->table("mod:board_data_".$board_id)}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['read']
@@ -944,7 +944,7 @@ class Write_submit{
         $sql->query(
             "
             insert into {$sql->table("mod:board_data_".$board_id)}
-            (category, mb_idx, mb_id, writer, pwd, email, article, subject, file1, file2, use_secret, use_notice, use_html, use_email, ip, regdate, ln, rn, data_1, data_2, data_3, data_4, data_5, data_6, data_7, data_8, data_9, data_10)
+            (`category`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `file1`, `file2`, `use_secret`, `use_notice`, `use_html`, `use_email`, `ip`, `regdate`, `ln`, `rn`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`)
             values
             (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, '{$_SERVER['REMOTE_ADDR']}', now(), :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25)
             ",
@@ -958,9 +958,9 @@ class Write_submit{
         // 작성된 글의 idx를 다시 가져옴
         $sql->query(
             "
-            select max(idx) as max_idx
+            select max(`idx`) as max_idx
             from {$sql->table("mod:board_data_".$board_id)}
-            where writer=:col1 and subject=:col2 and article=:col3
+            where `writer`=:col1 and `subject`=:col2 and `article`=:col3
             ",
             array(
                 $req['writer'], $req['subject'], $req['article']

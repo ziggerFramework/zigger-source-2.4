@@ -163,8 +163,8 @@ class Regist_submit {
             "
             select *
             from {$sql->table("mod:contents")}
-            where data_key=:col1
-            order by regdate desc
+            where `data_key`=:col1
+            order by `regdate` desc
             ",
             array(
                 $req['data_key']
@@ -178,7 +178,7 @@ class Regist_submit {
         $sql->query(
             "
             insert into {$sql->table("mod:contents")}
-            (data_key,title,html,mo_html,use_mo_html,regdate)
+            (`data_key`, `title`, `html`, `mo_html`, `use_mo_html`, `regdate`)
             values
             (:col1, :col2, :col3, :col4, :col5, now())
             ",
@@ -191,8 +191,8 @@ class Regist_submit {
             "
             select *
             from {$sql->table("mod:contents")}
-            where data_key=:col1
-            order by regdate desc
+            where `data_key`=:col1
+            order by `regdate` desc
             ",
             array(
                 $req['data_key']
@@ -248,7 +248,7 @@ class Modify extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mod:contents")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -340,8 +340,8 @@ class Modify_submit{
         $sql->query(
             "
             update {$sql->table("mod:contents")}
-            SET title=:col2, html=:col3, mo_html=:col4, use_mo_html=:col5
-            where idx=:col1
+            SET `title`=:col2, `html`=:col3, `mo_html`=:col4, `use_mo_html`=:col5
+            where `idx`=:col1
             ",
             array(
                 $req['idx'], $req['title'], $req['html'], $req['mo_html'], $req['use_mo_html']
@@ -371,7 +371,7 @@ class Modify_submit{
             "
             select *
             from {$sql->table("mod:contents")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -384,7 +384,7 @@ class Modify_submit{
             "
             delete
             from {$sql->table("mod:contents")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']

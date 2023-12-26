@@ -106,7 +106,7 @@ class Uploader {
         $sql->query(
             "
             insert into {$sql->table("dataupload")}
-            (filepath, orgfile, repfile, storage, byte, regdate)
+            (`filepath`, `orgfile`, `repfile`, st`orage, `byte`, `regdate`)
             values
             (:col1, :col2, :col3, :col4, :col5, now())
             ",
@@ -129,7 +129,7 @@ class Uploader {
             "
             select *
             from {$sql->table("dataupload")}
-            where orgfile=:col1 and repfile=:col2
+            where `orgfile`=:col1 and `repfile`=:col2
             ",
             array(
                 $fileinfo['orgfile'], $replace_filename
@@ -144,7 +144,7 @@ class Uploader {
         $sql->query(
             "
             insert into {$sql->table("dataupload")}
-            (filepath, orgfile, repfile, storage, byte, regdate)
+            (`filepath`, `orgfile`, `repfile`, `storage`, `byte`, `regdate`)
             values
             (:col1, :col2, :col3, :col4, :col5, now())
             ",
@@ -161,7 +161,7 @@ class Uploader {
             "
             delete
             from {$sql->table("dataupload")}
-            where repfile=:col1
+            where `repfile`=:col1
             ",
             array(
                 $replace_filename

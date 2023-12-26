@@ -29,7 +29,7 @@ class Down extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mod:board_data_".addslashes($board_id))}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -102,8 +102,8 @@ class Down extends \Controller\Make_Controller {
         $sql->query(
             "
             update {$sql->table("mod:board_data_".$board_id)}
-            set file{$req['file']}_cnt = file{$req['file']}_cnt + 1
-            where idx={$req['idx']}
+            set `file{$req['file']}_cnt` = `file{$req['file']}_cnt` + 1
+            where `idx`={$req['idx']}
             ", []
         );
 

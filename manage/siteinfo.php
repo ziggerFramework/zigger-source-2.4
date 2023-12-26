@@ -56,7 +56,7 @@ class Info extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='engine'
+            where `cfg_type`='engine'
             ", []
         );
 
@@ -175,7 +175,7 @@ class Info_submit {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='engine'
+            where `cfg_type`='engine'
             ", []
         );
 
@@ -262,8 +262,8 @@ class Info_submit {
                 update
                 {$sql->table("config")}
                 set
-                cfg_value=:col1
-                where cfg_type='engine' and cfg_key=:col2
+                `cfg_value`=:col1
+                where `cfg_type`='engine' and `cfg_key`=:col2
                 ",
                 array(
                     $value, $key
@@ -321,7 +321,7 @@ class Plugins extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='engine'
+            where `cfg_type`='engine'
             ", []
         );
 
@@ -539,7 +539,7 @@ class Plugins_submit {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='engine'
+            where `cfg_type`='engine'
             ", []
         );
 
@@ -569,8 +569,8 @@ class Plugins_submit {
                 update
                 {$sql->table("config")}
                 set
-                cfg_value=:col1
-                where cfg_type='engine' and cfg_key='{$key}'
+                `cfg_value`=:col1
+                where `cfg_type`='engine' and `cfg_key`='{$key}'
                 ",
                 array(
                     $value
@@ -612,7 +612,7 @@ class Seo extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='engine'
+            where `cfg_type`='engine'
             ", []
         );
 
@@ -697,7 +697,7 @@ class Seo_submit {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='engine'
+            where `cfg_type`='engine'
             ", []
         );
 
@@ -745,8 +745,8 @@ class Seo_submit {
                 update
                 {$sql->table("config")}
                 set
-                cfg_value=:col1
-                where cfg_type='engine' and cfg_key='{$key}'
+                `cfg_value`=:col1
+                where `cfg_type`='engine' and `cfg_key`='{$key}'
                 ",
                 array(
                     $value
@@ -825,8 +825,8 @@ class SitemapList extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("sitemap")}
-            where CHAR_LENGTH(caidx)=4
-            order by caidx ASC
+            where char_length(`caidx`)=4
+            order by `caidx` asc
             ", []
         );
         $list_cnt = $sql->getcount();
@@ -845,8 +845,8 @@ class SitemapList extends \Controller\Make_Controller {
                         "
                         select *
                         from {$sql2->table("sitemap")}
-                        where substr(caidx,1,4)=:col1 and CHAR_LENGTH(caidx)=8
-                        order by caidx ASC
+                        where substr(`caidx`, 1, 4)=:col1 and char_length(`caidx`)=8
+                        order by `caidx` asc
                         ",
                         array(
                             $arr['caidx']
@@ -863,8 +863,8 @@ class SitemapList extends \Controller\Make_Controller {
                                 "
                                 select *
                                 from {$sql3->table("sitemap")}
-                                where substr(caidx,1,8)=:col1 and CHAR_LENGTH(caidx)=12
-                                order by caidx ASC
+                                where substr(`caidx`, 1, 8)=:col1 and char_length(`caidx`)=12
+                                order by `caidx` ASC
                                 ",
                                 array(
                                     $arr2['caidx']
@@ -933,7 +933,7 @@ class SitemapList_submit{
             "
             select *
             from {$sql->table("sitemap")}
-            order by idx desc
+            order by `idx` desc
             limit 1
             ", []
         );
@@ -964,7 +964,7 @@ class SitemapList_submit{
                 "
                 select count(*) count
                 from {$sql->table("sitemap")}
-                where caidx like :col1
+                where `caidx` like :col1
                 ",
                 array(
                     $prt_caidx.'%'
@@ -976,8 +976,8 @@ class SitemapList_submit{
                 "
                 update {$sql->table("sitemap")}
                 set
-                children=:col2
-                where caidx=:col1
+                `children`=:col2
+                where `caidx`=:col1
                 ",
                 array(
                     $prt_caidx, $children_count
@@ -990,7 +990,7 @@ class SitemapList_submit{
             "
             insert into
             {$sql->table("sitemap")}
-            (idx, caidx, title, children)
+            (`idx`, `caidx`, `title`, `children`)
             values
             (:col1, :col2, :col3, :col4)
             ",
@@ -1043,7 +1043,7 @@ class SitemapList_submit{
                 "
                 select count(*) count
                 from {$sql->table("sitemap")}
-                where caidx like :col1
+                where `caidx` like :col1
                 ",
                 array(
                     $req['org_caidx'][$i].'%'
@@ -1057,8 +1057,8 @@ class SitemapList_submit{
                 "
                 update {$sql->table("sitemap")}
                 set
-                caidx=:col1,children=:col2
-                where idx=:col3
+                `caidx`=:col1, `children`=:col2
+                where `idx`=:col3
                 ",
                 array(
                     $req['caidx'][$i], $children_count[$i], $req['idx'][$i]
@@ -1116,7 +1116,7 @@ class SitemapModify extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("sitemap")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -1172,8 +1172,8 @@ class SitemapModify_submit{
             "
             update {$sql->table("sitemap")}
             set
-            title=:col2, href=:col3, visible=:col4
-            where idx=:col1
+            `title`=:col2, `href`=:col3, `visible`=:col4
+            where `idx`=:col1
             ",
             array(
                 $req['idx'],

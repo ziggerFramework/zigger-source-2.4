@@ -42,9 +42,9 @@ class Ip extends \Controller\Make_Controller {
             "
             select
             (
-                select COUNT(*)
+                select count(*)
                 from {$sql->table("blockmb")}
-                where ip is not null and ip!=''
+                where `ip` is not null and `ip`!=''
             ) total
             ", []
         );
@@ -61,7 +61,7 @@ class Ip extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("blockmb")}
-                where ip is not null and ip!='' $sortby $searchby
+                where `ip` is not null and `ip`!='' $sortby $searchby
                 order by $orderby
                 ", []
             )
@@ -163,7 +163,7 @@ class Ip_submit{
             "
             select *
             from {$sql->table("blockmb")}
-            where ip=:col1
+            where `ip`=:col1
             ",
             array(
                 $req['ip']
@@ -176,7 +176,7 @@ class Ip_submit{
             "
             insert into
             {$sql->table("blockmb")}
-            (ip,memo,regdate)
+            (`ip`, `memo`, `regdate`)
             values
             (:col1, :col2, now())
             ",
@@ -207,7 +207,7 @@ class Ip_submit{
             "
             select *
             from {$sql->table("blockmb")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -219,7 +219,7 @@ class Ip_submit{
         $sql->query(
             "
             delete from {$sql->table("blockmb")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -275,7 +275,7 @@ class Member extends \Controller\Make_Controller {
             (
                 select count(*)
                 from {$sql->table("blockmb")}
-                where mb_id is not null and mb_id!=''
+                where `mb_id` is not null and `mb_id`!=''
             ) total
             ", []
         );
@@ -292,7 +292,7 @@ class Member extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("blockmb")}
-                where mb_id is not null and mb_id!='' $sortby $searchby
+                where `mb_id` is not null and `mb_id`!='' $sortby $searchby
                 order by $orderby
                 ", []
             )
@@ -393,7 +393,7 @@ class Member_submit{
             "
             select *
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_dregdate IS NULL and mb_adm!='Y'
+            where `mb_id`=:col1 and `mb_dregdate` is null and `mb_adm`!='Y'
             ",
             array(
                 $req['id']
@@ -409,7 +409,7 @@ class Member_submit{
             "
             select *
             from {$sql->table("blockmb")}
-            where mb_idx=:col1 and mb_id=:col2
+            where `mb_idx`=:col1 and `mb_id`=:col2
             ",
             array(
                 $mb_idx, $mb_id
@@ -422,9 +422,9 @@ class Member_submit{
             "
             insert into
             {$sql->table("blockmb")}
-            (mb_idx,mb_id,memo,regdate)
+            (`mb_idx`, `mb_id`, `memo`, `regdate`)
             values
-            (:col1,:col2,:col3,now())
+            (:col1, :col2, :col3, now())
             ",
             array(
                 $mb_idx,
@@ -455,7 +455,7 @@ class Member_submit{
             "
             select *
             from {$sql->table("blockmb")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -467,7 +467,7 @@ class Member_submit{
         $sql->query(
             "
             delete from {$sql->table("blockmb")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']

@@ -25,7 +25,7 @@ class Statistic {
                 "
                 select count(*) as visit_count
                 from {$sql->table("visitcount")}
-                where ip=:col1 and regdate>=date_sub(now(),interval 1 hour)
+                where `ip`=:col1 and `regdate`>=date_sub(now(),interval 1 hour)
                 ",
                 array(
                     $user_info['remote_addr']
@@ -36,7 +36,7 @@ class Statistic {
                 $sql->query(
                     "
                     insert into {$sql->table("visitcount")}
-                    (mb_idx, mb_id, ip, device, browser, regdate)
+                    (`mb_idx`, `mb_id`, `ip`, `device`, `browser`, `regdate`)
                     values
                     (:col1, :col2, :col3, :col4, :col5, now())
                     ",
@@ -56,9 +56,9 @@ class Statistic {
                 $sql->query(
                     "
                     update {$sql->table("visitcount")}
-                    set mb_idx=:col2, mb_id=:col3, device=:col4, browser=:col5
-                    where ip=:col1
-                    order by regdate desc
+                    set `mb_idx`=:col2, `mb_id`=:col3, `device`=:col4, `browser`=:col5
+                    where `ip`=:col1
+                    order by `regdate` desc
                     limit 1
                     ",
                     array(

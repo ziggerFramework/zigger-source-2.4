@@ -36,7 +36,7 @@ if (!file_exists('../data/dbconn.temp.php')) {
     }
 
     $stmt = $pdo->query("
-        select count(*) as has_table from Information_schema.tables where table_schema='{$req['name']}' and table_name='{$req['pfx']}member';
+        select count(*) as has_table from Information_schema.tables where `table_schema`='{$req['name']}' and `table_name`='{$req['pfx']}member';
     ");
     $stmt->execute();
     if ($stmt->fetch()['has_table'] != 0) Func::err_location('이미 Database Table이 생성되었습니다. Table삭제 후 재설치 바랍니다.', './index.php');

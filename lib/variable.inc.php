@@ -37,7 +37,7 @@ $varsql->query(
     "
     select *
     from {$varsql->table("config")}
-    where cfg_type='engine'
+    where `cfg_type`='engine'
     ", []
 );
 
@@ -93,7 +93,7 @@ if (IS_MEMBER) {
         "
         select *
         from {$varsql->table("member")}
-        where mb_idx=:col1
+        where `mb_idx`=:col1
         ",
         array(
             MB_IDX

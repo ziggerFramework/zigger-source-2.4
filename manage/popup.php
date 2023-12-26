@@ -74,12 +74,12 @@ class Result extends \Controller\Make_Controller {
             (
                 select count(*)
                 from {$sql->table("popup")}
-                where show_from<now() and show_to>now()
+                where `show_from`<now() and `show_to`>now()
             ) use_pop,
             (
                 select count(*)
                 from {$sql->table("popup")}
-                where (show_from>now() or show_to<now())
+                where (`show_from`>now() or `show_to`<now())
             ) notuse_pop
             ", []
         );
@@ -109,7 +109,7 @@ class Result extends \Controller\Make_Controller {
                 select *
                 from {$sql->table("popup")}
                 where 1 $sortby $searchby
-                ORDER BY $orderby
+                order by $orderby
                 ", []
             )
         );
@@ -274,7 +274,7 @@ class Regist_submit{
             "
             select *
             from {$sql->table("popup")}
-            where id=:col1
+            where `id`=:col1
             limit 1
             ",
             array(
@@ -289,7 +289,7 @@ class Regist_submit{
         $sql->query(
             "
             insert into {$sql->table("popup")}
-            (id, title, link, link_target, width, height, pos_left, pos_top, level_from, level_to, show_from, show_to, html, mo_html, regdate)
+            (`id`, `title`, `link`, `link_target`, `width`, `height`, `pos_left`, `pos_top`, `level_from`, `level_to`, `show_from`, `show_to`, `html`, `mo_html`, `regdate`)
             values
             (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, now())
             ",
@@ -303,7 +303,7 @@ class Regist_submit{
             "
             select *
             from {$sql->table("popup")}
-            where id=:col1
+            where `id`=:col1
             limit 1
             ",
             array(
@@ -348,7 +348,7 @@ class Modify extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("popup")}
-            where idx=:col1
+            where `idx`=:col1
             limit 1
             ",
             array(
@@ -502,8 +502,8 @@ class Modify_submit{
         $sql->query(
             "
             update {$sql->table("popup")}
-            SET title=:col2, link=:col3, link_target=:col4, width=:col5, height=:col6, pos_top=:col7, pos_left=:col8, level_from=:col9, level_to=:col10, show_from=:col11, show_to=:col12, html=:col13, mo_html=:col14
-            where idx=:col1
+            SET `title`=:col2, `link`=:col3, `link_target`=:col4, `width`=:col5, `height`=:col6, `pos_top`=:col7, `pos_left`=:col8, `level_from`=:col9, `level_to`=:col10, `show_from`=:col11, `show_to`=:col12, `html`=:col13, `mo_html`=:col14
+            where `idx`=:col1
             ",
             array(
                 $req['idx'], $req['title'], $req['link'], $req['link_target'], $req['width'], $req['height'],
@@ -534,7 +534,7 @@ class Modify_submit{
             "
             delete
             from {$sql->table("popup")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -549,7 +549,7 @@ class Modify_submit{
             "
             delete
             from {$sql->table("popup")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']

@@ -33,8 +33,8 @@ class Received extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:alarm")}
-                where to_mb_idx=:col1
-                order by idx desc
+                where `to_mb_idx`=:col1
+                order by `idx` desc
                 ",
                 array(
                     MB_IDX

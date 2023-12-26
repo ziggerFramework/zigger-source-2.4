@@ -23,7 +23,7 @@ class View extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mod:contents")}
-            where data_key=:col1
+            where `data_key`=:col1
             ",
             array(
                 $MOD_CONF['key']

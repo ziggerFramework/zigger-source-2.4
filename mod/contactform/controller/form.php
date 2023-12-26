@@ -99,7 +99,7 @@ class Contactus_submit {
         $sql->query(
             "
             insert into {$sql->table("mod:contactform")}
-            (mb_idx, article, name, email, phone, regdate, contact_1, contact_2, contact_3, contact_4, contact_5, contact_6, contact_7, contact_8, contact_9, contact_10)
+            (`mb_idx`, `article`, `name`, `email`, `phone`, `regdate`, `contact_1`, `contact_2`, `contact_3`, `contact_4`, `contact_5`, `contact_6`, `contact_7`, `contact_8`, `contact_9`, `contact_10`)
             values
             (:col1, :col2, :col3, :col4, :col5, now(), :col6, :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15)
             ",

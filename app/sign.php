@@ -94,7 +94,7 @@ class Signin_submit {
             "
             select *
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_dregdate is null and mb_pwd={$sql->set_password($req['pwd'])}
+            where `mb_id`=:col1 and `mb_dregdate` is null and `mb_pwd`={$sql->set_password($req['pwd'])}
             ",
             array(
                 $req['id']
@@ -128,8 +128,8 @@ class Signin_submit {
         $sql->query(
             "
             update {$sql->table("member")}
-            set mb_lately_ip=:col2, mb_lately=now()
-            where mb_idx=:col1
+            set `mb_lately_ip`=:col2, `mb_lately`=now()
+            where `mb_idx`=:col1
             ",
             array(
                 $mbinfo['idx'],
@@ -309,7 +309,7 @@ class signup_submit {
                 "
                 select count(*) as total
                 from {$sql->table("member")}
-                where mb_phone=:col1 and mb_dregdate is null
+                where `mb_phone`=:col1 and `mb_dregdate` is null
                 ",
                 array(
                     $req['phone']
@@ -322,8 +322,8 @@ class signup_submit {
                 "
                 select count(*) as total
                 from {$sql->table("mbchk")}
-                where chk_code=:col1 and chk_mode='pchk' and chk_chk='Y' and chk_dregdate is null
-                order by chk_regdate desc
+                where `chk_code`=:col1 and `chk_mode`='pchk' and `chk_chk`='Y' and `chk_dregdate` is null
+                order by `chk_regdate` desc
                 limit 1
                 ",
                 array(
@@ -380,7 +380,7 @@ class signup_submit {
             "
             select count(*) as total
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_dregdate is null
+            where `mb_id`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $req['id']
@@ -394,7 +394,7 @@ class signup_submit {
             "
             select count(*) as total
             from {$sql->table("member")}
-            where mb_email=:col1 and mb_dregdate is null
+            where `mb_email`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $req['email']
@@ -410,7 +410,7 @@ class signup_submit {
         $sql->query(
             "
             insert into {$sql->table("member")}
-            (mb_id, mb_email, mb_pwd, mb_name, mb_gender, mb_phone, mb_telephone, mb_address, mb_email_chk, mb_regdate, mb_lately, mb_lately_ip, mb_1, mb_2, mb_3, mb_4, mb_5, mb_6, mb_7, mb_8, mb_9, mb_10, mb_sns_ka, mb_sns_nv, mb_sns_ka_token, mb_sns_nv_token, mb_exp)
+            (`mb_id`, `mb_email`, `mb_pwd`, `mb_name`, `mb_gender`, `mb_phone`, `mb_telephone`, `mb_address`, `mb_email_chk`, `mb_regdate`, `mb_lately`, `mb_lately_ip`, `mb_1`, `mb_2`, `mb_3`, `mb_4`, `mb_5`, `mb_6`, `mb_7`, `mb_8`, `mb_9`, `mb_10`, `mb_sns_ka`, `mb_sns_nv`, `mb_sns_ka_token`, `mb_sns_nv_token`, `mb_exp`)
             values
             (:col1, :col2, {$sql->set_password($req['pwd'])}, :col3, :col4, :col5, :col6, :col7, :col8, now(), now(), :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24)
             ",
@@ -422,9 +422,9 @@ class signup_submit {
         // 회원 idx를 다시 가져옴
         $sql->query(
             "
-            select mb_idx
+            select `mb_idx`
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_pwd={$sql->set_password($req['pwd'])} and mb_dregdate is null
+            where `mb_id`=:col1 and `mb_pwd`={$sql->set_password($req['pwd'])} and `mb_dregdate` is null
             ",
             array(
                 $req['id']
@@ -455,7 +455,7 @@ class signup_submit {
             $sql->query(
                 "
                 insert into {$sql->table("mbchk")}
-                (mb_idx, chk_code, chk_chk, chk_mode, chk_regdate)
+                (`mb_idx`, `chk_code`, `chk_chk`, `chk_mode`, `chk_regdate`)
                 values
                 (:col1, :col2, 'N', 'chk', now())
                 ",
@@ -522,7 +522,7 @@ class Signup_check_id {
             "
             select count(*) total
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_dregdate is null
+            where `mb_id`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $req['id']
@@ -572,7 +572,7 @@ class Signup_check_email {
             "
             select count(*) total
             from {$sql->table("member")}
-            where mb_email=:col1 and mb_dregdate is null
+            where `mb_email`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $req['email']
@@ -658,7 +658,7 @@ class Emailchk extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mbchk")}
-            where chk_code=:col1 and (chk_mode='chk' or chk_mode='chg')
+            where `chk_code`=:col1 and (`chk_mode`='chk' or `chk_mode`='chg')
             ",
             array(
                 $req['chk_code']
@@ -696,8 +696,8 @@ class Emailchk extends \Controller\Make_Controller {
                 $sql->query(
                     "
                     update {$sql->table("member")}
-                    set mb_email_chk='Y'
-                    where mb_idx=:col1
+                    set `mb_email_chk`='Y'
+                    where `mb_idx`=:col1
                     ",
                     array(
                         $mb_idx
@@ -710,8 +710,8 @@ class Emailchk extends \Controller\Make_Controller {
                 $sql->query(
                     "
                     update {$sql->table("member")}
-                    set mb_email=mb_email_chg, mb_email_chg=''
-                    where mb_idx=:col1
+                    set `mb_email`=`mb_email_chg`, `mb_email_chg`=''
+                    where `mb_idx`=:col1
                     ",
                     array(
                         $mb_idx
@@ -723,8 +723,8 @@ class Emailchk extends \Controller\Make_Controller {
             $sql->query(
                 "
                 update {$sql->table("mbchk")}
-                set chk_chk='Y'
-                where chk_code=:col1
+                set `chk_chk`='Y'
+                where `chk_code`=:col1
                 ",
                 array(
                     $chk_code
@@ -771,7 +771,7 @@ class Retry_emailchk extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("member")}
-                where mb_idx=:col1 and mb_email_chk='N' and mb_dregdate is null
+                where `mb_idx`=:col1 and `mb_email_chk`='N' and `mb_dregdate` is null
                 ",
                 array(
                     $p_req['p_mb_idx']
@@ -802,7 +802,7 @@ class Retry_emailchk extends \Controller\Make_Controller {
             $sql->query(
                 "
                 insert into {$sql->table("mbchk")}
-                (mb_idx, chk_code, chk_chk, chk_mode, chk_regdate)
+                (`mb_idx`, `chk_code`, `chk_chk`, `chk_mode`, `chk_regdate`)
                 values
                 (:col1, :col2, 'N', 'chk', now())
                 ",
@@ -892,8 +892,8 @@ class Forgot_submit {
             "
             select *, count(*) as total
             from {$sql->table("member")}
-            where mb_email=:col1 and mb_dregdate is null
-            order by mb_regdate desc
+            where `mb_email`=:col1 and `mb_dregdate` is null
+            order by `mb_regdate` desc
             limit 1
             ",
             array(
@@ -912,8 +912,8 @@ class Forgot_submit {
         $sql->query(
             "
             update {$sql->table("member")}
-            set mb_pwd={$sql->set_password($upw)}
-            where mb_id=:col1 and mb_dregdate is null
+            set `mb_pwd`={$sql->set_password($upw)}
+            where `mb_id`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $mb_id
@@ -983,7 +983,7 @@ class Phonechk_submit {
             "
             select count(*) as total
             from {$sql->table("member")}
-            where mb_phone=:col1 and mb_dregdate is null
+            where `mb_phone`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $req['phone']
@@ -998,7 +998,7 @@ class Phonechk_submit {
         $sql->query(
             "
             insert into {$sql->table("mbchk")}
-            (mb_idx, chk_code, chk_mode, chk_chk, chk_regdate)
+            (`mb_idx`, `chk_code`, `chk_mode`, `chk_chk`, `chk_regdate`)
             values
             (:col1, :col2, :col3, :col4, now())
             ",
@@ -1051,7 +1051,7 @@ class phonechk_confirm_submit {
             "
             select count(*) as total
             from {$sql->table("mbchk")}
-            where chk_code=:col1 and chk_mode='pchk' and chk_dregdate is null
+            where `chk_code`=:col1 and `chk_mode`='pchk' and `chk_dregdate` is null
             ",
             array(
                 $req['phone'].':'.$req['phone_code']
@@ -1065,7 +1065,7 @@ class phonechk_confirm_submit {
             "
             update {$sql->table("mbchk")}
             set chk_chk='Y'
-            where chk_code=:col1 and chk_mode='pchk' and chk_dregdate is null
+            where `chk_code`=:col1 and `chk_mode`='pchk' and `chk_dregdate` is null
             ",
             array(
                 $req['phone'].':'.$req['phone_code']

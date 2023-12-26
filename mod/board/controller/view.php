@@ -233,8 +233,8 @@ class View extends \Controller\Make_Controller {
         $sql->query(
             "
             select member.mb_profileimg,
-            ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=:col1 and likes>0 ) likes_cnt,
-            ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=:col1 and unlikes>0 ) unlikes_cnt,
+            ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=:col1 and `likes`>0 ) likes_cnt,
+            ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=:col1 and `unlikes`>0 ) unlikes_cnt,
             board.*
             from {$sql->table("mod:board_data_".$board_id)} board
             left outer join {$sql->table("member")} member
@@ -268,8 +268,8 @@ class View extends \Controller\Make_Controller {
 
             $sql->query(
                 "
-                select member.mb_profileimg,board.*,
-                ( select count(*) from {$sql->table("mod:board_cmt_".$board_id)} where bo_idx=board.idx ) comment_cnt
+                select member.mb_profileimg, board.*,
+                ( select count(*) from {$sql->table("mod:board_cmt_".$board_id)} where `bo_idx`=board.idx ) comment_cnt
                 from {$sql->table("mod:board_data_".$board_id)} board
                 left outer join {$sql->table("member")} member
                 on board.mb_idx=member.mb_idx
@@ -304,8 +304,8 @@ class View extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:board_data_".$board_id)}
-                where ln>:col1 and rn=:col2
-                order by ln asc
+                where `ln`>:col1 and `rn`=:col2
+                order by `ln` asc
                 limit 1
                 ",
                 array(
@@ -430,8 +430,8 @@ class View extends \Controller\Make_Controller {
             $sql->query(
                 "
                 update {$sql->table("mod:board_data_".$board_id)}
-                set view = view + 1
-                where idx=:col1
+                set `view`=`view`+1
+                where `idx`=:col1
                 ",
                 array(
                     $req['read']
@@ -592,7 +592,7 @@ class Get_likes {
             "
             select *
             from {$sql->table("mod:board_like")}
-            where id=:col1 and data_idx=:col2 and mb_idx=:col3
+            where `id`=:col1 and `data_idx`=:col2 and `mb_idx`=:col3
             ",
             array(
                 $req['board_id'], $req['read'], $MB['idx']
@@ -606,7 +606,7 @@ class Get_likes {
             $sql->query(
                 "
                 insert into {$sql->table("mod:board_like")}
-                (id, data_idx, mb_idx, likes, unlikes, regdate)
+                (`id`, `data_idx`, `mb_idx`, `likes`, `unlikes`, `regdate`)
                 values
                 (:col1, :col2, :col3, 1, 0, now())
                 ",
@@ -620,7 +620,7 @@ class Get_likes {
                 select
                 count(*) total_cnt
                 from {$sql->table("mod:board_like")}
-                where id=:col1 and data_idx=:col2 and likes>0
+                where `id`=:col1 and `data_idx`=:col2 and `likes`>0
                 ",
                 array(
                     $req['board_id'], $req['read']
@@ -634,7 +634,7 @@ class Get_likes {
             $sql->query(
                 "
                 insert into {$sql->table("mod:board_like")}
-                (id, data_idx, mb_idx, likes, unlikes, regdate)
+                (`id`, `data_idx`, `mb_idx`, `likes`, `unlikes`, `regdate`)
                 values
                 (:col1, :col2, :col3, 0, 1, now())
                 ",
@@ -648,7 +648,7 @@ class Get_likes {
                 select
                 count(*) total_cnt
                 from {$sql->table("mod:board_like")}
-                where id=:col1 and data_idx=:col2 and unlikes>0
+                where `id`=:col1 and `data_idx`=:col2 and `unlikes`>0
                 ",
                 array(
                     $req['board_id'], $req['read']

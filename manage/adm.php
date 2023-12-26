@@ -145,7 +145,7 @@ class Info_submit{
             "
             select *
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_dregdate is null and mb_adm!='Y'
+            where `mb_id`=:col1 and `mb_dregdate` is null and `mb_adm`!='Y'
             ",
             array(
                 $req['id']
@@ -158,7 +158,7 @@ class Info_submit{
             "
             select *
             from {$sql->table("member")}
-            where mb_id=:col1 and mb_dregdate is null
+            where `mb_id`=:col1 and `mb_dregdate` is null
             ",
             array(
                 $req['email']
@@ -200,8 +200,8 @@ class Info_submit{
             $sql->query(
                 "
                 update {$sql->table("member")}
-                set mb_id=:col2, mb_name=:col3, mb_pwd={$sql->set_password($req['pwd'])}, mb_email=:col4, mb_profileimg=:col5, mb_gender=:col6, mb_phone=:col7, mb_telephone=:col8, mb_address=:col9
-                where mb_adm='Y' and mb_idx=:col1
+                set `mb_id`=:col2, `mb_name`=:col3, `mb_pwd`={$sql->set_password($req['pwd'])}, `mb_email`=:col4, `mb_profileimg`=:col5, `mb_gender`=:col6, `mb_phone`=:col7, `mb_telephone`=:col8, `mb_address`=:col9
+                where `mb_adm`='Y' and `mb_idx`=:col1
                 ",
                 array(
                     $MB['idx'], $req['id'], $req['name'], $req['email'], $profileimg_name, $req['gender'], $req['phone'], $req['telephone'], $req['address1'].'|'.$req['address2'].'|'.$req['address3']
@@ -213,8 +213,8 @@ class Info_submit{
             $sql->query(
                 "
                 update {$sql->table("member")}
-                set mb_id=:col2, mb_name=:col3, mb_pwd=:col4, mb_email=:col5, mb_profileimg=:col6, mb_gender=:col7, mb_phone=:col8, mb_telephone=:col9, mb_address=:col10
-                where mb_adm='Y' and mb_idx=:col1
+                set `mb_id`=:col2, `mb_name`=:col3, `mb_pwd`=:col4, `mb_email`=:col5, `mb_profileimg`=:col6, `mb_gender`=:col7, `mb_phone`=:col8, `mb_telephone`=:col9, `mb_address`=:col10
+                where `mb_adm`='Y' and `mb_idx`=:col1
                 ",
                 array(
                     $MB['idx'], $req['id'], $req['name'], $MB['pwd'], $req['email'], $profileimg_name, $req['gender'], $req['phone'], $req['telephone'], $req['address1'].'|'.$req['address2'].'|'.$req['address3']

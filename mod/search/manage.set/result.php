@@ -63,8 +63,8 @@ class SearchList extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mod:search")}
-            where char_length(caidx)=4
-            order by caidx asc
+            where char_length(`caidx`)=4
+            order by `caidx` asc
             ", []
         );
         $list_cnt = $sql->getcount();
@@ -124,7 +124,7 @@ class SearchList_submit{
             "
             select *
             from {$sql->table("mod:search")}
-            order by idx DESC
+            order by `idx` DESC
             limit 1
             ", []
         );
@@ -137,7 +137,7 @@ class SearchList_submit{
             "
             insert into
             {$sql->table("mod:search")}
-            (idx, caidx, title, children)
+            (`idx`, `caidx`, `title`, `children`)
             values
             (:col1, :col2, :col3, :col4)
             ",
@@ -171,7 +171,7 @@ class SearchList_submit{
 
         } else {
             for ($i = 0; $i < count($req['idx']); $i++) {
-                $where .= ($i == 0) ? 'idx!=\''.$req['idx'][$i].'\'' : ' and idx!=\''.$req['idx'][$i].'\'';
+                $where .= ($i == 0) ? '`idx`!=\''.$req['idx'][$i].'\'' : ' and `idx`!=\''.$req['idx'][$i].'\'';
             }
         }
 
@@ -188,9 +188,9 @@ class SearchList_submit{
         for ($i = 0; $i < count($req['idx']); $i++) {
             $sql->query(
                 "
-                select COUNT(*) count
+                select count(*) count
                 from {$sql->table("mod:search")}
-                where caidx like :col1
+                where `caidx` like :col1
                 ",
                 array(
                     $req['org_caidx'][$i].'%'
@@ -204,8 +204,8 @@ class SearchList_submit{
                 "
                 update {$sql->table("mod:search")}
                 set
-                caidx=:col1, children=:col2
-                where idx=:col3
+                `caidx`=:col1, `children`=:col2
+                where `idx`=:col3
                 ",
                 array(
                     $req['caidx'][$i], $children_count[$i], $req['idx'][$i]
@@ -268,7 +268,7 @@ class SearchModify extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mod:contents")}
-                order by data_key asc
+                order by `data_key` asc
                 ", []
             );
 
@@ -297,7 +297,7 @@ class SearchModify extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mod:search")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
@@ -371,8 +371,8 @@ class SearchModify_submit{
             "
             update {$sql->table("mod:search")}
             set
-            title=:col1, href=:col2, opt=:col3
-            where idx=:col4
+            `title`=:col1, `href`=:col2, `opt`=:col3
+            where `idx`=:col4
             ",
             array(
                 $req['title'], $req['href'], $req['module'].'|'.$req['limit'], $req['idx']

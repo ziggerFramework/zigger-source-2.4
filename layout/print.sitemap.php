@@ -7,8 +7,8 @@ $stsql->query(
     "
     select *
     from {$stsql->table("sitemap")}
-    where char_length(caidx)=4 and visible='Y'
-    order by caidx asc
+    where char_length(`caidx`)=4 and `visible`='Y'
+    order by `caidx` asc
     ", ''
 );
 $list_cnt = $stsql->getcount();
@@ -35,8 +35,8 @@ if ($list_cnt > 0) {
                 "
                 select *
                 from {$stsql->table("sitemap")}
-                where substr(caidx,1,4)=:col1 and char_length(caidx)=8 and visible='Y'
-                order by caidx asc
+                where substr(`caidx`,1,4)=:col1 and char_length(`caidx`)=8 and `visible`='Y'
+                order by `caidx` asc
                 ",
                 array(
                     $arr['caidx']
@@ -61,8 +61,8 @@ if ($list_cnt > 0) {
                             "
                             select *
                             from {$stsql->table("sitemap")}
-                            where substr(caidx,1,8)=:col1 and char_length(caidx)=12 and visible='Y'
-                            order by caidx asc
+                            where substr(`caidx`,1,8)=:col1 and char_length(`caidx`)=12 and `visible`='Y'
+                            order by `caidx` asc
                             ",
                             array(
                                 $arr2['caidx']

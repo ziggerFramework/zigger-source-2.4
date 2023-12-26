@@ -160,7 +160,7 @@ class Ctrl_submit {
                     "
                     select *
                     from {$sql->table("mod:board_data_".$board_id)}
-                    where idx=:col1
+                    where `idx`=:col1
                     ",
                     array(
                         $cnum[$i]
@@ -179,10 +179,10 @@ class Ctrl_submit {
                 if ($org_arr['rn'] >= 1) {
                     $sql->query(
                         "
-                        select ln
+                        select `ln`
                         from {$sql->table("mod:board_data_".$board_id)}
-                        where ln>=:col1 and ln<:col2 and rn=:col3
-                        order by ln desc
+                        where `ln`>=:col1 and `ln`<:col2 and `rn`=:col3
+                        order by `ln` desc
                         limit 1
                         ",
                         array(
@@ -191,7 +191,7 @@ class Ctrl_submit {
                     );
                     $tar_ln = $sql->fetch('ln');
 
-                    $del_where[$i] = ($tar_ln == '') ? '(ln<='.$org_arr['ln'].' and ln>'.$ln_min.' and rn>='.$org_arr['rn'].')' : '(ln<='.$org_arr['ln'].' and ln>'.$tar_ln.' and rn>='.$org_arr['rn'].')';
+                    $del_where[$i] = ($tar_ln == '') ? '(`ln`<='.$org_arr['ln'].' and `ln`>'.$ln_min.' and `rn`>='.$org_arr['rn'].')' : '(`ln`<='.$org_arr['ln'].' and `ln`>'.$tar_ln.' and `rn`>='.$org_arr['rn'].')';
                 }
             }
         }
@@ -243,7 +243,7 @@ class Ctrl_submit {
                     "
                     delete
                     from {$sql2->table("mod:board_cmt_".$board_id)}
-                    where bo_idx=:col1
+                    where `bo_idx`=:col1
                     ",
                     array(
                         $del_arr['idx']
@@ -295,10 +295,10 @@ class Ctrl_submit {
         $ln_where = array();
         for ($i = 0; $i < count($cnum); $i++) {
             if ($i == 0) {
-                $ln_where = 'idx=\''.$cnum[$i].'\'';
+                $ln_where = '`idx`=\''.$cnum[$i].'\'';
 
             } else {
-                $ln_where .= ' or idx=\''.$cnum[$i].'\'';
+                $ln_where .= ' or `idx`=\''.$cnum[$i].'\'';
             }
         }
 
@@ -342,9 +342,9 @@ class Ctrl_submit {
                 // 대상 게시판의 최대 ln값 불러옴
                 $cp_sql->query(
                     "
-                    select max(ln)+1000 as ln_max
+                    select max(`ln`)+1000 as ln_max
                     from {$cp_sql->table("mod:board_data_".$t_board_id)}
-                    order by ln desc
+                    order by `ln` desc
                     limit 1
                     ", []
                 );
@@ -401,7 +401,7 @@ class Ctrl_submit {
                         "
                         insert into
                         {$cp_sql->table("mod:board_data_".$t_board_id)}
-                        (category, ln, rn, mb_idx, mb_id, writer, pwd, email, article, subject, file1, file1_cnt, file2, file2_cnt, use_secret, use_html, use_email, view, ip, regdate, dregdate, data_1, data_2, data_3, data_4, data_5, data_6, data_7, data_8, data_9, data_10)
+                        (`category`, `ln`, `rn`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `file1`, `file1_cnt`, `file2`, `file2_cnt`, `use_secret`, `use_html`, `use_email`, `view`, `ip`, `regdate`, `dregdate`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`)
                         values
                         (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, now(), :col20, :col21, :col22, :col23, :col24, :col25, :col26, :col27, :col28, :col29, :col30)
                         ",
@@ -415,9 +415,9 @@ class Ctrl_submit {
                     // 이동된 글의 idx값을 다시 불러옴
                     $cp_sql->query(
                         "
-                        select idx
+                        select `idx`
                         from {$cp_sql->table("mod:board_data_".$t_board_id)}
-                        where ln=:col1
+                        where `ln`=:col1
                         ",
                         array(
                             $tar_ln
@@ -430,8 +430,8 @@ class Ctrl_submit {
                         "
                         update
                         {$cp_sql->table("mod:board_like")}
-                        set id=:col1, data_idx=:col2
-                        where id=:col3 and data_idx=:col4
+                        set `id`=:col1, `data_idx`=:col2
+                        where `id`=:col3 and `data_idx`=:col4
                         ",
                         array(
                             $t_board_id, $cped_idx, $board_id, $arr['idx']
@@ -441,9 +441,9 @@ class Ctrl_submit {
                     // 댓글 복사를 위해 대상 댓글 테이블의 최대 ln값 구함
                     $cp_sql->query(
                         "
-                        select max(ln)+1000 as ln_max
+                        select max(`ln`)+1000 as ln_max
                         from {$cp_sql->table("mod:board_data_".$t_board_id)}
-                        order by ln desc
+                        order by `ln` desc
                         limit 1
                         ", []
                     );
@@ -457,7 +457,7 @@ class Ctrl_submit {
                         "
                         select *
                         from {$cp_sql->table("mod:board_cmt_".$board_id)}
-                        where bo_idx=:col1
+                        where `bo_idx`=:col1
                         ",
                         array(
                             $arr['idx']
@@ -474,7 +474,7 @@ class Ctrl_submit {
                                 "
                                 insert into
                                 {$cp_sql2->table("mod:board_cmt_".$t_board_id)}
-                                (ln, rn, bo_idx, mb_idx, writer, parent_writer, parent_mb_idx, comment, ip, regdate, cmt_1, cmt_2, cmt_3, cmt_4, cmt_5, cmt_6, cmt_7, cmt_8, cmt_9, cmt_10)
+                                (`ln`, `rn`, `bo_idx`, `mb_idx`, `writer`, `parent_writer`, `parent_mb_idx`, `comment`, `ip`, `regdate`, `cmt_1`, `cmt_2`, `cmt_3`, `cmt_4`, `cmt_5`, `cmt_6`, `cmt_7`, `cmt_8`, `cmt_9`, `cmt_10`)
                                 values
                                 (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, :col20)
                                 ",
@@ -492,7 +492,7 @@ class Ctrl_submit {
                         "
                         delete
                         from {$cp_sql->table("mod:board_cmt_".$board_id)}
-                        where bo_idx=:col1
+                        where `bo_idx`=:col1
                         ",
                         array(
                             $arr['idx']
@@ -504,7 +504,7 @@ class Ctrl_submit {
                         "
                         delete
                         from {$cp_sql->table("mod:board_data_".$board_id)}
-                        where idx=:col1
+                        where `idx`=:col1
                         ",
                         array(
                             $arr['idx']
@@ -552,7 +552,7 @@ class Ctrl_submit {
                 "
                 select *
                 from {$sql->table("mod:board_data_".$board_id)}
-                where idx=:col1
+                where `idx`=:col1
                 ",
                 array(
                     $cnum[$i]
@@ -568,9 +568,9 @@ class Ctrl_submit {
                 // 대상 게시판의 최대 ln값 불러옴
                 $sql->query(
                     "
-                    select max(ln)+1000 as ln_max
+                    select max(`ln`)+1000 as ln_max
                     from {$sql->table("mod:board_data_".$t_board_id)}
-                    order by ln desc
+                    order by `ln` desc
                     limit 1
                     ", []
                 );
@@ -616,7 +616,7 @@ class Ctrl_submit {
                     "
                     insert into
                     {$sql->table("mod:board_data_".$t_board_id)}
-                    (category, ln, rn, mb_idx, mb_id, writer, pwd, email, article, subject, file1, file1_cnt, file2, file2_cnt, use_secret, use_html, use_email, view, ip, regdate, dregdate, data_1, data_2, data_3, data_4, data_5, data_6, data_7, data_8, data_9, data_10)
+                    (`category`, `ln`, `rn`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `file1`, `file1_cnt`, `file2`, `file2_cnt`, `use_secret`, `use_html`, `use_email`, `view`, `ip`, `regdate`, `dregdate`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`)
                     values
                     (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, now(), :col20, :col21, :col22, :col23, :col24, :col25, :col26, :col27, :col28, :col29, :col30)
                     ",
@@ -702,7 +702,7 @@ class Writer extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("member")}
-            where mb_idx=:col1
+            where `mb_idx`=:col1
             limit 1
             ",
             array(

@@ -47,7 +47,7 @@ class Blocked {
             "
             select *
             from {$sql->table("blockmb")}
-            where (ip=:col1 or ip=:col2 or ip=:col3 or ip=:col4) or (mb_idx=:col5 and mb_id=:col6)
+            where (`ip`=:col1 or `ip`=:col2 or `ip`=:col3 or `ip`=:col4) or (`mb_idx`=:col5 and `mb_id`=:col6)
             ",
             array(
                 $ip_qry[0],

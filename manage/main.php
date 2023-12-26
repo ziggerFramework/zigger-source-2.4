@@ -33,8 +33,8 @@ class Dash extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("member")}
-            where mb_adm!='Y' and mb_dregdate is null
-            order by mb_regdate desc
+            where `mb_adm`!='Y' and `mb_dregdate` is null
+            order by `mb_regdate` desc
             limit 5
             ", []
         );
@@ -55,11 +55,11 @@ class Dash extends \Controller\Make_Controller {
         // visit member
         $sql->query(
             "
-            select visit.*,ifnull(member.mb_level,10) mb_level
+            select visit.*, ifnull(member.mb_level, 10) mb_level
             from {$sql->table("visitcount")} visit
             left outer join {$sql->table("member")} member
             on visit.mb_idx=member.mb_idx
-            order by regdate desc
+            order by `regdate` desc
             limit 5
             ", []
         );
@@ -89,8 +89,8 @@ class Dash extends \Controller\Make_Controller {
             left outer join
             {$sql->table("member")} member
             on sess.mb_idx=member.mb_idx
-            where regdate>=date_sub(now(), interval 10 minute)
-            order by regdate desc
+            where `regdate`>=date_sub(now(), interval 10 minute)
+            order by `regdate` desc
             ", []
         );
         $list_cnt['stat_mb'] = $sql->getcount();
@@ -118,8 +118,8 @@ class Dash extends \Controller\Make_Controller {
                 $sql->query(
                     "
                     update {$sql->table("mng_feeds")}
-                    set chked='Y'
-                    where chked='N'
+                    set `chked`='Y'
+                    where `chked`='N'
                     ", []
                 );
 
@@ -128,8 +128,8 @@ class Dash extends \Controller\Make_Controller {
                 $sql->query(
                     "
                     update {$sql->table("mng_feeds")}
-                    set chked='Y'
-                    where idx=:col1 and chked='N'
+                    set `chked`='Y'
+                    where `idx`=:col1 and `chked`='N'
                     ",
                     array(
                         $req['view_dash_feed']
@@ -150,10 +150,10 @@ class Dash extends \Controller\Make_Controller {
                 (
                     select count(*)
                     from {$sql->table("mng_feeds")}
-                    where chked='N'
+                    where `chked`='N'
                 ) as total
                 from {$sql->table("mng_feeds")}
-                order by idx desc
+                order by `idx` desc
                 ", []
             )
         );

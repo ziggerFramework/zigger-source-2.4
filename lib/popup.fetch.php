@@ -15,7 +15,7 @@ class Popup_fetch {
             "
             select *
             from {$sql->table("popup")}
-            where show_from<now() and show_to>now()
+            where `show_from`<now() and `show_to`>now()
             ", ''
         );
 

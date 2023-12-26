@@ -385,9 +385,9 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             "
             select *, member.mb_profileimg,
-            ( select count(*) from {$sql->table("mod:board_cmt_".$board_id)} where bo_idx=board.idx ) comment_cnt,
-            ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=board.idx and likes>0 ) likes_cnt,
-            ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=board.idx and unlikes>0 ) unlikes_cnt
+            ( select count(*) from {$sql->table("mod:board_cmt_".$board_id)} where `bo_idx`=board.idx ) comment_cnt,
+            ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=board.idx and `likes`>0 ) likes_cnt,
+            ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=board.idx and `unlikes`>0 ) unlikes_cnt
             from {$sql->table("mod:board_data_".$board_id)} board
             left outer join {$sql->table("member")} member
             on board.mb_idx=member.mb_idx
@@ -414,14 +414,14 @@ class Result extends \Controller\Make_Controller {
             $paging->query(
                 "
                 select *, member.mb_profileimg,
-                ( select count(*) from {$sql->table("mod:board_cmt_".$board_id)} where bo_idx=board.idx ) comment_cnt,
-                ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=board.idx and likes>0 ) likes_cnt,
-                ( select count(*) from {$sql->table("mod:board_like")} where id='$board_id' and data_idx=board.idx and unlikes>0 ) unlikes_cnt
+                ( select count(*) from {$sql->table("mod:board_cmt_".$board_id)} where `bo_idx`=board.idx ) comment_cnt,
+                ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=board.idx and `likes`>0 ) likes_cnt,
+                ( select count(*) from {$sql->table("mod:board_like")} where `id`='$board_id' and `data_idx`=board.idx and `unlikes`>0 ) unlikes_cnt
                 from {$sql->table("mod:board_data_".$board_id)} board
                 left outer join {$sql->table("member")} member
                 on board.mb_idx=member.mb_idx
                 where board.use_notice='N' $search
-                order by board.ln DESC, board.rn asc, board.regdate desc
+                order by board.ln desc, board.rn asc, board.regdate desc
                 ", []
             )
         );

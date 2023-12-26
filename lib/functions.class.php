@@ -27,7 +27,7 @@ class Func {
                     "
                     insert into
                     {$sql->table("config")}
-                    (cfg_type, cfg_key, cfg_value, cfg_regdate)
+                    (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regdate`)
                     values
                     ('engine', :col1, :col2, now())
                     ", array(
@@ -239,7 +239,7 @@ class Func {
             "
             select *
             from {$sql->table("member")}
-            where mb_idx=:col1
+            where `mb_idx`=:col1
             ",
             array(
                 $arr['mb_idx']
@@ -252,7 +252,7 @@ class Func {
             $sql->query(
                 "
                 insert into {$sql->table("mbpoint")}
-                (mb_idx,p_in, memo, regdate)
+                (`mb_idx`, `p_in`, `memo`, `regdate`)
                 values
                 (:col1, :col2, :col3, now())
                 ",
@@ -277,7 +277,7 @@ class Func {
             $sql->query(
                 "
                 insert into {$sql->table("mbpoint")}
-                (mb_idx, p_out, memo, regdate)
+                (`mb_idx`, `p_out`, `memo`, `regdate`)
                 values
                 (:col1, :col2, :col3, now())
                 ",
@@ -292,8 +292,8 @@ class Func {
         $sql->query(
             "
             update {$sql->table("member")}
-            set mb_point=:col1
-            where mb_idx=:col2
+            set `mb_point`=:col1
+            where `mb_idx`=:col2
             ",
             array(
                 $set_point,
@@ -315,7 +315,7 @@ class Func {
         $sql->query(
             "
             insert into {$sql->table("mng_feeds")}
-            (msg_from, memo, href, regdate)
+            (`msg_from`, `memo`, `href`, `regdate`)
             values
             (:col1, :col2, :col3, now())
             ",
@@ -450,7 +450,7 @@ class Func {
                 "
                 select *
                 from {$sql->table("dataupload")}
-                where repfile=:col1
+                where `repfile`=:col1
                 ", array(
                     $file
                 )

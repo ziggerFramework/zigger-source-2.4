@@ -83,7 +83,7 @@ class Info extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("member")}
-            where mb_idx=:col1 and mb_dregdate is null
+            where `mb_idx`=:col1 and `mb_dregdate` is null
             ",
             array(
                 MB_IDX
@@ -226,7 +226,7 @@ class Info_submit {
                 "
                 select count(*) as total
                 from {$sql->table("member")}
-                where mb_email=:col1 and mb_email!=:col2 and mb_dregdate is null
+                where `mb_email`=:col1 and `mb_email`!=:col2 and `mb_dregdate` is null
                 ",
                 array(
                     $req['email'],
@@ -261,7 +261,7 @@ class Info_submit {
             $sql->query(
                 "
                 insert into {$sql->table("mbchk")}
-                (mb_idx, chk_code, chk_chk, chk_mode, chk_regdate)
+                (`mb_idx`, `chk_code`, `chk_chk`, `chk_mode`, `chk_regdate`)
                 values
                 (:col1, :col2, 'N', 'chg', now())
                 ",
@@ -298,7 +298,7 @@ class Info_submit {
                 "
                 select count(*) as total
                 from {$sql->table("member")}
-                where mb_phone=:col1 and mb_dregdate is null
+                where `mb_phone`=:col1 and `mb_dregdate` is null
                 ",
                 array(
                     $req['phone']
@@ -311,8 +311,8 @@ class Info_submit {
                 "
                 select count(*) as total
                 from {$sql->table("mbchk")}
-                where chk_code=:col1 and chk_mode='pchk' and chk_chk='Y' and chk_dregdate is null
-                order by chk_regdate desc
+                where `chk_code`=:col1 and `chk_mode`='pchk' and `chk_chk`='Y' and `chk_dregdate` is null
+                order by `chk_regdate` desc
                 limit 1
                 ",
                 array(
@@ -388,8 +388,8 @@ class Info_submit {
             $sql->query(
                 "
                 update {$sql->table("member")}
-                set mb_pwd={$sql->set_password($req['pwd'])}, mb_name=:col2, mb_gender=:col3, mb_phone=:col4, mb_address=:col5, mb_telephone=:col6, mb_email_chg=:col7, mb_profileimg=:col8
-                where mb_idx=:col1 and mb_dregdate is null
+                set `mb_pwd`={$sql->set_password($req['pwd'])}, `mb_name`=:col2, `mb_gender`=:col3, `mb_phone`=:col4, `mb_address`=:col5, `mb_telephone`=:col6, `mb_email_chg`=:col7, `mb_profileimg`=:col8
+                where `mb_idx`=:col1 and `mb_dregdate` is null
                 ",
                 array(
                     MB_IDX,
@@ -407,8 +407,8 @@ class Info_submit {
             $sql->query(
                 "
                 update {$sql->table("member")}
-                set mb_pwd=:col2, mb_name=:col3, mb_gender=:col4, mb_phone=:col5, mb_address=:col6, mb_telephone=:col7, mb_email_chg=:col8, mb_profileimg=:col9
-                where mb_idx=:col1 and mb_dregdate is null
+                set `mb_pwd`=:col2, `mb_name`=:col3, `mb_gender`=:col4, `mb_phone`=:col5, `mb_address`=:col6, `mb_telephone`=:col7, `mb_email_chg`=:col8, `mb_profileimg`=:col9
+                where `mb_idx`=:col1 and `mb_dregdate` is null
                 ",
                 array(
                     MB_IDX,
@@ -455,7 +455,7 @@ class Info_submit {
             "
             select *
             from {$sql->table("member")}
-            where mb_idx=:col1 and mb_id=:col2 and mb_pwd={$sql->set_password($req['pwd'])} and mb_dregdate is null
+            where `mb_idx`=:col1 and `mb_id`=:col2 and `mb_pwd`={$sql->set_password($req['pwd'])} and `mb_dregdate` is null
             ",
             array(
                 MB_IDX, $MB['id']
@@ -468,8 +468,8 @@ class Info_submit {
         $sql->query(
             "
             update {$sql->table("member")}
-            set mb_dregdate=now()
-            where mb_idx=:col1 and mb_dregdate is null
+            set `mb_dregdate`=now()
+            where `mb_idx`=:col1 and `mb_dregdate` is null
             ",
             array(
                 MB_IDX
@@ -522,8 +522,8 @@ class Point extends \Controller\Make_Controller {
                 "
                 select *
                 from {$sql->table("mbpoint")}
-                where mb_idx=:col1
-                order by idx desc
+                where `mb_idx`=:col1
+                order by `idx` desc
                 ",
                 array(
                     MB_IDX
@@ -578,7 +578,7 @@ class Warning extends \Controller\Make_Controller {
             "
             select *, count(*) as total
             from {$sql->table("blockmb")}
-            where (ip=:col1 or ip=:col2 or ip=:col3 or ip=:col4) or (mb_idx=:col5 and mb_id=:col6)
+            where (`ip`=:col1 or `ip`=:col2 or `ip`=:col3 or `ip`=:col4) or (`mb_idx`=:col5 and `mb_id`=:col6)
             limit 1
             ",
             array(

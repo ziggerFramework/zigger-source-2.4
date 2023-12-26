@@ -39,7 +39,7 @@ class Search extends \Controller\Make_Controller {
             foreach (exp_keywords($keyword) as $key => $value)
             {
                 $or = ($key > 0) ? ' or ' : '';
-                $where .= $or.'html like \'%'.addslashes($value).'%\'';
+                $where .= $or.'`html` like \'%'.addslashes($value).'%\'';
             }
 
             $sql->query(
@@ -79,17 +79,17 @@ class Search extends \Controller\Make_Controller {
 
             foreach (exp_keywords($keyword) as $key => $value) {
                 $or = ($key > 0) ? ' or ' : '';
-                $where[0] .= $or.' subject like \'%'.addslashes($value).'%\'';
-                $where[1] .= $or.' article like \'%'.addslashes($value).'%\'';
-                $where[2] .= $or.' writer like \'%'.addslashes($value).'%\'';
+                $where[0] .= $or.' `subject` like \'%'.addslashes($value).'%\'';
+                $where[1] .= $or.' `article` like \'%'.addslashes($value).'%\'';
+                $where[2] .= $or.' `writer` like \'%'.addslashes($value).'%\'';
             }
 
             $sql->query(
                 "
                 select *
                 from {$sql->table("mod:board_data_{$board}")}
-                where ({$where[0]}) or ({$where[1]}) or ({$where[2]}) and dregdate is null
-                order by regdate desc
+                where ({$where[0]}) or ({$where[1]}) or ({$where[2]}) and `dregdate` is null
+                order by `regdate` desc
                 limit 0, {$limit}
                 ", []
             );
@@ -128,8 +128,8 @@ class Search extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("mod:search")}
-            where opt is not null and href is not null
-            order by caidx asc
+            where `opt` is not null and `href` is not null
+            order by `caidx` asc
             ", []
         );
 

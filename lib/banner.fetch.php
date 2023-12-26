@@ -15,8 +15,8 @@ class Banner_fetch
             "
             select *
             from {$sql->table("banner")}
-            where bn_key=:col1
-            order by zindex asc
+            where `bn_key`=:col1
+            order by `zindex` asc
             ",
             array(
                 $FETCH_CONF['key']

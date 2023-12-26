@@ -21,7 +21,7 @@ class Library {
             "
             select *
             from {$sql->table("config")}
-            where cfg_type='mod:board:config:".addslashes($board_id)."'
+            where `cfg_type`='mod:board:config:".addslashes($board_id)."'
             ", []
         );
 

@@ -57,7 +57,7 @@ class Result extends \Controller\Make_Controller {
             "
             select
             (
-                select COUNT(*)
+                select count(*)
                 from {$sql->table("banner")}
             ) bn_total
             ", []
@@ -219,7 +219,7 @@ class Regist_submit{
         $sql->query(
             "
             insert into {$sql->table("banner")}
-            (bn_key, title, link, link_target, pc_img, mo_img, zindex, regdate)
+            (`bn_key`, `title`, `link`, `link_target`, `pc_img`, `mo_img`, `zindex`, `regdate`)
             VALUES
             (:col1, :col2, :col3, :col4, :col5, :col6, :col7, now())
             ",
@@ -232,8 +232,8 @@ class Regist_submit{
             "
             select *
             from {$sql->table("banner")}
-            where bn_key=:col1
-            order by regdate DESC
+            where `bn_key`=:col1
+            order by `regdate` DESC
             ",
             array(
                 $req['key']
@@ -276,7 +276,7 @@ class Modify extends \Controller\Make_Controller {
             "
             select *
             from {$sql->table("banner")}
-            where idx=binary(:col1)
+            where `idx`=binary(:col1)
             limit 1
             ",
             array(
@@ -406,7 +406,7 @@ class Modify_submit{
             "
             select *
             from {$sql->table("banner")}
-            where idx=binary(:col1)
+            where `idx`=binary(:col1)
             limit 1
             ",
             array(
@@ -450,8 +450,8 @@ class Modify_submit{
         $sql->query(
             "
             update {$sql->table("banner")}
-            set bn_key=:col2, title=:col3, link=:col4, link_target=:col5, pc_img=:col6, mo_img=:col7, zindex=:col8
-            where idx=:col1
+            set `bn_key`=:col2, `title`=:col3, `link`=:col4, `link_target`=:col5, `pc_img`=:col6, `mo_img`=:col7, `zindex`=:col8
+            where `idx`=:col1
             ",
             array(
                 $req['idx'], $req['key'], $req['title'], $req['link'], $req['link_target'], $pc_img_name, $mo_img_name, $req['zindex']
@@ -482,7 +482,7 @@ class Modify_submit{
             "
             select *
             from {$sql->table("banner")}
-            where idx=binary(:col1)
+            where `idx`=binary(:col1)
             limit 1
             ",
             array(
@@ -502,7 +502,7 @@ class Modify_submit{
             "
             delete
             from {$sql->table("banner")}
-            where idx=:col1
+            where `idx`=:col1
             ",
             array(
                 $req['idx']
