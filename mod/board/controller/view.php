@@ -316,7 +316,8 @@ class View extends \Controller\Make_Controller {
         }
 
         // 패스워드가 submit된 경우(비밀글) 패스워드가 일치 하는지 검사
-        if (isset($s_req['s_password'])) {
+        $rd_level = 0;
+        if (isset($s_req['s_password']) && empty($arr['mb_id'])) {
             if ($arr['pwd'] == $s_req['s_password']) {
                 $rd_level = 1;
 

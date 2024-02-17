@@ -25,7 +25,9 @@ function step1_chk()
         extschk('GD'),
         extschk('mbstring'),
         extschk('PDO'),
-        extschk('curl')
+        extschk('curl'),
+        extschk('OpenSSL'),
+        extschk('xml')
     );
 
     foreach ($loaded as $key => $value) {

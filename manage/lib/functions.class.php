@@ -34,7 +34,7 @@ class ManageFunc{
             Func::chklevel(1);
         }
 
-        $keyword = (!empty($PARAM['keyword'])) ? urldecode(addslashes($PARAM['keyword'])) : '';
+        $keyword = (!empty($PARAM['keyword'])) ? addslashes(urldecode($PARAM['keyword'])) : '';
         $searchby = '';
         if (!empty($PARAM['keyword']) && trim(addslashes($PARAM['keyword'])) != '') $searchby = 'AND '.addslashes($PARAM['where']).' like \'%'.$keyword.'%\'';
 

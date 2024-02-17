@@ -920,8 +920,8 @@ class Record extends \Controller\Make_Controller {
         $req = Method::request('get', 'nowdate, fdate, tdate');
 
         // date sortby
-        if (!$req['fdate']) $req['fdate'] = date('Y-m-d');
-        if (!$req['tdate']) $req['tdate'] = date('Y-m-d');
+        $req['fdate'] = (isset($req['fdate']) && !empty($req['fdate']) && preg_match("/^\d{4}-\d{2}-\d{2}$/", $req['fdate'])) ? date('Y-m-d', strtotime($req['fdate'])) : date('Y-m-d');
+        $req['tdate'] = (isset($req['tdate']) && !empty($req['tdate']) && preg_match("/^\d{4}-\d{2}-\d{2}$/", $req['tdate'])) ? date('Y-m-d', strtotime($req['tdate'])) : date('Y-m-d');
 
         // sortby
         $sortby = '';
@@ -969,17 +969,19 @@ class Record extends \Controller\Make_Controller {
         $PARAM[0]['nowdate'] = $req['nowdate'];
 
         // list
-        $sql_arr = array($req['fdate'], $req['tdate']);
         $sql->query(
             $paging->query(
                 "
-                select visit.*, ifnull(member.mb_level,10) mb_level
+                select visit.*, ifnull(member.mb_level, 10) mb_level
                 from {$sql->table("visitcount")} visit
                 left outer join {$sql->table("member")} member
                 on visit.mb_idx=member.mb_idx
-                where date_format(visit.regdate, '%Y-%m-%d') between date('{$req['fdate']}') and date('{$req['tdate']}') $sortby $searchby
+                where date_format(visit.regdate, '%Y-%m-%d') between date(:col1) and date(:col2) $sortby $searchby
                 order by $orderby
-                ", []
+                ",
+                array(
+                    $req['fdate'], $req['tdate']
+                )
             )
         );
         $list_cnt = $sql->getcount();
@@ -1069,7 +1071,7 @@ class Session extends \Controller\Make_Controller {
         $sql->query(
             $paging->query(
                 "
-                select sess.*, member.*, ifnull(member.mb_level, 10) mb_level
+                select sess.*, member.mb_id, member.mb_email, member.mb_name, ifnull(member.mb_level, 10) mb_level
                 from {$sql->table("session")} sess
                 left outer join
                 {$sql->table("member")} member
@@ -1185,7 +1187,7 @@ class Point extends \Controller\Make_Controller {
         $sql->query(
             $paging->query(
                 "
-                select mbpoint.*, member.*
+                select mbpoint.*, member.mb_id
                 from {$sql->table("mbpoint")} mbpoint
                 left outer join
                 {$sql->table("member")} member
@@ -1282,6 +1284,7 @@ class Point_submit{
         $id_qry = '';
 
         for ($i = 0; $i < count($id_ex); $i++) {
+            $id_ex[$i] = addslashes($id_ex[$i]);
             $id_qry .= ($i == 0) ? 'mb_id=\''.$id_ex[$i].'\'' : 'or mb_id=\''.$id_ex[$i].'\'';
         }
 

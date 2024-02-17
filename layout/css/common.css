@@ -14,7 +14,7 @@ dl,ul,ol,menu,li {list-style: none;}
 blockquote,q {quotes: none;}
 blockquote:before,blockquote:after,q:before,q:after {content: '';display: block;}
 article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,fieldset,legend {display: block;margin: 0;padding: 0;}
-a,input,select,textarea,button,label {vertical-aflign: middle;}
+a,input,select,textarea,button,label {vertical-align: middle;}
 *[disabled] {opacity: 0.5;}
 label,button,input[type=button],input[type=submit],input[type=image] {cursor: pointer;}
 h1,h2,h3,h4,h5,h6 {margin: 0;padding: 0;text-align: left;}

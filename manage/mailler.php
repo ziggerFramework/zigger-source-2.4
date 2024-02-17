@@ -439,7 +439,7 @@ class Send extends \Controller\Make_Controller {
                 select *
                 from {$sql->table("mailtpl")}
                 where `system`='N' or `type`='default'
-                order by `type` asc
+                order by `system` asc, `type` asc
                 ", []
             );
 

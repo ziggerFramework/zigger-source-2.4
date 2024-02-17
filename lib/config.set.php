@@ -52,11 +52,12 @@ define('REGEXP_NEGANUM', "/^[0-9-]+$/"); // 숫자 (음수 포함)
 define('REGEXP_ENG', "/^[a-zA-Z_]+$/"); // 영어
 define('REGEXP_NICK', "/^[가-힣0-9a-zA-Z]+$/"); // 닉네임
 define('REGEXP_PHONE', "/^[0-9]+$/"); // 연락처
-define('REGEXP_ID', "/^[0-9a-zA-Z]+$/"); // ID
+define('REGEXP_ID', "/^[0-9a-z]+$/"); // ID
 define('REGEXP_IDX', "/^[0-9a-zA-Z_]+$/"); // idx
 define('REGEXP_IMG', "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i"); // 이미지 추출
 
 // 오류문구 상수
+define('ERR_MSG_0', 'zigger Database가 올바르게 설치되지 않았습니다. (ERR-CODE: err000)'); // zigger Database를 확인할 수 없는 경우
 define('ERR_MSG_1', '정상적으로 접근 바랍니다. (ERR-CODE: err001)'); // 비정상적인 방법으로 접근한 경우
 define('ERR_MSG_2', '사용할 수 없는 태그가 포함되어 있습니다. (ERR-CODE: err002)'); // 사용 금지 태그를 사용한 경우
 define('ERR_MSG_3', 'Database에 접속할 수 없습니다. (ERR-CODE: err003)'); // DB Connect가 불가한 경우

@@ -907,7 +907,7 @@ class Forgot_submit {
         $mb_name = $sql->fetch('mb_name');
 
         // 임시 비밀번호 생성 및 정보 update
-        $upw = substr(md5(date('YmdHis').$mb_id), 0, 10);
+        $upw = substr(md5(Func::make_random_char()), 0, 10);
 
         $sql->query(
             "

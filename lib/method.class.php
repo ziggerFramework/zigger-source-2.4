@@ -25,7 +25,7 @@ class Method {
             if (count($expl) > 0) {
                 for ($i = 0; $i < count($expl); $i++) {
                     $expl[$i] = trim($expl[$i]);
-                    $return_arr[$expl[$i]] = (isset($_GET[$expl[$i]])) ? $_GET[$expl[$i]] : null;
+                    $return_arr[$expl[$i]] = (isset($_GET[$expl[$i]])) ? htmlspecialchars($_GET[$expl[$i]]) : null;
                 }
             }
             return $return_arr;

@@ -295,19 +295,31 @@ class Valid {
 
                 // 사용 금지 HTML TAG 포함된 경우 error (default : false)
                 case 'chkhtml' :
-
+                    
                     if ($value === true) {
                         $not_tags = SET_INTDICT_TAGS;
                         $not_tags_ex = explode(',', $not_tags);
 
+                        $pass_insp = true;
+                        
+                        // 특정 TAG 사용 금지
                         for ($i = 0; $i < count($not_tags_ex); $i++) {
-                            if (stristr($arr['value'], '<'.$not_tags_ex[$i]) || stristr($arr['value'], '</'.$not_tags_ex[$i])) {
-                                if (self::trim_val($arr['msg']) == '') $arr['msg'] = ERR_MSG_2;
-                                self::error($arr['input'], $arr['msg']);
-
-                                return;
-                            }
+                            if (stristr($arr['value'], '<'.$not_tags_ex[$i]) || stristr($arr['value'], '</'.$not_tags_ex[$i])) $pass_insp = false;
                         }
+
+                        // XSS 방지를 위한 검증
+                        if (preg_match('/onerror\s*=\s*"[^"]*"/i', $arr['value'])) $pass_insp = false;
+                        if (preg_match('/\beval\s*\(/', $arr['value'])) $pass_insp = false;
+                        if (preg_match('/\XMLHttpRequest\s*\(/', $arr['value'])) $pass_insp = false;
+                        if (preg_match('/\batob\s*\(/', $arr['value'])) $pass_insp = false;
+
+                        // return
+                        if (self::trim_val($arr['msg']) == '') $arr['msg'] = ERR_MSG_2;
+                        if ($pass_insp === false) {
+                            self::error($arr['input'], $arr['msg']);
+                            return;
+                        }
+                        
                     }
 
                     break;

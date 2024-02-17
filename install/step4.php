@@ -16,6 +16,7 @@ if (!file_exists('../data/dbconn.temp.php')) {
 
     if (!$req['engine'] || !$req['host'] || !$req['name'] || !$req['user'] || !$req['pwd'] || !$req['pfx']) Func::err_location('Database 정보가 입력되지 않았습니다.', './index.php');
     if (!preg_match('/^[0-9a-zA-Z_]+$/', $req['pfx'])) Func::err_location('Table Prefix가 올바르지 않습니다.', './index.php');
+    if (preg_match('/[\'"]/', $req['pwd'])) Func::err_location('Database Password에는 따옴표가 포함될 수 없습니다.', './index.php');
 
     try {
         switch ($req['engine']) {

@@ -237,6 +237,8 @@ class Write extends \Controller\Make_Controller {
         if (($req['wrmode'] == 'modify' || $req['wrmode'] == 'reply') && $arr['dregdate']) Func::err_back('삭제된 게시물입니다.');
 
         // 수정모드인 경우 권한 검사
+        $wr_level = 1;
+        
         if ($req['wrmode'] == 'modify') {
 
             if ($MB['level'] <= Write::$boardconf['ctr_level']) {
@@ -264,7 +266,7 @@ class Write extends \Controller\Make_Controller {
         }
 
         // 패스워드가 submit된 경우 검사
-        if (isset($s_req['s_password'])) {
+        if (isset($s_req['s_password']) && empty($arr['mb_id'])) {
             if ($arr['pwd'] == $s_req['s_password']) {
                 $wr_level = 1;
 
@@ -272,6 +274,9 @@ class Write extends \Controller\Make_Controller {
                 Func::err_back('입력한 비밀번호가 일치하지 않습니다.');
             }
         }
+
+        // 권한이 없는 경우 경고창
+        if ($wr_level == 0) Func::err_back('글 작성 권한이 없습니다.');
 
         // 패스워드 입력 폼 노출
         if ($req['wrmode'] == 'modify' && !IS_MEMBER && $wr_level != 1) {
@@ -460,10 +465,14 @@ class Write_submit{
                 if (!isset($req['data_'.$i])) $req['data_'.$i] = $org_arr['data_'.$i];
             }
         }
-
-        // check
+        
+        // 글 작성 권한 검사
         if ($MB['level'] > Write::$boardconf['write_level'] && $MB['level'] > Write::$boardconf['ctr_level']) Valid::error('','글 작성 권한이 없습니다.');
 
+        // 수정모드인 경우 수정 권한 검사
+        if ($req['wrmode'] == 'modify' && $org_arr['mb_idx'] != $MB['idx'] && $MB['level'] > Write::$boardconf['ctr_level']) Valid::error('','글 수정 권한이 없습니다.');
+
+        // 기본 입력 항목 검사
         Valid::get(
             array(
                 'input' => 'subject',
@@ -544,7 +553,7 @@ class Write_submit{
 
         if (isset($f_req['file1']) && isset($f_req['file2']) && $f_req['file1']['name'] == $f_req['file2']['name']) Valid::error('', '동일한 파일을 업로드 할 수 없습니다.');
 
-        // 수정모드인 경우 검사
+        // 수정모드인 경우 검사 (접속자가 회원이고, 원글은 비회원 글인 경우 추가 입력 항목 검사)
         if ($req['wrmode'] == 'modify' && IS_MEMBER && $org_arr['mb_idx'] == 0) {
 
             Valid::get(
@@ -776,6 +785,9 @@ class Write_submit{
         );
 
         // 관리자 Dashboard 소식 등록
+        $req['thisuri'] = htmlspecialchars($req['thisuri']);
+        $req['thisuri'] = str_replace(array("'", '"'), '', $req['thisuri']);
+        
         $feed_uri = (PH_DIR) ? str_replace(PH_DIR, '', $req['thisuri']) : $req['thisuri'];
 
         if (Write::$boardconf['use_mng_feed'] == 'Y') {

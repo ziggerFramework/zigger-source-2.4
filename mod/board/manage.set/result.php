@@ -78,7 +78,7 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             $paging->query(
                 "
-                select config.*,board_name_tbl.cfg_value as board_name
+                select config.*, board_name_tbl.cfg_value as board_name
                 from {$sql->table("config")} config
                 left outer join {$sql->table("config")} board_name_tbl
                 on config.cfg_type=board_name_tbl.cfg_type and board_name_tbl.cfg_key='title'
@@ -1041,11 +1041,16 @@ class Modify_submit {
             "
             select *
             from {$sql->table("config")}
-            where `cfg_type`='mod:board:config:{$req['id']}' and `cfg_key`='id' and `cfg_value`='{$req['id']}'
-            ", []
+            where `cfg_type`=:col1 and `cfg_key`='id' and `cfg_value`=:col2
+            ",
+            array(
+                'mod:board:config:'.$req['id'], $req['id']
+            )
         );
 
         $board_id = $sql->fetch('cfg_value');
+
+         if (!preg_match(REGEXP_IDX, $board_id)) Valid::error('', '게시판 경로가 올바르지 않습니다.');
 
         if ($sql->getcount() < 1) Valid::error('', '게시판이 존재하지 않습니다.');
 

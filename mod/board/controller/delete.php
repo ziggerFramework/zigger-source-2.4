@@ -86,7 +86,7 @@ class Delete extends \Controller\Make_Controller {
         }
 
         // 패스워드가 submit된 경우 패스워드가 일치 하는지 검사
-        if (isset($req['s_password'])) {
+        if (isset($req['s_password']) && empty($arr['mb_id'])) {
             if ($arr['pwd'] == $req['s_password']) {
                 $del_level = 1;
 
@@ -97,7 +97,7 @@ class Delete extends \Controller\Make_Controller {
         }
 
         // 권한이 없는 경우 경고창
-        if ($del_level == 0) Func::arr_back('삭제 권한이 없습니다.');
+        if ($del_level == 0) Func::err_back('삭제 권한이 없습니다.');
 
         // 패스워드 입력폼 노출
         if ($del_level == 2) {

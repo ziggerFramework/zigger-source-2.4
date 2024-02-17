@@ -364,8 +364,13 @@ class Func {
         
         $paramArr = array_filter(explode('&', $param), function ($list) {
             if ($list == '') return false;
-            list($key, $value) = explode('=', $list, 2);
-            return !empty($value) ? $key . '=' . $value : false;
+            $pair = explode('=', $list, 2);
+            if (count($pair) === 2) {
+                [$key, $value] = $pair;
+                return !empty($value) ? $key . '=' . $value : false;
+            } else {
+                return false;
+            }
         });
 
         return (count($paramArr) > 0) ? $chain.implode('&', $paramArr) : '';

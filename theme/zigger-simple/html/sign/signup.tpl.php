@@ -27,7 +27,7 @@
             <input type="text" name="id" id="id" title="User ID" class="inp" data-validt-action="/sign/Signup-check-id" data-validt-event="keyup" data-validt-group="id" required />
             <span class="validt" data-validt-group="id"></span>
             <span class="tbltxt">
-                · 영어, 숫자 조합으로 입력<br />
+                · 영어 소문자, 숫자 조합으로 입력<br />
                 · 최소 5자~최대 30자 까지 입력
             </span>
 

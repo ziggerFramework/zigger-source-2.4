@@ -109,6 +109,9 @@ class Ctrl_submit {
         $board_id = $req['board_id'];
         $t_board_id = $req['t_board_id'];
 
+        // board_id, t_board_id 값 검증
+        if (!preg_match(REGEXP_IDX, $board_id) || !preg_match(REGEXP_IDX, $t_board_id)) Valid::error('', '원본 게시판 또는 대상 게시판 id 값이 올바르지 않습니다.');
+
         //load config
         $boardconf = $boardlib->load_conf($board_id);
 
@@ -329,6 +332,9 @@ class Ctrl_submit {
                 $ln_min = (int)(ceil($ln[$i] / 1000) * 1000) - 1000;
                 $ln_max = (int)(ceil($ln[$i] / 1000) * 1000);
 
+                // 대상 게시판이 존재하는지 검증
+                if ($sql->table_exists(DB_PREFIX.'_mod_board_data_'.$t_board_id)) Valid::error('', '대상 게시판 id 값이 올바르지 않습니다.');
+
                 // 자식글의 범위를 구함
                 $ln_where = 'ln>'.$ln_min.' and ln<='.$ln_max;
                 $sql->query(
@@ -546,6 +552,9 @@ class Ctrl_submit {
         $sql = new Pdosql();
 
         for ($i = 0; $i < count($cnum); $i++) {
+
+            // 대상 게시판이 존재하는지 검증
+            if ($sql->table_exists(DB_PREFIX.'_mod_board_data_'.$t_board_id)) Valid::error('', '대상 게시판 id 값이 올바르지 않습니다.');
 
             // 원본글의 정보를 불러옴
             $sql->query(

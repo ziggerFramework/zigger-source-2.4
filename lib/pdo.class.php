@@ -45,6 +45,9 @@ class Pdosql {
             Func::core_err(ERR_MSG_3 . '<br />' . $e->getMessage());
         }
 
+        // check installation
+        if ((int)$this->table_exists('config') === 0) Func::core_err(ERR_MSG_0);
+
         $this->specialchars = DB_SPECIALCHARS;
         $this->nl2br = DB_NL2BR;
     }
