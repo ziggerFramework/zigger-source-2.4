@@ -1,6 +1,6 @@
 ### Apache의 MultiViews Option이 활성화 되어있어 오류가 발생하는 경우
-### 아래 'Options -MultiViews' 주석을 해제하여 MultiViews 종료
-# Options -MultiViews
+### 아래 'Options -FollowSymlinks -MultiViews' 주석을 해제하여 FollowSymlinks, MultiViews  종료
+# Options -FollowSymlinks -MultiViews
 
 ### Apache의 AllowOverride Options이 비활성화 되어있어 오류가 발생하는 경우
 ### 아래 'php_*' 구문을 주석처리하여 로그 기록 종료
@@ -17,8 +17,8 @@ RewriteRule ^\.well-known/.+ - [L]
 
 RewriteRule ^install($|/.*) - [L]
 
-RewriteRule ^manage$ manage/index.php [L]
-RewriteRule ^manage/$ manage/index.php [L]
+RewriteRule ^manage$ mng/index.php [L]
+RewriteRule ^manage/$ mng/index.php [L]
 
 RewriteCond %{QUERY_STRING} ^(.*)$ [NC]
 RewriteRule ^(.*)/([0-9]+)$ index.php?rewritepage=$1&mode=view&read=$2&%1 [L]

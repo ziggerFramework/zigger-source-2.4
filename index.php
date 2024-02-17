@@ -63,6 +63,11 @@ if (strpos($rewritepage, 'manage/mod/') !== false) {
     $includeFile = PH_MOD_PATH.'/'.$relEx[count($relEx) - 1].'/manage.set/'.$REL_PATH['page_name'].'.php';
 }
 
+else if (strpos($rewritepage, 'manage/') !== false) {
+    $REL_PATH['full_path'] = str_replace('/manage', '', $REL_PATH['full_path']);
+    $includeFile = PH_MANAGE_PATH.$REL_PATH['full_path'].'/'.$REL_PATH['page_name'].'.php';
+}
+
 if ($REL_PATH['first_path'] == 'mod') {
     $moduleNameEx = explode('/', str_replace(PH_PATH.'/mod/', '', $includeFile));
     $REL_PATH['namespace'] = 'Module\\'.$moduleNameEx[0].'\\';

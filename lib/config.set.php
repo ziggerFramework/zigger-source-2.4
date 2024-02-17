@@ -35,7 +35,7 @@ define('PH_PLUGIN_PATH', PH_PATH.'/plugin'); // Plugin PHP 경로
 define('PH_DATA_DIR', PH_DIR.'/data'); // Data 경로
 define('PH_DATA_PATH', PH_PATH.'/data'); // Data PHP 경로
 define('PH_MANAGE_DIR', PH_DIR.'/manage'); // Manage 경로
-define('PH_MANAGE_PATH', PH_PATH.'/manage'); // Manage PHP 경로
+define('PH_MANAGE_PATH', PH_PATH.'/mng'); // Manage PHP 경로
 define('PH_SESSION_FILE_PATH', PH_PATH.'/data/sessions'); //파일세션 생성 경로
 
 ////////////////////////////////////////////////////
