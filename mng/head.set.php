@@ -18,8 +18,8 @@ $manage = new ManageFunc();
 <link rel="shortcut icon" href="<?php echo $CONF['favicon']; ?>" />
 <?php } ?>
 <link rel="stylesheet" href="<?php echo PH_DIR; ?>/layout/css/jquery.common.css<?php echo SET_CACHE_HASH; ?>" />
-<link rel="stylesheet" href="<?php echo PH_DIR; ?>/manage/css/common.css<?php echo SET_CACHE_HASH; ?>" />
-<link rel="stylesheet" href="<?php echo PH_DIR; ?>/manage/css/global.css<?php echo SET_CACHE_HASH; ?>" />
+<link rel="stylesheet" href="<?php echo PH_DIR; ?>/mng/css/common.css<?php echo SET_CACHE_HASH; ?>" />
+<link rel="stylesheet" href="<?php echo PH_DIR; ?>/mng/css/global.css<?php echo SET_CACHE_HASH; ?>" />
 <link rel="stylesheet" href="<?php echo PH_PLUGIN_DIR; ?>/<?php echo PH_PLUGIN_CKEDITOR; ?>/contents_view.css<?php echo SET_CACHE_HASH; ?>" />
 <script type="text/javascript">
 var PH_DIR = '<?php echo PH_DIR; ?>';
@@ -33,7 +33,7 @@ var PH_POST_MAX_SIZE = <?php echo $CONF['ini_post_max_size']; ?>;
 <script src="<?php echo PH_DIR; ?>/layout/js/jquery.min.js<?php echo SET_CACHE_HASH; ?>"></script>
 <script src="<?php echo PH_DIR; ?>/layout/js/jquery.common.js<?php echo SET_CACHE_HASH; ?>"></script>
 <script src="<?php echo PH_DIR; ?>/layout/js/common.js<?php echo SET_CACHE_HASH; ?>"></script>
-<script src="<?php echo PH_DIR; ?>/manage/js/global.js<?php echo SET_CACHE_HASH; ?>"></script>
+<script src="<?php echo PH_DIR; ?>/mng/js/global.js<?php echo SET_CACHE_HASH; ?>"></script>
 <script src="<?php echo PH_PLUGIN_DIR; ?>/<?php echo PH_PLUGIN_CKEDITOR; ?>/ckeditor.js<?php echo SET_CACHE_HASH; ?>"></script>
 </head>
 <body>

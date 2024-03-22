@@ -62,7 +62,8 @@ class Method {
         $type = strtolower($type);
 
         if ($type == 'referer') {
-            if (!isset($_SERVER['HTTP_REFERER']) || !preg_match(";{$_SERVER['HTTP_HOST']};", $_SERVER['HTTP_REFERER'])) Func::core_err(ERR_MSG_1);
+            $referer_http_host = (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
+            if (!isset($_SERVER['HTTP_REFERER']) || !preg_match(";{$referer_http_host};", $_SERVER['HTTP_REFERER'])) Func::core_err(ERR_MSG_1);
 
         } elseif ($type == 'request_get') {
             if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') Func::core_err(ERR_MSG_1);
