@@ -3,7 +3,7 @@ Allow: /
 
 User-agent: *
 Disllow: /data/
-Disllow: /manage/
+Disllow: /mng/
 Disllow: /layout/
 Disllow: /lib/
 Disllow: /mod/
