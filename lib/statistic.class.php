@@ -17,7 +17,7 @@ class Statistic {
 
             $user_info = array(
                 'device' => Func::chkdevice(),
-                'remote_addr' => (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'],
+                'remote_addr' => MB_REMOTE_ADDR,
                 'user_agent' => ($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''
             );
 

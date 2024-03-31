@@ -10,7 +10,7 @@ class Blocked {
     {
         global $ip_qry;
 
-        $ip_ex = explode('.', $_SERVER['REMOTE_ADDR']);
+        $ip_ex = explode('.', MB_REMOTE_ADDR);
         $ip_qry = array();
 
         for ($i = 0; $i < count($ip_ex); $i++) {
@@ -37,7 +37,7 @@ class Blocked {
 
         $localhosts = array('127.0.0.1', '::1', 'localhost', '255.255.255.0');
 
-        if (in_array($_SERVER['REMOTE_ADDR'], $localhosts)) return false;
+        if (in_array(MB_REMOTE_ADDR, $localhosts)) return false;
 
         $sql = new Pdosql();
 

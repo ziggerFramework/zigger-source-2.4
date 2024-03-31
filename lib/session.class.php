@@ -81,7 +81,7 @@ class SessionHandler extends \Make\Database\Pdosql {
                 array(
                     $key,
                     $this->expiry,
-                    $_SERVER['REMOTE_ADDR']
+                    MB_REMOTE_ADDR
                 )
             );
 

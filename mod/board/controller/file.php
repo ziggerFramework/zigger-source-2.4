@@ -25,10 +25,11 @@ class Down extends \Controller\Make_Controller {
         if (!$board_id || !$req['idx'] || !$req['file']) Func::err('필수 값이 누락 되었습니다.');
 
         // 게시글의 첨부파일 정보 불러옴
+        $board_data_table = str_replace(['`', '\`'], '', $sql->table("mod:board_data_".addslashes($board_id)));
         $sql->query(
             "
             select *
-            from {$sql->table("mod:board_data_".addslashes($board_id))}
+            from {$board_data_table}
             where `idx`=:col1
             ",
             array(
@@ -101,7 +102,7 @@ class Down extends \Controller\Make_Controller {
         // 파일 다운로드 횟수 증가
         $sql->query(
             "
-            update {$sql->table("mod:board_data_".$board_id)}
+            update {$board_data_table}
             set `file{$req['file']}_cnt` = `file{$req['file']}_cnt` + 1
             where `idx`={$req['idx']}
             ", []

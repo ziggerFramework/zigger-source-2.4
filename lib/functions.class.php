@@ -416,7 +416,7 @@ class Func {
 
         // google recaptcha 검증
         if ($CONF['use_recaptcha'] == 'Y') {
-            $url = SET_GRECAPTCHA_URL[1].$CONF['recaptcha_key2'].'&response='.$val.'&remoteip='.$_SERVER['REMOTE_ADDR'];
+            $url = SET_GRECAPTCHA_URL[1].$CONF['recaptcha_key2'].'&response='.$val.'&remoteip='.MB_REMOTE_ADDR;
             $req = self::url_get_contents($url);
 
             return ($req['data']['success']) ? true : false;

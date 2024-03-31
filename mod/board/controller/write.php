@@ -763,7 +763,7 @@ class Write_submit{
             insert into {$sql->table("mod:board_data_".$board_id)}
             (`category`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `file1`, `file2`, `use_secret`, `use_notice`, `use_html`, `use_email`, `ip`, `ln`, `rn`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`, `regdate`)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, '{$_SERVER['REMOTE_ADDR']}', :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25, :col26)
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, '".MB_REMOTE_ADDR."', :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25, :col26)
             ",
             array(
                 $req['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], (isset($ufile[1])) ? $ufile[1]['ufile_name'] : '',
@@ -874,7 +874,7 @@ class Write_submit{
             "
             update {$sql->table("mod:board_data_".$board_id)}
             set `category`=:col2, `writer`=:col3, `pwd`=:col4, `email`=:col5, `article`=:col6, `subject`=:col7, `file1`=:col8, `file2`=:col9, `use_secret`=:col10, `use_notice`=:col11,
-            use_html='Y', `use_email`=:col12, `ip`='{$_SERVER['REMOTE_ADDR']}', `regdate`=:col13, `data_1`=:col14, `data_2`=:col15, `data_3`=:col16, `data_4`=:col17, `data_5`=:col18, `data_6`=:col19, `data_7`=:col20, `data_8`=:col21, `data_9`=:col22, `data_10`=:col23
+            use_html='Y', `use_email`=:col12, `ip`='".MB_REMOTE_ADDR."', `regdate`=:col13, `data_1`=:col14, `data_2`=:col15, `data_3`=:col16, `data_4`=:col17, `data_5`=:col18, `data_6`=:col19, `data_7`=:col20, `data_8`=:col21, `data_9`=:col22, `data_10`=:col23
             where `idx`=:col1
             ",
             array(
@@ -958,7 +958,7 @@ class Write_submit{
             insert into {$sql->table("mod:board_data_".$board_id)}
             (`category`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `file1`, `file2`, `use_secret`, `use_notice`, `use_html`, `use_email`, `ip`, `regdate`, `ln`, `rn`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, '{$_SERVER['REMOTE_ADDR']}', now(), :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25)
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, '".MB_REMOTE_ADDR."', now(), :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25)
             ",
             array(
                 $org_arr['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], (isset($ufile[1])) ? $ufile[1]['ufile_name'] : '',

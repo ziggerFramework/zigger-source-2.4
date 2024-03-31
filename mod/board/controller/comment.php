@@ -341,7 +341,7 @@ class Comment_submit {
             insert into {$sql->table("mod:board_cmt_".$board_id)}
             (`ln`, `rn`, `bo_idx`, `mb_idx`, `writer`, `comment`, `ip`, `regdate`, `cmt_1`, `cmt_2`, `cmt_3`, `cmt_4`, `cmt_5`, `cmt_6`, `cmt_7`, `cmt_8`, `cmt_9`, `cmt_10`)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, '{$_SERVER['REMOTE_ADDR']}', now(), :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16)
+            (:col1, :col2, :col3, :col4, :col5, :col6, '".MB_REMOTE_ADDR."', now(), :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16)
             ",
             array(
                 $ln_arr['ln_max'], 0, $req['read'], $mb_idx, $writer, $req['comment'], $req['cmt_1'], $req['cmt_2'],
@@ -457,7 +457,7 @@ class Comment_submit {
             insert into {$sql->table("mod:board_cmt_".$board_id)}
             (`parent_mb_idx`, `parent_writer`, `ln`, `rn`, `bo_idx`, `mb_idx`, `writer`, `comment`, `ip`, `regdate`, `cmt_1`, `cmt_2`, `cmt_3`, `cmt_4`, `cmt_5`, `cmt_6`, `cmt_7`, `cmt_8`, `cmt_9`, `cmt_10`)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, '{$_SERVER['REMOTE_ADDR']}', now(), :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18)
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, '".MB_REMOTE_ADDR."', now(), :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18)
             ",
             array(
                 $parent_mb_idx, $parent_writer, $ln_isrt, $rn_next, $req['read'], $mb_idx, $writer, $req['re_comment'], $req['cmt_1'], $req['cmt_2'], $req['cmt_3'], $req['cmt_4'], $req['cmt_5'],
@@ -533,7 +533,7 @@ class Comment_submit {
         $sql->query(
             "
             update {$sql->table("mod:board_cmt_".$board_id)}
-            set `writer`=:col2, `comment`=:col3, ip='{$_SERVER['REMOTE_ADDR']}', `cmt_1`=:col4, `cmt_2`=:col5, `cmt_3`=:col6, `cmt_4`=:col7, `cmt_5`=:col8, `cmt_6`=:col9, `cmt_7`=:col10, `cmt_8`=:col11, `cmt_9`=:col12, `cmt_10`=:col13
+            set `writer`=:col2, `comment`=:col3, ip='".MB_REMOTE_ADDR."', `cmt_1`=:col4, `cmt_2`=:col5, `cmt_3`=:col6, `cmt_4`=:col7, `cmt_5`=:col8, `cmt_6`=:col9, `cmt_7`=:col10, `cmt_8`=:col11, `cmt_9`=:col12, `cmt_10`=:col13
             where `idx`=:col1
             ",
             array(

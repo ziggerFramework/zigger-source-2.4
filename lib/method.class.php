@@ -62,13 +62,31 @@ class Method {
         $type = strtolower($type);
 
         if ($type == 'referer') {
-            $referer_http_host = (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
-            if (!isset($_SERVER['HTTP_REFERER']) || !preg_match(";{$referer_http_host};", $_SERVER['HTTP_REFERER'])) Func::core_err(ERR_MSG_1);
+            $referer_http_host = array();
+            
+            if (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && !empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+                $hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+                $referer_http_host = array_merge($referer_http_host, $hosts);
 
-        } elseif ($type == 'request_get') {
+            } else if (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) {
+                $referer_http_host[] = $_SERVER['HTTP_HOST'];
+
+            } else {
+                Func::core_err(ERR_MSG_1);
+            }
+
+            $match_count = 0;
+
+            foreach ($referer_http_host as $key => $value) {
+                if (isset($_SERVER['HTTP_REFERER']) && preg_match(";".trim($value).";", $_SERVER['HTTP_REFERER'])) $match_count++;
+            }
+
+            if ($match_count < 1) Func::core_err(ERR_MSG_1);
+
+        } else if ($type == 'request_get') {
             if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') Func::core_err(ERR_MSG_1);
             
-        } elseif ($type == 'request_post') {
+        } else if ($type == 'request_post') {
             if (strtolower($_SERVER['REQUEST_METHOD']) == 'get') Func::core_err(ERR_MSG_1);
         }
     }

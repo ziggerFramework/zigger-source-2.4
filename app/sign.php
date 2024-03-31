@@ -118,7 +118,7 @@ class Signin_submit {
         $mbinfo = array(
             'id' => $sql->fetch('mb_id'),
             'idx' => $sql->fetch('mb_idx'),
-            'remote_addr' => (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']
+            'remote_addr' => MB_REMOTE_ADDR
         );
 
         // 로그인 session 처리
@@ -405,7 +405,7 @@ class signup_submit {
 
         // insert
         $mbchk_var = ($CONF['use_emailchk'] == 'Y') ? 'N' : 'Y';
-        $remote_addr = (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+        $remote_addr = MB_REMOTE_ADDR;
 
         $sql->query(
             "
