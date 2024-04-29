@@ -1797,6 +1797,12 @@ class Board_view extends \Controller\Make_Controller {
             return ($arr['use_secret'] == 'Y') ? '<img src=\''.MOD_BOARD_DIR.'/manage.set/images/secret-ico.png\' align=\'absmiddle\' title=\'비밀글\' alt=\'비밀글\' />' : '';
         }
 
+        // 삭제 버튼
+        function delete_btn()
+        {
+            return '<button type=\'button\' class=\'btn2\' id=\'del-btn\'>삭제</button>';
+        }
+
         // 수정 버튼
         function modify_btn($arr, $read, $category)
         {
@@ -2000,6 +2006,7 @@ class Board_view extends \Controller\Make_Controller {
         $this->set('print_imgfile', print_imgfile($arr));
         $this->set('print_file_name', print_file_name($arr));
         $this->set('list_btn', list_btn($req['category']));
+        $this->set('delete_btn', delete_btn());
         $this->set('modify_btn', modify_btn($arr, $req['read'], $req['category']));
         $this->set('reply_btn', reply_btn($arr, $req['read'], $req['category']));
         $this->set('mode', $req['mode']);

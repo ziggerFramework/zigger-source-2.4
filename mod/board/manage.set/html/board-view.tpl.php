@@ -11,6 +11,11 @@
             <input type="hidden" name="board_id" value="<?php echo $board_id; ?>" />
             <input type="hidden" name="read" value="<?php echo $read; ?>" />
             <input type="hidden" name="thisuri" value="<?php echo $thisuri; ?>" />
+            <input type="hidden" name="page" value="<?php echo $page; ?>" />
+            <input type="hidden" name="where" value="<?php echo $where; ?>" />
+            <input type="hidden" name="keyword" value="<?php echo $keyword; ?>" />
+            <input type="hidden" name="category" value="<?php echo $category; ?>" />
+            <input type="hidden" name="request" value="manage" />
         </form>
 
         <table class="table1">
@@ -114,6 +119,7 @@
 
         <div class="btn-wrap">
             <?php echo $list_btn; ?>
+            <?php echo $delete_btn; ?>
             <?php echo $modify_btn; ?>
             <?php echo $reply_btn; ?>
         </div>

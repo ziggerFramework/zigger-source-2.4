@@ -205,7 +205,7 @@ class Pdosql {
 
         for ($i = 0; $i < 10; $i++) {
             if (!isset($ex[$i])) $ex[$i] = '';
-            $ex[$i] = str_replace('|', "&vert;", $ex[$i]);
+            $ex[$i] = str_replace('|', '&vert;', $ex[$i]);
         }
         
         return implode('|', $ex);

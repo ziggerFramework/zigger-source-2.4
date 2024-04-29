@@ -34,9 +34,9 @@ class Delete extends \Controller\Make_Controller {
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post','read, page, where, keyword, category, s_password');
+        $req = Method::request('post','read, page, where, keyword, category, s_password, request, board_id');
 
-        $board_id = $MOD_CONF['id'];
+        $board_id = (isset($req['request']) && $req['request'] == 'manage') ? $req['board_id'] : $MOD_CONF['id'];
         Delete::$boardconf = $boardlib->load_conf($board_id);
 
         // 패스워드가 post로 submit 된 경우
@@ -254,7 +254,14 @@ class Delete extends \Controller\Make_Controller {
             }
 
             // return
-            Func::location(PH_DOMAIN.Func::thisuri().Func::get_param_combine('page='.$req['page'].'&where='.$req['where'].'&keyword='.$req['keyword'].'&category='.urlencode($req['category']), '?'));
+            if (isset($req['request']) && $req['request'] == 'manage') {
+                $return_url = PH_MANAGE_DIR.'/mod/board/result/board?id='.$board_id.'&page='.$req['page'].'&where='.$req['where'].'&keyword='.$req['keyword'].'&category='.urlencode($req['category']);
+                
+            } else {
+                $return_url = PH_DOMAIN.Func::thisuri().Func::get_param_combine('page='.$req['page'].'&where='.$req['where'].'&keyword='.$req['keyword'].'&category='.urlencode($req['category']), '?');
+            }
+            
+            Func::location($return_url);
         }
     }
 

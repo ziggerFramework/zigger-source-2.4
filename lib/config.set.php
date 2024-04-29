@@ -107,6 +107,11 @@ ini_set('session.gc_divisor', 100);
 ini_set("session.gc_maxlifetime", SET_SESS_LIFE);
 ini_set('display_errors', 1);
 
+// 클라이언트 IP 획득
+$REMOTE_ADDR = (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+$REMOTE_ADDR = explode(',', $REMOTE_ADDR);
+define('MB_REMOTE_ADDR', $REMOTE_ADDR[0]);
+
 ////////////////////////////////////////////////////
 //
 // 플러그인 상수

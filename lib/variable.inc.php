@@ -86,11 +86,6 @@ define('PH_THEME_PATH', PH_PATH.'/theme/'.$CONF['theme']); // theme PHP 경로
 define('IS_MEMBER', Session::is_sess('MB_IDX'));
 define('MB_IDX', (IS_MEMBER) ? Session::sess('MB_IDX') : null);
 
-// 클라이언트 IP 획득
-$remote_addr = (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-$remote_addr_exp = explode(',', $remote_addr); 
-define('MB_REMOTE_ADDR', $remote_addr_exp[0]);
-
 // 회원 기본 정보
 $MB = array();
 

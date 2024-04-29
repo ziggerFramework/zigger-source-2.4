@@ -8,6 +8,7 @@ ph_mod_board_manage = {
         this.get_ctr_popup() // 관리 팝업
         this.use_notice_opt() // 공지사항 옵션 체크시 답변알림 옵션 & 카테고리 숨김
         this.get_view_comment(); // Comment
+        this.get_delete(); // 글 삭제
 
     },
 
@@ -59,7 +60,7 @@ ph_mod_board_manage = {
         $(document).on('click', 'body.mod-board-manage #ctrpop .close', function(e) {
             e.preventDefault();
 
-            //접근성 위해 layer띄운 요소로 focus 이동.
+            // 접근성 위해 layer띄운 요소로 focus 이동.
             $('*[data-tab-index='+PH_NOW_TABINDEX+']').focus();
 
             $ele.ctrpop.fadeOut(100);
@@ -254,6 +255,25 @@ ph_mod_board_manage = {
             e.preventDefault();
             $('body.mod-board-manage #commentForm input[name=mode]').val(cmt_stat_val);
             $('body.mod-board-manage #commentForm').submit();
+        });
+
+    },
+
+    //
+    // 글 삭제
+    //
+    'get_delete' : function() {
+
+        $(document).on('click', 'body.mod-board-manage #del-btn', function(e) {
+            e.preventDefault();
+            var thisuri = $('#board-readForm input[name=thisuri]').val();
+            
+            if (confirm("이 글을 삭제 하시겠습니까?")) {
+                $('body.mod-board-manage #board-readForm').attr({
+                    'method' : 'POST',
+                    'action' : MOD_BOARD_DIR + '/controller/delete/delete'
+                }).submit();
+            }
         });
 
     }
