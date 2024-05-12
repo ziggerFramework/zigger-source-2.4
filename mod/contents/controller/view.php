@@ -30,7 +30,7 @@ class View extends \Controller\Make_Controller {
             )
         );
 
-        if ($sql->getcount() < 1) unc::core_err('존재하지 않는 콘텐츠 key 입니다. : \''.$MOD_CONF['key'].'\'');
+        if ($sql->getcount() < 1) Func::core_err('존재하지 않는 콘텐츠 key 입니다. : \''.$MOD_CONF['key'].'\'');
 
         $print_arr = $sql->fetchs();
 

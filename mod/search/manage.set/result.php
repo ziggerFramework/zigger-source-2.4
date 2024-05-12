@@ -252,16 +252,18 @@ class SearchModify extends \Controller\Make_Controller {
                 ", []
             );
 
-            do {
-                $arr['type'] = 'board';
-                $arr['type-txt'] = '게시판';
-                $arr['title'] = $sql->fetch('board_title');
-                $arr['id'] = $sql->fetch('board_id');
-                $arr['option-txt'] = $arr['type-txt'].'모듈 - '.$arr['title'].' ('.$arr['id'].')';
+            if ($sql->getcount() > 0) {
+                do {
+                    $arr['type'] = 'board';
+                    $arr['type-txt'] = '게시판';
+                    $arr['title'] = $sql->fetch('board_title');
+                    $arr['id'] = $sql->fetch('board_id');
+                    $arr['option-txt'] = $arr['type-txt'].'모듈 - '.$arr['title'].' ('.$arr['id'].')';
 
-                $sltarr[] = $arr;
+                    $sltarr[] = $arr;
 
-            } while($sql->nextRec());
+                } while($sql->nextRec());
+            }
 
             // contents
             $sql->query(
@@ -272,16 +274,19 @@ class SearchModify extends \Controller\Make_Controller {
                 ", []
             );
 
-            do {
-                $arr['type'] = 'contents';
-                $arr['type-txt'] = '콘텐츠';
-                $arr['title'] = $sql->fetch('title');
-                $arr['id'] = $sql->fetch('data_key');
-                $arr['option-txt'] = $arr['type-txt'].'모듈 - '.$arr['title'].' ('.$arr['id'].')';
-
-                $sltarr[] = $arr;
-
-            } while($sql->nextRec());
+            if ($sql->getcount() > 0) {
+                do {
+                    $arr['type'] = 'contents';
+                    $arr['type-txt'] = '콘텐츠';
+                    $arr['title'] = $sql->fetch('title');
+                    $arr['id'] = $sql->fetch('data_key');
+                    $arr['option-txt'] = $arr['type-txt'].'모듈 - '.$arr['title'].' ('.$arr['id'].')';
+    
+                    $sltarr[] = $arr;
+    
+                } while($sql->nextRec());
+            }
+            
 
             return $sltarr;
         }

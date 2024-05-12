@@ -704,7 +704,7 @@ class Writer extends \Controller\Make_Controller {
         {
             if ($mbinfo['mb_profileimg']) {
                 $fileinfo = Func::get_fileinfo($mbinfo['mb_profileimg']);
-                return $fileinfo['replink'];
+                return (isset($fileinfo['replink']) && !empty($fileinfo['replink'])) ? $fileinfo['replink'] : false;
 
             } else {
                 return false;

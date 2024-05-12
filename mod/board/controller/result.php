@@ -194,7 +194,7 @@ class Result extends \Controller\Make_Controller {
         {
             if ($arr['mb_profileimg']) {
                 $fileinfo = Func::get_fileinfo($arr['mb_profileimg']);
-                return $fileinfo['replink'];
+                return (isset($fileinfo['replink']) && !empty($fileinfo['replink'])) ? $fileinfo['replink'] : false;
 
             } else {
                 return false;
@@ -283,6 +283,19 @@ class Result extends \Controller\Make_Controller {
             return $opt;
         }
 
+        // 검색 keyword 분리
+        function exp_keywords($keyword) {
+            $exp = explode(' ', $keyword);
+
+            $key_arr = array();
+
+            for ($i = 0; $i < count($exp); $i++) {
+                $key_arr[$i] = $exp[$i];
+            }
+
+            return $key_arr;
+        }
+
         // list arr setting
         function get_listarr($req, $arr, $paging, $thisuri, $keyword, $category)
         {
@@ -349,29 +362,23 @@ class Result extends \Controller\Make_Controller {
 
         if ($keyword) {
             $keyword = urldecode($req['keyword']);
-            $where_arr = array('subject', 'article', 'writer', 'mb_id');
+            $where = array('', '', '', '', '');
+
+            foreach (exp_keywords($keyword) as $key => $value) {
+                $or = ($key > 0) ? ' and ' : '';
+                $where[0] .= $or.' board.subject like \'%'.addslashes($value).'%\'';
+                $where[1] .= $or.' board.article like \'%'.addslashes($value).'%\'';
+                $where[2] .= $or.' board.writer like \'%'.addslashes($value).'%\'';
+                $where[3] .= $or.' board.mb_id like \'%'.addslashes($value).'%\'';
+            }
 
             switch ($req['where']) {
-                case 'subjectAndArticle' :
-                    $search .= 'and (';
-                    $search .= 'board.subject like \'%'.addslashes($req['keyword']).'%\'';
-                    $search .= 'or board.article like \'%'.addslashes($req['keyword']).'%\'';
-                    $search .= ')';
-                    break;
-
-                case 'subject' :
-                case 'article' :
-                case 'writer' :
-                case 'mb_id' :
-                    $search .= 'and board.'.addslashes($req['where']).' like \'%'.addslashes($req['keyword']).'%\'';
-                    break;
-
-                default :
-                    $search .= 'and (';
-                    foreach ($where_arr as $key => $value) {
-                        $search .= ($key > 0 ? ' or ' : '').'board.'.addslashes($value).' like \'%'.addslashes($req['keyword']).'%\'';
-                    }
-                    $search .= ')';
+                case 'subjectAndArticle' : $search .= ' and ('.$where[0].' ) or ('.$where[1].')'; break;
+                case 'subject' : $search .= ' and '.$where[0]; break;
+                case 'article' : $search .= ' and '.$where[1]; break;
+                case 'writer' : $search .= ' and '.$where[2];  break;
+                case 'mb_id' : $search .= ' and '.$where[3]; break;
+                default : $search .= ' and ('.$where[0].') or ('.$where[1].') or ('.$where[2].') or ('.$where[3].')'; break;
             }
         }
 
