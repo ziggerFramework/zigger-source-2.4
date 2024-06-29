@@ -123,7 +123,7 @@ class Info extends \Controller\Make_Controller {
         $this->set('siteconf', $CONF);
         $this->set('gender_chked', gender_chked($arr));
         $this->set('mb', $mb);
-        $this->set('max_pfimg_size', Func::getbyte(SET_MAX_PFIMG_UPLOAD, 'k'));
+        $this->set('max_pfimg_size', Func::getbyte(SET_MAX_PFIMG_UPLOAD));
     }
 
     public function form()
@@ -480,7 +480,7 @@ class Info_submit {
         Session::drop_sess();
 
         // 프로필 이미지 삭제
-        $uploader->path= PH_DATA_PATH.'/memberprofile';
+        $uploader->path = PH_DATA_PATH.'/memberprofile';
         $uploader->drop($MB['profileimg']);
 
         // return

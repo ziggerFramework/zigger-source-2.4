@@ -67,22 +67,13 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("popup")}
-            ) pop_total,
-            (
-                select count(*)
-                from {$sql->table("popup")}
-                where `show_from`<now() and `show_to`>now()
-            ) use_pop,
-            (
-                select count(*)
-                from {$sql->table("popup")}
-                where (`show_from`>now() or `show_to`<now())
-            ) notuse_pop
+            sum(case when `regdate` is not null then 1 else 0 end) as `pop_total`,
+            sum(case when `show_from`<now() and `show_to`>now() then 1 else 0 end) as `use_pop`,
+            sum(case when (`show_from`>now() or `show_to`<now()) then 1 else 0 end) as `notuse_pop`
+            from {$sql->table("popup")}
             ", []
         );
+        
         $sort_arr['pop_total'] = $sql->fetch('pop_total');
         $sort_arr['use_pop'] = $sql->fetch('use_pop');
         $sort_arr['notuse_pop'] = $sql->fetch('notuse_pop');

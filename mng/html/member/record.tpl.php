@@ -16,8 +16,7 @@
 <article>
 
     <form id="list-sch" action="" method="get">
-        <?php echo $manage->print_hidden_inp(); ?>
-
+        <?php echo $manage->print_hidden_inp($is_search = true); ?>
 
         <fieldset>
             <input type="hidden" name="nowdate" class="date" value="<?php echo date("Y-m-d"); ?>" readonly />

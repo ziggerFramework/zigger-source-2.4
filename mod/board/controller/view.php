@@ -655,7 +655,7 @@ class Get_likes {
                     $req['board_id'], $req['read']
                 )
             );
-            $return_ele = '#board-unlikes-cnt';
+            $return_ele = 'body.mod-board #board-unlikes-cnt';
 
         }
 

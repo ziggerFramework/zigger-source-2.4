@@ -87,7 +87,7 @@ class Send extends \Controller\Make_Controller {
 
 //
 // Controller for submit
-// ( Send )
+// ( Tomember )
 //
 class Tomember_submit{
 
@@ -101,8 +101,7 @@ class Tomember_submit{
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post', 'type, to_mb, to_phone, level_from, level_to, subject, memo, use_resv, resv_date, resv_hour, resv_min');
-        $file = Method::request('file', 'image');
+        $req = Method::request('post', 'type, to_mb, to_phone, level_from, level_to, memo');
         $manage->req_hidden_inp('post');
 
         if ($CONF['use_sms'] != 'Y') Valid::error('', 'SMS 발송 기능이 활성화 되지 않아 SMS 발송이 불가합니다.');
@@ -113,7 +112,7 @@ class Tomember_submit{
                 'value' => $req['memo']
             )
         );
-
+        
         $rcv_sms = array();
 
         // 단일 회원 발송
@@ -130,7 +129,7 @@ class Tomember_submit{
                 "
                 select *
                 from {$sql->table("member")}
-                where `mb_id`=:col1 and `mb_dregdate` is null
+                where mb_id=:col1 and mb_dregdate is null
                 ",
                 array(
                     $req['to_mb']
@@ -157,7 +156,7 @@ class Tomember_submit{
                 select *
                 from {$sql->table("member")}
                 where `mb_level`>=:col1 and `mb_level`<=:col2 and `mb_phone` is not null and `mb_phone`!='' and `mb_dregdate` is null
-                order by `mb_idx` ASC
+                order by `mb_idx` asc
                 ",
                 array(
                     $req['level_from'], $req['level_to']
@@ -203,10 +202,43 @@ class Tomember_submit{
 
         }
 
+        Valid::set(
+            array(
+                'return' => 'callback',
+                'function' => "sms_set_rcv_email(".count($rcv_sms).", '".implode('|', $rcv_sms)."')"
+            )
+        );
+        Valid::turn();
+    }
+
+}
+
+//
+// Controller for submit
+// ( Tomember-send )
+//
+class Tomember_action_submit{
+
+    public function init()
+    {
+        global $CONF;
+
+        $sql = new Pdosql();
+        $sms = new Sms();
+        $manage = new ManageFunc();
+
+        Method::security('referer');
+        Method::security('request_post');
+        $req = Method::request('post', 'type, to_mb, to_phone, subject, memo, use_resv, resv_date, resv_hour, resv_min, level_from, level_to, email, rcv_now_rcv_idx, rcv_to_count');
+        $file = Method::request('file', 'image');
+        $manage->req_hidden_inp('post');
+
+        if ($CONF['use_sms'] != 'Y') Valid::error('', 'SMS 발송 기능이 활성화 되지 않아 SMS 발송이 불가합니다.');
+
         // 발송 수행
         $sms_arr = array();
         $sms_arr = array(
-            'to' => $rcv_sms,
+            'to' => array($req['email']),
             'memo' => stripslashes($req['memo'])
         );
 
@@ -229,43 +261,64 @@ class Tomember_submit{
             $req['resv_min'] = '';
         }
 
+        // 첨부이미지 처리
         if (isset($file['image'])) {
 
             $uploader = new Uploader();
             $uploader->file = $file['image'];
             $uploader->intdict = 'jpg, jpeg';
 
-            if ($uploader->chkfile('match') !== true) Valid::error('image', '허용되지 않는 이미지 유형입니다.');
-            if ($file['image']['size'] > 409600) Valid::error('image', '이미지 용량은 400 Kbyte를 넘을 수 없습니다.');
+            if ($uploader->chkfile('match') !== true) {
+                Valid::set(
+                    array(
+                        'return' => 'callback',
+                        'function' => "sms_get_send_sms_error('허용되지 않는 이미지 유형입니다.')"
+                    )
+                );
+                Valid::turn();
+            }
+            if ($file['image']['size'] > 61440) {
+                Valid::set(
+                    array(
+                        'return' => 'callback',
+                        'function' => "sms_get_send_sms_error('이미지 용량은 60 Kbyte를 넘을 수 없습니다.')"
+                    )
+                );
+                Valid::turn();
+            }
 
             $sms_arr['attach'] = array($file['image']['tmp_name']);
         }
-
+        
         $sms->set($sms_arr);
         $sms->send();
 
-        $sql->query(
-            "
-            insert into {$sql->table("sentsms")}
-            (`sendtype`, `to_mb`, `level_from`, `level_to`, `subject`, `memo`, `use_resv`, `resv_date`, `resv_hour`, `resv_min`, `to_phone`, `regdate`)
-            values
-            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, now())
-            ",
-            array(
-                $sms->sendType, $req['to_mb'], $req['level_from'], $req['level_to'], $req['subject'], $req['memo'], $req['use_resv'], $req['resv_date'], $req['resv_hour'], $req['resv_min'], trim($req['to_phone'])
-            )
-        );
+        // 발송 내역 기록
+        if ($req['rcv_now_rcv_idx'] == 1) {
+            $sql->query(
+                "
+                insert into {$sql->table("sentsms")}
+                (`sendtype`, `to_mb`, `level_from`, `level_to`, `subject`, `memo`, `use_resv`, `resv_date`, `resv_hour`, `resv_min`, `to_phone`, `regdate`, `to_count`)
+                values
+                (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, now(), :col12)
+                ",
+                array(
+                    $sms->sendType, $req['to_mb'], $req['level_from'], $req['level_to'], $req['subject'], $req['memo'], $req['use_resv'], $req['resv_date'], $req['resv_hour'], $req['resv_min'], trim($req['to_phone']), $req['rcv_to_count']
+                )
+            );
+        }
 
         Valid::set(
             array(
-                'return' => 'alert->reload',
-                'msg' => '성공적으로 발송 되었습니다.'
+                'return' => 'callback',
+                'function' => "sms_get_send_sms()"
             )
         );
         Valid::turn();
     }
 
 }
+
 
 //
 // Controller for display
@@ -342,25 +395,11 @@ class History extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("sentsms")}
-            ) total,
-            (
-                select count(*)
-                from {$sql->table("sentsms")}
-                where `to_mb` is not null and `to_mb`!=''
-            ) to_mb_total,
-            (
-                select count(*)
-                from {$sql->table("sentsms")}
-                where (`to_mb` is null or `to_mb`='') and (`to_phone` is null or `to_phone`='')
-            ) level_from_total,
-            (
-                select count(*)
-                from {$sql->table("sentsms")}
-                where `to_phone` is not null and `to_phone`!=''
-            ) to_phone_total
+            sum(case when `regdate` is not null then 1 else 0 end) as `total`,
+            sum(case when `to_mb` is not null and `to_mb`!='' then 1 else 0 end) as `to_mb_total`,
+            sum(case when (`to_mb` is null or `to_mb`='') and (`to_phone` is null or `to_phone`='') then 1 else 0 end) as `level_from_total`,
+            sum(case when `to_phone` is not null and `to_phone`!='' then 1 else 0 end) as `to_phone_total`
+            from {$sql->table("sentsms")}
             ", []
         );
         $sort_arr['total'] = $sql->fetch('total');
@@ -414,6 +453,7 @@ class History extends \Controller\Make_Controller {
                 $arr[0]['print_to_phone'] = print_to_phone($arr);
                 $arr[0]['subject'] = Func::strcut($arr['subject'], 0, 15);
                 $arr[0]['memo'] = Func::strcut($arr['memo'], 0, 20);
+                $arr[0]['to_count'] = Func::number($arr['to_count']);
 
                 $print_arr[] = $arr;
 

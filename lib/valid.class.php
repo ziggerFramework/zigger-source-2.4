@@ -192,7 +192,11 @@ class Valid {
         if (!isset($arr['check']['checked'])) $arr['check']['checked'] = false;
         if (!isset($arr['check']['chkhtml'])) $arr['check']['chkhtml'] = false;
 
+        $org_arr = $arr; // 초기화 변수 변조시 복구를 위한 변수 복제
+
         foreach ($arr['check'] as $key => $value) {
+            $arr = $org_arr;
+
             switch ($key) {
 
                 // 값이 null 인 경우 error (default : false)

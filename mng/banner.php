@@ -56,10 +56,8 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("banner")}
-            ) bn_total
+            sum(case when `regdate` is not null then 1 else 0 end) as `bn_total`
+            from {$sql->table("banner")}
             ", []
         );
         $sort_arr['bn_total'] = $sql->fetch('bn_total');

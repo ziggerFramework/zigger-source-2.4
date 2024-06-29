@@ -22,7 +22,7 @@ class View extends \Controller\Make_Controller {
 
         $req = Method::request('get', 'refmode, hash, page');
 
-        Func::getlogin(SET_NOAUTH_MSG);
+        Func::getlogin();
 
         // 메시지 본문
         $sql->query(

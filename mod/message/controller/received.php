@@ -26,7 +26,7 @@ class Received extends \Controller\Make_Controller {
 
         $req = Method::request('get', 'page');
 
-        Func::getlogin(SET_NOAUTH_MSG);
+        Func::getlogin();
 
         $sql->query(
             $paging->query(

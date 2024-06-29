@@ -84,7 +84,7 @@ class Message_send_submit {
                 $req['to_mb_id']
             )
         );
-        if ($sql->getcount() < 1) Valid::error('', '존재하지 않는 회원 아이디 입니다.');
+        if ($sql->getcount() < 1) Valid::error('to_mb_id', '존재하지 않는 회원 아이디 입니다.');
 
         $to_mb_idx = $sql->fetch('mb_idx');
 
@@ -130,8 +130,8 @@ class Message_send_submit {
         // return
         Valid::set(
             array(
-                'return' => 'alert->reload',
-                'msg' => '성공적으로 발송 되었습니다.'
+                'return' => 'callback',
+                'function' => 'get_message_after_send()'
             )
         );
         Valid::turn();

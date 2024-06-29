@@ -225,9 +225,20 @@
     /* Emailchk */
     #emailchk {margin: 40px 15px;width: auto;}
 
-    /* Zig alert */
-    #zig-alert-wrap {right: 5px;top: 0;width: 300px;}
-    #zig-alert {border-left: 3px solid #b82e24;margin-bottom: 3px;}
-    #zig-alert p {font-size: 12px;line-height: 15px;padding: 10px 6px;}
+    /* Zig Alert */
+    #zig-alert {left: 40px;transform: translate(0, -50%);width: calc(100% - 80px)}
+    #zig-alert .content {padding: 25px;}
+    #zig-alert .content p {font-size: 14px;line-height: 22px;}
+    #zig-alert .button {padding: 10px;text-align: center;}
+    #zig-alert .button button {font-size: 16px;padding: 0 30px;}
+    #zig-alert .button button.yes{background: #f7f7f7;}
+
+    /* Zig Confirm */
+    #zig-confirm {left: 40px;transform: translate(0, -50%);width: calc(100% - 80px)}
+    #zig-confirm .content {padding: 25px;}
+    #zig-confirm .content p {font-size: 14px;line-height: 22px;}
+    #zig-confirm .button {padding: 10px;text-align: center;}
+    #zig-confirm .button button {font-size: 16px;padding: 0 30px;}
+    #zig-confirm .button button.yes{background: #f7f7f7;}
 
 }

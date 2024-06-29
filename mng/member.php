@@ -54,16 +54,9 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("member")}
-                where `mb_adm`!='Y' and `mb_dregdate` is null
-            ) mb_total,
-            (
-                select count(*)
-                from {$sql->table("member")}
-                where `mb_email_chk`='Y' and `mb_adm`!='Y' and `mb_dregdate` is null
-            ) emchk_total
+            sum(case when `mb_adm`!='Y' and `mb_dregdate` is null then 1 else 0 end) as `mb_total`,
+            sum(case when `mb_email_chk`='Y' and `mb_adm`!='Y' and `mb_dregdate` is null then 1 else 0 end) as `emchk_total`
+            from {$sql->table("member")}
             ", []
         );
 
@@ -930,31 +923,18 @@ class Record extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("visitcount")}
-            ) visit_total,
-            (
-                select count(*)
-                from {$sql->table("visitcount")}
-                where date_format(`regdate`, '%Y-%m-%d') between :col1 and :col2
-            ) device_total,
-            (
-                select count(*)
-                from {$sql->table("visitcount")}
-                where date_format(`regdate`, '%Y-%m-%d') between :col1 and :col2 and `device`='pc'
-            ) device_pc,
-            (
-                select count(*)
-                from {$sql->table("visitcount")}
-                where date_format(`regdate`, '%Y-%m-%d') between :col1 and :col2 and `mb_idx`!=0
-            ) member_total
+            sum(case when `regdate` is not null then 1 else 0 end) as `visit_total`,
+            sum(case when date_format(`regdate`, '%Y-%m-%d') between :col1 and :col2 then 1 else 0 end) as `device_total`,
+            sum(case when date_format(`regdate`, '%Y-%m-%d') between :col1 and :col2 and `device`='pc' then 1 else 0 end) as `device_pc`,
+            sum(case when date_format(`regdate`, '%Y-%m-%d') between :col1 and :col2 and `mb_idx`!=0 then 1 else 0 end) as `member_total`
+            from {$sql->table("visitcount")}
             ",
             array(
                 $req['fdate'],
                 $req['tdate']
             )
         );
+
         $sort_arr['visit_total'] = $sql->fetch('visit_total');
         $sort_arr['device_total'] = $sql->fetch('device_total');
         $sort_arr['device_pc'] = $sql->fetch('device_pc');
@@ -1053,11 +1033,8 @@ class Session extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("session")}
-                where `regdate`>=date_sub(now(), interval 10 minute)
-            ) stat_total
+            sum(case when `regdate`>=date_sub(now(), interval 10 minute) then 1 else 0 end) as `stat_total`
+            from {$sql->table("session")}
             ", []
         );
         $sort_arr['stat_total'] = $sql->fetch('stat_total');
@@ -1155,20 +1132,10 @@ class Point extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("mbpoint")}
-            ) act_total,
-            (
-                select sum(`p_in`)
-                from {$sql->table("mbpoint")}
-                where `p_in`>0
-            ) in_total,
-            (
-                select sum(`p_out`)
-                from {$sql->table("mbpoint")}
-                where `p_out`>0
-            ) out_total
+            sum(case when `regdate` is not null then 1 else 0 end) as `act_total`,
+            sum(case when `p_in`>0 then p_in else 0 end) as `in_total`,
+            sum(case when `p_out`>0 then p_out else 0 end) as `out_total`
+            from {$sql->table("mbpoint")}
             ", []
         );
         

@@ -132,12 +132,16 @@ class ManageFunc{
         return '?page='.$PARAM['page'].'&sort='.$PARAM['sort'].'&ordtg='.$PARAM['ordtg'].'&ordsc='.$PARAM['ordsc'].'&where='.$PARAM['where'].'&keyword='.urlencode(!empty($PARAM['keyword']) ? $PARAM['keyword'] : '').$params;
     }
 
-    public function print_hidden_inp()
+    public function print_hidden_inp($is_search = false)
     {
         global $PARAM;
 
+        if ($is_search !== true) {
+            echo '
+                <input type="hidden" name="page" value="'.$PARAM['page'].'" />
+            ';
+        }
         echo '
-            <input type="hidden" name="page" value="'.$PARAM['page'].'" />
             <input type="hidden" name="sort" value="'.$PARAM['sort'].'" />
             <input type="hidden" name="ordtg" value="'.$PARAM['ordtg'].'" />
             <input type="hidden" name="ordsc" value="'.$PARAM['ordsc'].'" />

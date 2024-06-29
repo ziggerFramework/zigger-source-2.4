@@ -17,6 +17,11 @@
         <input type="hidden" name="type" value="3" />
         <?php echo $manage->print_hidden_inp(); ?>
 
+        <textarea name="rcv_email" style="display: none;"></textarea>
+        <input type="hidden" name="email" value="" />
+        <input type="hidden" name="rcv_to_count" value="" />
+        <input type="hidden" name="rcv_now_rcv_idx" value="" />
+
         <table class="table1">
             <thead>
                 <tr>
@@ -70,7 +75,7 @@
                     <td>
                         <input type="file" name="image" title="이미지 파일" />
                         <span class="tbl_sment">문자메시지에 이미지 파일이 첨부되는 경우 MMS 발송</span>
-                        <span class="tbl_sment mt0">jpg, jpeg 유형의 파일만 첨부 가능</span>
+                        <span class="tbl_sment mt0">jpg, jpeg 유형의 파일만 첨부 가능 / 최대 60kb 가능</span>
                     </td>
                 </tr>
                 <tr>
@@ -98,6 +103,9 @@
         </table>
 
         <div class="btn-wrap">
+            <div class="rcv_count">
+                <strong>0</strong> / <em>0</em>
+            </div>
             <div class="center">
                 <button type="submit" class="btn1"><i class="fa fa-check"></i><strong>SMS</strong> 발송</button>
             </div>

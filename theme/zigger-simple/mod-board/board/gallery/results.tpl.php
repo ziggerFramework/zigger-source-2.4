@@ -30,7 +30,7 @@
 		<?php } ?>
 
         <!-- 공지글 -->
-		<?php if (count($print_notice)>0) { ?>
+		<?php if (count($print_notice) > 0) { ?>
 		<table class="notice mt15">
             <caption>게시판 리스트</caption>
 			<colgroup>
@@ -47,6 +47,21 @@
 				<?php } ?>
 			</colgroup>
 
+			<thead>
+				<tr>
+                    <?php if ($is_ctr_show) { ?>
+                    <th scope="col"><input type="checkbox" class="cnum_allchk" alt="게시글 전체 선택" /></th>
+                    <?php } ?>
+                    <th scope="col">No.</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">날짜</th>
+                    <th scope="col">조회</th>
+                    <?php if ($is_likes_show) { ?>
+                    <th scope="col" class="like">좋아요</th>
+                    <?php } ?>
+				</tr>
+			</thead>
 			<tbody>
 				<?php foreach ($print_notice as $list) { ?>
 				<tr>
@@ -104,6 +119,10 @@
 		<ul class="list">
 			<?php foreach($print_arr as $list) { ?>
 			<li>
+				<?php if ($is_ctr_show) { ?>
+				<input type="checkbox" name="cnum[]" value="<?php echo $list['idx']; ?>" />
+				<?php } ?>
+
 				<div class="tmb" <?php if ($list[0]['thumbnail']) { ?>style="background-image: url('<?php echo $list[0]['thumbnail']; ?>');"<?php } ?>>
 					<a href="<?php echo $list[0]['get_link']; ?>" class="link"></a>
 				</div>
@@ -111,9 +130,6 @@
 
 					<span class="tit">
 						<a href="<?php echo $list[0]['get_link']; ?>" class="sbj">
-							<?php if ($is_ctr_show) { ?>
-							<input type="checkbox" name="cnum[]" value="<?php echo $list['idx']; ?>" />
-							<?php } ?>
 							<?php echo $list[0]['secret_ico']; ?>
 							<?php echo $list[0]['subject']; ?>
 						</a>

@@ -50,6 +50,11 @@
 #board-write table td.article {border: none;padding: 0;}
 #board-write .bytetxt {color: #999999;display: block;font-size: 14px;margin-top: 5px;}
 #board-write .uploaded {color: #000000;display: block;font-size: 14px;margin-bottom: 10px;}
+#board-write .temp-btn {border: 1px solid #333333;box-shadow: 1px 1px rgba(0,0,0,0.1);display: inline-block;font-size: 0;height: 37px;inline-size: none;overflow: hidden;vertical-align: middle;}
+#board-write .temp-btn button {display: inline-block;line-height: 37px;padding: 0 15px;vertical-align: middle;}
+#board-write .temp-btn button.load-btn {background: none;border: none;border-left: 1px solid #eeeeee;cursor: pointer;}
+#board-write .temp-btn button.load-btn strong {color: #6b52e9;font-size: 14px;font-weight: bold;}
+#board-write .temp-btn button.save-btn {background: none;border: none;color: #000000;font-size: 14px;letter-spacing: -1px;}
 
 #board-view .view-tit {border-top: 1px solid #000000;}
 #board-view .view-tit h3 {border-bottom: 1px solid #dddddd;color: #000000;font-size: 22px;font-weight: bold;letter-spacing: -0.05em;line-height: 22px;padding: 30px 20px;position: relative;}
@@ -168,6 +173,20 @@
 #mbpop .sment {display: block;font-size: 14px;letter-spacing: -0.05em;line-height: 20px;margin-bottom: 20px;text-align: center;}
 #mbpop .mb-btn {text-align: center;}
 #mbpop-bg {background: rgba(0,0,0,0.2);display: none;height: 100%;left: 0;position: fixed;top: 0;width: 100%;z-index: 300;}
+
+#temppop {background: #fff;box-shadow: 0 0 20px rgba(0,0,0,0.03);box-sizing: border-box;display: none;height: 380px;left: 50%;margin-left: -300px;margin-top: -190px;overflow: hidden;padding-top: 60px;position: fixed;top: 50%;width: 600px;z-index: 301;}
+#temppop .tit {background: #fafafa;border-bottom: 1px solid #eee;box-sizing: border-box;left: auto;line-height: 60px;padding: 0 25px;position: absolute;top: 0;width: 100%;z-index: 302;}
+#temppop .tit h2 {color: #000;font-size: 16px;font-weight: bold;letter-spacing: -0.05em;}
+#temppop .tit .close {color: #333;display: block;font-size: 16px;height: 60px;line-height: 60px;position: absolute;right: 0;text-align: center;text-decoration: none;top: 0;width: 60px;}
+#temppop .cont {box-sizing: border-box;height: 100%;overflow-y: auto;padding: 20px 30px;}
+#temppop .tbl {width: 100%;}
+#temppop .tbl tbody tr > * {border-bottom: 1px solid #f1f1f1;font-size: 15px;padding: 18px 10px;letter-spacing: -0.03em;}
+#temppop .tbl tbody td .sbj {color: #333333;display: block;font-size: 16px;font-weight: bold;line-height: 22px;letter-spacing: -1px;}
+#temppop .tbl tbody td .date {color: #999999;display: block;font-size: 13px;letter-spacing: -1px;text-align: right;}
+#temppop .tbl tbody td .remove-btn {color: #666666;font-size: 13px;}
+#temppop .sment {border-bottom: 1px solid #333333;color: #999999;display: block;font-size: 14px;letter-spacing: -0.05em;line-height: 20px;padding-bottom: 15px;}
+#temppop .mb-btn {text-align: center;}
+#temppop-bg {background: rgba(0,0,0,0.2);display: none;height: 100%;left: 0;position: fixed;top: 0;width: 100%;z-index: 300;}
 
 .board-mb-profileimg {background-position: center center;background-size: cover;border-radius: 50%;display: inline-block;height: 23px;position: relative;vertical-align: middle;width: 23px;}
 .board-mb-profileimg:after {border: 1px solid rgba(0,0,0,0.1);border-radius: 50%;box-sizing: border-box;content: '';display: block;height: 100%;left: 0;position: absolute;top: 0;width: 100%;}
@@ -289,6 +308,17 @@
     #mbpop .mb-tbl colgroup {display: none;}
     #mbpop .mb-tbl tbody th {font-size: 13px;width: 60px;}
     #mbpop .mb-tbl tbody td {font-size: 13px;}
+
+    #temppop {height: 60%;left: 5%;margin-left: 0;margin-top: 0;padding-top: 50px;top: 20%;width: 90%;}
+    #temppop .tit {line-height: 50px;padding: 0 15px;}
+    #temppop .tit h2 {font-size: 14px;}
+    #temppop .tit .close {height: 50px;line-height: 50px;width: 50px;}
+    #temppop .cont {padding: 15px;}
+    #temppop .sment {font-size: 13px;}
+    #temppop .tbl colgroup {display: none;}
+    #temppop .tbl tbody th {font-size: 13px;width: 60px;}
+    #temppop .tbl tbody td {font-size: 13px;}
+    #temppop .tbl tbody td .sbj {font-size: 14px;}
 
     .board-mb-profileimg {height: 16px;width: 16px;}
 

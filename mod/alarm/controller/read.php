@@ -23,7 +23,7 @@ class Read extends \Controller\Make_Controller {
 
         $req = Method::request('get', 'hash, allcheck, page');
 
-        Func::getlogin(SET_NOAUTH_MSG);
+        Func::getlogin();
 
         // 전체 읽음 처리
         if ($req['allcheck'] == 1) {

@@ -77,7 +77,7 @@
                             <?php } else { ?>
                             <span class="tbltxt mb10">
                                 · 현재 등록된 프로필 이미지가 없습니다. <br />
-                                · 설정 가능한 이미지 최대 용량은 <strong><?php echo $max_pfimg_size; ?>Kbyte</strong> 입니다.
+                                · 설정 가능한 이미지 최대 용량은 <strong><?php echo $max_pfimg_size; ?></strong> 입니다.
                             </span>
                             <?php } ?>
 
@@ -264,14 +264,17 @@ $(function() {
         var pwd2_value = $('#infoForm input[name=pwd2]').val();
 
         if (!pwd_value || !pwd2_value) {
-            zigalert('탈퇴를 위해 비밀번호를 입력해주세요.');
-            var empty_inp = (!pwd_value) ? 'pwd' : 'pwd2';
-            $('#infoForm input[name=' + empty_inp + ']').focus();
+            zigalert('탈퇴를 위해 비밀번호를 입력해주세요.', function() {
+                var empty_inp = (!pwd_value) ? 'pwd' : 'pwd2';
+                $('#infoForm input[name=' + empty_inp + ']').focus();
+            });
             return false;
+            
         }
         if (pwd_value != pwd2_value) {
-            zigalert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-            $('#infoForm input[name=pwd2]').focus();
+            zigalert('비밀번호와 비밀번호 확인이 일치하지 않습니다.', function() {
+                $('#infoForm input[name=pwd2]').focus();
+            });
             return false;
         }
     });

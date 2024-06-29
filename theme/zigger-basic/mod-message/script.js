@@ -61,6 +61,17 @@ ph_mod_message = {
             $ele.sendpop.remove();
             $ele.sendpopBG.remove();
         });
+
+        // 쪽지 발송 후 처리
+        get_message_after_send = function() {
+            $ele.sendpop = $('#message-send');
+            $ele.sendpopBG = $('#message-send-bg');
+
+            zigalert('성공적으로 발송 되었습니다.', function() {
+                $ele.sendpop.remove();
+                $ele.sendpopBG.remove();
+            });
+        }
     }
 
 }

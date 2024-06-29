@@ -35,7 +35,7 @@ ajax_valid = {
 							'dataType' : 'html',
 							'success' : function(data){
 								if(data.indexOf('"success" :') === -1){
-									alert('일시적인 오류 : '+data);
+									zigalert('일시적인 오류 : '+data);
 									return false;
 								}
 								var json = eval(data);
@@ -52,7 +52,7 @@ ajax_valid = {
 										break;
 
 									default :
-										alert('일시적인 오류 : '+data);
+										zigalert('일시적인 오류 : '+data);
 								}
 							}
 						});
@@ -80,24 +80,32 @@ valid = {
 		}
 
 		if ($.trim(opt.err_code) === 'ERR_NULL') {
-			zigalert(inp_tit + ' : 입력해 주세요.');
+			zigalert(inp_tit + ' : 입력해 주세요.', function(result) {
+				if (opt.input && result) $inp.focus();
+			});
 
 		} else if ($.trim(opt.err_code) === 'NOTMATCH_CAPTCHA') {
-			zigalert('Captcha(스팸방지)가 올바르지 않습니다.');
+			zigalert('Captcha(스팸방지)가 올바르지 않습니다.', function(result) {
+				if (opt.input && result) $inp.focus();
+			});
+			
 
 		} else if ($.trim(opt.msg) !== '') {
             if (typeof inp_tit != 'undefined' && typeof inp_tit != 'null') {
-                zigalert(inp_tit + ' : ' + opt.msg);
+				zigalert(inp_tit + ' : ' + opt.msg, function(result) {
+					if (opt.input && result) $inp.focus();
+				});
 
             } else {
-                zigalert(opt.msg);
+                zigalert(opt.msg, function(result) {
+					if (opt.input && result) $inp.focus();
+				});
             }
 
 		} else {
-			zigalert(inp_tit + ' : 올바르게 입력해 주세요.');
-		}
-		if (opt.input) {
-			$inp.focus();
+			zigalert(inp_tit + ' : 올바르게 입력해 주세요.', function(result) {
+				if (opt.input && result) $inp.focus();
+			});
 		}
 	},
 
@@ -106,16 +114,26 @@ valid = {
 		switch (success) {
 			case 'alert->location' :
 				if ($.trim(opt.msg) !== '') {
-					alert(opt.msg);
+					zigalert(opt.msg, function(result) {
+						if (result) {
+							window.document.location.href = opt.location;
+						}
+					});
+				} else {
+					window.document.location.href = opt.location;
 				}
-				window.document.location.href = opt.location;
 				break;
 
 			case 'alert->reload' :
 				if ($.trim(opt.msg) !== '') {
-					alert(opt.msg);
+					zigalert(opt.msg, function(result) {
+						if (result) {
+							window.document.location.reload();
+						}
+					});
+				} else {
+					window.document.location.reload();
 				}
-				window.document.location.reload();
 				break;
 
 			case 'callback':
@@ -162,7 +180,7 @@ returnAjaxSubmit = function($form, data) {
     var trim_data = data.replace(/(<([^>]+)>)/ig, '');
 
 	if (data.indexOf('"success" :') === -1) {
-		alert('일시적인 오류 : ' + trim_data);
+		zigalert('일시적인 오류 : ' + trim_data);
 		return false;
 	}
 
@@ -170,7 +188,7 @@ returnAjaxSubmit = function($form, data) {
     first_char = first_char.charAt(0);
 
     if (first_char !== '[') {
-        alert('일시적인 오류 : ' + trim_data);
+        zigalert('일시적인 오류 : ' + trim_data);
         return false;
     }
 
@@ -194,7 +212,7 @@ returnAjaxSubmit = function($form, data) {
 			valid.success($form, success, opt);
 			break;
 		default :
-			alert('일시적인 오류 : ' + trim_data);
+			zigalert('일시적인 오류 : ' + trim_data);
 	}
 }
 
@@ -289,7 +307,7 @@ ajaxFileSubmit = {
         });
 		
 		if (PH_POST_MAX_SIZE > 0 && post_max_size > PH_POST_MAX_SIZE) {
-			alert('서버의 첨부 가능한 허용 용량을 초과하였습니다.');
+			zigalert('서버의 첨부 가능한 허용 용량을 초과하였습니다.');
 			return false;
 		}
 
@@ -427,25 +445,25 @@ formBeforeConfirm = {
                 val_exp[i] = val_exp[i].replace(/^\s+|\s+$/g, '');
             }
 			
-			var confirmed = (val_exp[0]) ? confirm(val_exp[0]) : true;
-
-            if (confirmed) {
-                var $form = $this.closest('form')
-                var $inp = new Array;
-                var org_val = new Array;
-
-                for (var i = 1; i < val_exp.length; i++) {
-                    $inp[i] = $('input[name="' + val_exp[i].split(':')[0] + '"]' ,$form);
-                    org_val[i] = $('input[name="' + val_exp[i].split(':')[0] + '"]').val();
-                    $inp[i].val(val_exp[i].split(':')[1])
-                }
-
-                $form.closest('form').submit();
-
-                for (var i = 1; i < $inp.length; i++) {
-                    $inp[i].val(org_val[i]);
-                }
-            }
+			zigconfirm(val_exp[0], function(result) {
+				if (result) {
+					var $form = $this.closest('form')
+					var $inp = new Array;
+					var org_val = new Array;
+	
+					for (var i = 1; i < val_exp.length; i++) {
+						$inp[i] = $('input[name="' + val_exp[i].split(':')[0] + '"]' ,$form);
+						org_val[i] = $('input[name="' + val_exp[i].split(':')[0] + '"]').val();
+						$inp[i].val(val_exp[i].split(':')[1])
+					}
+	
+					$form.closest('form').submit();
+	
+					for (var i = 1; i < $inp.length; i++) {
+						$inp[i].val(org_val[i]);
+					}
+				}
+			});
         });
     }
 
@@ -504,30 +522,105 @@ $(function() {
 });
 
 //
-// Zigger alert
+// Zigger Alert
 //
-zigalert = function(msg) {
+get_zigalert = function(msg) {
+	return new Promise(function(resolve, reject) {
 
-    var $ele = {
+		var $ele = {
+			'wrap' : $('#zig-alert-wrap'),
+			'alert' : $('#zig-alert')
+		}
+
+		$ele.alert.find('.content p').html(msg);
+		$ele.alert.show().addClass('show').find('button').focus();
+		
+		// button click시 처리
+		$ele.alert.find('button').click(function() {
+			$ele.wrap.remove();
+			$ele.alert.remove();
+			resolve(true);
+		});
+
+		$(document).keydown(function(e) {
+			if (e.keyCode === 27 && $ele.alert.length > 0) {
+				$ele.alert.find('button.yes').click();
+			}
+		});
+	});
+}
+
+zigalert = function(msg, callback) {
+	var $ele = {
         'wrap' : $('#zig-alert-wrap'),
-        'alert' : $('<div id="zig-alert"><p><i class="fa fa-exclamation-circle"></i>' + msg + '</p></div>')
+        'alert' : $('<div id="zig-alert-wrap"><div id="zig-alert"><div class="content"><p></p></div><div class="button"><button class="yes">확인</button></div></div>')
     }
 
-    if ($ele.wrap.length < 1) {
-        $wrap = $('<div id="zig-alert-wrap"></div>');
-        $wrap.appendTo('body');
-        $ele.wrap = $wrap;
+	msg = msg.replace(/\r?\n/g, "<br />");
+
+	if ($ele.wrap.length < 1) {
+        $ele.alert.appendTo('body');
     }
-
-    $ele.alert.prependTo($ele.wrap).delay(3000).queue(function() {
-        $(this).remove();
-    });
-
-    $ele.alert.on({
-        'click' : function(e) {
-            e.preventDefault();
-            $(this).remove();
-        }
-    });
 	
+	get_zigalert(msg).then(function(result) {
+		if (callback) callback(result);
+	});
+}
+
+//
+// Zigger Confirm
+//
+get_zigconfirm = function(msg) {
+	return new Promise(function(resolve, reject) {
+
+		var $ele = {
+			'wrap' : $('#zig-confirm-wrap'),
+			'alert' : $('#zig-confirm')
+		}
+
+		$ele.alert.find('.content p').html(msg);
+		$ele.alert.show().addClass('show').find('button.yes').focus();
+		
+		// button click시 처리
+		$ele.alert.find('button.yes').click(function() {
+			$ele.wrap.remove();
+			$ele.alert.remove();
+			resolve(true);
+            $('*[data-tab-index='+PH_NOW_TABINDEX+']').focus();
+		});
+		
+		$ele.alert.find('button.no').click(function() {
+			$ele.wrap.remove();
+			$ele.alert.remove();
+			resolve(false);
+		});
+
+		$(document).keydown(function(e) {
+			if (e.keyCode === 27 && $ele.alert.length > 0) {
+				$ele.alert.find('button.no').click();
+			}
+		});
+	});
+}
+
+zigconfirm = function(msg, callback) {
+	if (!msg) {
+		callback(true);
+		return;
+	}
+
+	msg = msg.replace(/\r?\n/g, "<br />");
+	 
+	var $ele = {
+        'wrap' : $('#zig-confirm-wrap'),
+        'alert' : $('<div id="zig-confirm-wrap"><div id="zig-confirm"><div class="content"><p></p></div><div class="button"><button class="yes">확인</button><button class="no">닫기</button></div></div>')
+    }
+
+	if ($ele.wrap.length < 1) {
+        $ele.alert.appendTo('body');
+    }
+
+	get_zigconfirm(msg).then(function(result) {
+		if (callback) callback(result);
+	});
 }

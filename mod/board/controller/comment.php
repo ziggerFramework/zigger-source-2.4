@@ -68,7 +68,7 @@ class Load extends \Controller\Make_Controller {
         {
             if ($arr['mb_profileimg']) {
                 $fileinfo = Func::get_fileinfo($arr['mb_profileimg']);
-                return $fileinfo['replink'];
+                return (isset($fileinfo['replink']) && !empty($fileinfo['replink'])) ? $fileinfo['replink'] : false;
 
             } else {
                 return false;

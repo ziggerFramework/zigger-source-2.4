@@ -24,7 +24,7 @@
     
     <form id="list-sch" action="" method="get">
         <input type="hidden" name="mode" value="" />
-        <?php echo $manage->print_hidden_inp(); ?>
+        <?php echo $manage->print_hidden_inp($is_search = true); ?>
 
         <fieldset>
             <div class="slt">
@@ -45,6 +45,7 @@
             <colgroup>
                 <col style="width: 63px;" />
                 <col style="width: 50px;" />
+                <col style="width: 50px;" />
                 <col style="width: 80px;" />
                 <col style="width: auto;" />
                 <col style="width: auto;" />
@@ -58,6 +59,7 @@
                     <th><label><input type="checkbox" class="cnum_allchk" /></label></th>
                     <th>No.</th>
                     <th>유형</th>
+                    <th>수신자수</th>
                     <th>수신번호(비회원)</th>
                     <th>수신 범위</th>
                     <th><a href="<?php echo $manage->orderlink("to_mb"); ?>">수신 회원 ID</a></th>
@@ -72,6 +74,7 @@
                     <td class="chk"><label><input type="checkbox" name="cnum[]" value="<?php echo $list['idx']; ?>" /></label></td>
                     <td class="no tac"><?php echo $list['no']; ?></td>
                     <td class="tac"><?php echo $list['sendtype']; ?></td>
+                    <td class="no tac"><?php echo $list[0]['to_count']; ?></td>
                     <td class="tac"><?php echo $list[0]['print_to_phone']; ?></td>
                     <td class="tac"><?php echo $list[0]['print_level']; ?></td>
                     <td class="tac"><?php echo $list[0]['print_to_mb']; ?></td>

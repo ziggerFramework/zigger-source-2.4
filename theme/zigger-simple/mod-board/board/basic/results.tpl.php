@@ -30,13 +30,13 @@
 				<?php if ($is_ctr_show) { ?>
 				<col style="width: 50px;" />
 				<?php } ?>
-				<col style="width: 60px;" />
-				<col style="width: auto;" />
-				<col style="width: 120px;" />
-				<col style="width: 60px;" />
-				<col style="width: 50px;" />
-				<?php if ($is_likes_show) { ?>
 				<col style="width: 70px;" />
+				<col style="width: auto;" />
+				<col style="width: 150px;" />
+				<col style="width: 100px;" />
+				<col style="width: 100px;" />
+				<?php if ($is_likes_show) { ?>
+				<col style="width: 80px;" />
 				<?php } ?>
 			</colgroup>
 			<thead>

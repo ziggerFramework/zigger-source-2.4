@@ -33,16 +33,29 @@ class Paging {
         $this->total = $total;
     }
 
-    public function query($sql, $param)
+    public function query($sql, $param, $dspError = true, $getQuery = true)
     {
         $db = new Pdosql();
 
         $this->listno = 0;
         $this->request();
-        $sql_replace = $db->query($sql, $param);
-        $this->totalCount = $db->getcount();
-        $this->gettotal($db->getcount());
-
+        $sql_replace = $db->query($sql, $param, $dspError, $getQuery);
+        
+        // paging을 위해 전체 데이터 개수 계산
+        if ($getQuery === false) {
+            $countSql = preg_replace('/\bselect\b(.*?)\bfrom\b(?!.*\bfrom\b)/is', 'select count(*) from', $sql_replace);
+        
+            $stmt = $db->pdo->prepare($countSql);
+            $stmt->execute();
+            $this->totalCount = $stmt->fetchColumn();
+    
+            $this->gettotal($this->totalCount);
+            
+        } else {
+            $this->totalCount = $db->getcount();
+            $this->gettotal($this->totalCount);
+        }
+        
         return $sql_replace.$this->setpaging();
     }
 

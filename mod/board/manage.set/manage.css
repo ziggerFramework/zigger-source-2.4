@@ -22,6 +22,27 @@
 #ctrpop .cont select {height: 40px;margin-bottom: 10px;width: 100%;}
 #ctrpop-bg {background: rgba(0,0,0,0.2);display: none;height: 100%;left: 0;position: fixed;top: 0;width: 100%;z-index: 300;}
 
+#temppop {background: #fff;box-shadow: 0 0 20px rgba(0,0,0,0.03);box-sizing: border-box;display: none;height: 380px;left: 50%;margin-left: -300px;margin-top: -190px;overflow: hidden;padding-top: 60px;position: fixed;top: 50%;width: 600px;z-index: 301;}
+#temppop .tit {background: #fafafa;border-bottom: 1px solid #eee;box-sizing: border-box;left: auto;line-height: 60px;padding: 0 25px;position: absolute;top: 0;width: 100%;z-index: 302;}
+#temppop .tit h2 {color: #000;font-size: 16px;font-weight: bold;letter-spacing: -0.05em;}
+#temppop .tit .close {color: #333;display: block;font-size: 16px;height: 60px;line-height: 60px;position: absolute;right: 0;text-align: center;text-decoration: none;top: 0;width: 60px;}
+#temppop .cont {box-sizing: border-box;height: 100%;overflow-y: auto;padding: 20px 30px;}
+#temppop .tbl {width: 100%;}
+#temppop .tbl tbody tr > * {border-bottom: 1px solid #f1f1f1;font-size: 15px;padding: 18px 10px;letter-spacing: -0.03em;}
+#temppop .tbl tbody td .sbj {color: #333333;display: block;font-size: 16px;font-weight: bold;line-height: 22px;letter-spacing: -1px;}
+#temppop .tbl tbody td .date {color: #999999;display: block;font-size: 13px;letter-spacing: -1px;text-align: right;}
+#temppop .tbl tbody td .remove-btn {color: #666666;font-size: 13px;}
+#temppop .sment {border-bottom: 1px solid #333333;color: #999999;display: block;font-size: 14px;letter-spacing: -0.05em;line-height: 20px;padding-bottom: 15px;}
+#temppop .mb-btn {text-align: center;}
+#temppop-bg {background: rgba(0,0,0,0.2);display: none;height: 100%;left: 0;position: fixed;top: 0;width: 100%;z-index: 300;}
+
+/* board write */
+#board-writeForm .temp-btn {border: 1px solid #333333;box-shadow: 1px 1px rgba(0,0,0,0.1);display: inline-block;font-size: 0;height: 37px;inline-size: none;overflow: hidden;vertical-align: middle;}
+#board-writeForm .temp-btn button {display: inline-block;line-height: 37px;padding: 0 15px;vertical-align: middle;}
+#board-writeForm .temp-btn button.load-btn {background: none;border: none;border-left: 1px solid #eeeeee;cursor: pointer;}
+#board-writeForm .temp-btn button.load-btn strong {color: #6b52e9;font-size: 14px;font-weight: bold;}
+#board-writeForm .temp-btn button.save-btn {background: none;border: none;color: #000000;font-size: 14px;letter-spacing: -1px;}
+
 /* board view */
 #board-view .view-tit img {height: 15px;width: 15px;}
 #board-view .article-wrap {padding: 50px;vertical-align: top;}

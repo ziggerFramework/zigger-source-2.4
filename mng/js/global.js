@@ -363,7 +363,7 @@ ph_manage_script = {
         }
 
         var secc_modify = function() {
-            alert('성공적으로 수정 되었습니다.');
+            zigalert('성공적으로 수정 되었습니다.');
             list_reload();
         }
 
@@ -402,38 +402,56 @@ ph_manage_script = {
 
         $(document).on('click', '#sitemapListForm .del-1d', function(e) {
             e.preventDefault();
-            if (!confirm('삭제하는 경우 복구할 수 없습니다.\n\n그래도 진행 하시겠습니까?')) {
-                return false;
-            }
+
             var $this = $(this);
-            $this.parents('.st-1d').remove();
-            $('#sitemapListForm input[name=type]').val('modify');
-            $('#sitemapMofidyForm').empty().append($wait_box);
-            list_refrs();
+            
+            zigconfirm('삭제하는 경우 복구할 수 없습니다.\r\n그래도 진행 하시겠습니까?', function(result) {
+                if (result) {
+                    $this.parents('.st-1d').remove();
+                    $('#sitemapListForm input[name=type]').val('modify');
+                    $('#sitemapMofidyForm').empty().append($wait_box);
+                    list_refrs();
+
+                } else {
+                    return false;
+                }
+            });
         });
 
         $(document).on('click', '#sitemapListForm .del-2d', function(e) {
             e.preventDefault();
-            if (!confirm('삭제하는 경우 복구할 수 없습니다.\n\n그래도 진행 하시겠습니까?')) {
-                return false;
-            }
+
             var $this = $(this);
-            $this.parent().parent('li').remove();
-            $('#sitemapListForm input[name=type]').val('modify');
-            $('#sitemapMofidyForm').empty().append($wait_box);
-            list_refrs();
+            
+            zigconfirm('삭제하는 경우 복구할 수 없습니다.\r\n그래도 진행 하시겠습니까?', function(result) {
+                if (result) {
+                    $this.parent().parent('li').remove();
+                    $('#sitemapListForm input[name=type]').val('modify');
+                    $('#sitemapMofidyForm').empty().append($wait_box);
+                    list_refrs();
+
+                } else {
+                    return false;
+                }
+            });
         });
 
         $(document).on('click', '#sitemapListForm .del-3d', function(e) {
             e.preventDefault();
-            if (!confirm('삭제하는 경우 복구할 수 없습니다.\n\n그래도 진행 하시겠습니까?')) {
-                return false;
-            }
+
             var $this = $(this);
-            $this.parent().parent('li').remove();
-            $('#sitemapListForm input[name=type]').val('modify');
-            $('#sitemapMofidyForm').empty().append($wait_box);
-            list_refrs();
+            
+            zigconfirm('삭제하는 경우 복구할 수 없습니다.\r\n그래도 진행 하시겠습니까?', function(result) {
+                if (result) {
+                    $this.parent().parent('li').remove();
+                    $('#sitemapListForm input[name=type]').val('modify');
+                    $('#sitemapMofidyForm').empty().append($wait_box);
+                    list_refrs();
+
+                } else {
+                    return false;
+                }
+            });
         });
 
         $(document).on('click', '#sitemapListForm a.modify-btn', function(e) {
@@ -451,7 +469,7 @@ ph_manage_script = {
 
         $(document).on('click', '#sendmailForm input[name=type]', function(e) {
             var type = $(this).val();
-            $('#sendmailForm table tr.hd-tr[data-type='+type+']').show().siblings('.hd-tr').hide();
+            $('#sendmailForm table tr.hd-tr[data-type='+type+']').show().siblings('.hd-tr').hide().find('input[type=text]').val('');
         });
 
         $(document).on('change', '#sendmailForm select[name=tpl]', function(e) {
@@ -462,6 +480,73 @@ ph_manage_script = {
             CKEDITOR.instances.html.setData(soruce);
         });
 
+        // 단체발송
+        var mailler_send_now_rcv_idx = 0;
+        $mailler_form = $('form[name=sendmailForm]');
+        submit_ajax_action = new Array();
+        submit_ajax_action[0] = PH_MANAGE_DIR + '/mailler/send-submit?rewritetype=submit';
+        submit_ajax_action[1] = PH_MANAGE_DIR + '/mailler/send-action-submit?rewritetype=submit';
+
+        // 초기화
+        mailler_set_rcv_email = function(count, rcv_email_txt) {
+
+            zigconfirm('<' + count + '> 명에게 발송 하시겠습니까?\r\n중간에 취소할 수 없습니다.', function(result) {
+                if (result) {
+                    $mailler_form.find('.rcv_count').show().find('em').text(count);
+
+                    $mailler_form.find('textarea[name=rcv_email]').val(rcv_email_txt);
+                    $mailler_form.find('input[name=rcv_to_count]').val(count);
+
+                    mailler_get_send_email();
+                }
+            });
+            
+        }
+
+        // 건별 발송
+        mailler_get_send_email = function() {
+            setTimeout(
+                function() {
+                    var rcv_email_txt = $('textarea[name=rcv_email]').val();
+                    var rcv_email_arr = rcv_email_txt.split('|');
+                    
+                    // 초기화
+                    $mailler_form.find('.rcv_count').find('strong').text('0');
+                    
+                    // 발송 완료
+                    if (mailler_send_now_rcv_idx + 1 > rcv_email_arr.length) {
+                        zigalert('성공적으로 발송 되었습니다.');
+                        $mailler_form.find('button:submit').show();
+                        $('.rcv_count').hide();
+                        $mailler_form.attr('ajax-action', submit_ajax_action[0]);
+                        mailler_send_now_rcv_idx = 0;
+                    
+                    // 발송중
+                    } else {
+                        $mailler_form.find('.rcv_count').find('strong').text(mailler_send_now_rcv_idx + 1);
+                        $mailler_form.find('input[name=rcv_now_rcv_idx]').val(mailler_send_now_rcv_idx + 1);
+                        console.log((mailler_send_now_rcv_idx + 1) + ' : ' + rcv_email_arr[mailler_send_now_rcv_idx]);
+                        $mailler_form.find('button:submit').hide();
+                        $mailler_form.attr('ajax-action', submit_ajax_action[1]);
+                        $mailler_form.find('input[name=email]').val(rcv_email_arr[mailler_send_now_rcv_idx]).submit();
+                        mailler_send_now_rcv_idx++;
+                    }
+
+                },
+                200
+            )
+        }
+
+        // 오류 발생
+        mailler_get_send_email_error = function(msg) {
+            alert(msg);
+            $mailler_form.find('button:submit').show().attr('disabled', false);
+            $('.rcv_count').hide();
+            $('.rcv_count').find('strong').text('0');
+            $mailler_form.attr('ajax-action', submit_ajax_action[0]);
+            mailler_send_now_rcv_idx = 0;
+        }
+
     },
 
     //
@@ -469,7 +554,7 @@ ph_manage_script = {
     //
     'sms_tomember_script' : function() {
 
-        //내용 byte수 체크
+        // 내용 byte수 체크
         var get_sms_memobyte = function(val) {
             var bytes = 0;
             for (var i = 0; i < val.length; i++) {
@@ -505,13 +590,13 @@ ph_manage_script = {
             get_sms_timer = setTimeout(get_sms_printbyte, 100);
         }
 
-        //수신 범위 지정
+        // 수신 범위 지정
         $(document).on('click', '#smsSendForm input[name=type]', function(e) {
             var type = $(this).val();
-            $('#smsSendForm table tr.hd-tr[data-type='+type+']').show().siblings('.hd-tr').hide();
+            $('#smsSendForm table tr.hd-tr[data-type='+type+']').show().siblings('.hd-tr').hide().find('input[type=text]').val('');
         });
 
-        //예약 발송 설정
+        // 예약 발송 설정
         var get_sms_resv = function(type) {
             if (type == 'show') {
                 $('#smsSendForm .resv-wrap *').attr('disabled', false);
@@ -530,6 +615,71 @@ ph_manage_script = {
             }
         });
         get_sms_resv('hide');
+
+        // 단체발송
+        var sms_send_now_rcv_idx = 0;
+        $sms_form = $('form[name=smsSendForm]');
+        sms_submit_ajax_action = new Array();
+        sms_submit_ajax_action[0] = PH_MANAGE_DIR + '/sms/tomember-submit?rewritetype=submit';
+        sms_submit_ajax_action[1] = PH_MANAGE_DIR + '/sms/tomember-action-submit?rewritetype=submit';
+
+        // 초기화
+        sms_set_rcv_email = function(count, rcv_email_txt) {
+            zigconfirm('<' + count + '> 명에게 발송 하시겠습니까?\r\n중간에 취소할 수 없습니다.', function(result) {
+                if (result) {
+                    $sms_form.find('.rcv_count').show().find('em').text(count);
+
+                    $sms_form.find('textarea[name=rcv_email]').val(rcv_email_txt);
+                    $sms_form.find('input[name=rcv_to_count]').val(count);
+        
+                    sms_get_send_sms();
+                }
+            });
+        }
+
+        // 건별 발송
+        sms_get_send_sms = function() {
+            setTimeout(
+                function() {
+                    var rcv_email_txt = $('textarea[name=rcv_email]').val();
+                    var rcv_email_arr = rcv_email_txt.split('|');
+                    
+                    // 초기화
+                    $sms_form.find('.rcv_count').find('strong').text('0');
+                    
+                    // 발송 완료
+                    if (sms_send_now_rcv_idx + 1 > rcv_email_arr.length) {
+                        zigalert('성공적으로 발송 되었습니다.');
+                        $sms_form.find('button:submit').show();
+                        $('.rcv_count').hide();
+                        $sms_form.attr('ajax-action', sms_submit_ajax_action[0]);
+                        sms_send_now_rcv_idx = 0;
+                    
+                    // 발송중
+                    } else {
+                        $sms_form.find('.rcv_count').find('strong').text(sms_send_now_rcv_idx + 1);
+                        $sms_form.find('input[name=rcv_now_rcv_idx]').val(sms_send_now_rcv_idx + 1);
+                        console.log((sms_send_now_rcv_idx + 1) + ' : ' + rcv_email_arr[sms_send_now_rcv_idx]);
+                        $sms_form.find('button:submit').hide();
+                        $sms_form.attr('ajax-action', sms_submit_ajax_action[1]);
+                        $sms_form.find('input[name=email]').val(rcv_email_arr[sms_send_now_rcv_idx]).submit();
+                        sms_send_now_rcv_idx++;
+                    }
+
+                },
+                200
+            )
+        }
+
+        // 오류 발생
+        sms_get_send_sms_error = function(msg) {
+            alert(msg);
+            $sms_form.find('button:submit').show().attr('disabled', false);
+            $('.rcv_count').hide();
+            $('.rcv_count').find('strong').text('0');
+            $sms_form.attr('ajax-action', sms_submit_ajax_action[0]);
+            sms_send_now_rcv_idx = 0;
+        }
 
     }
 

@@ -16,7 +16,7 @@
 <article>
 
     <form id="list-sch" action="" method="get">
-        <?php echo $manage->print_hidden_inp(); ?>
+        <?php echo $manage->print_hidden_inp($is_search = true); ?>
 
         <fieldset>
             <div class="slt">
@@ -36,7 +36,8 @@
             <colgroup>
                 <col style="width: 63px;" />
                 <col style="width: 50px;" />
-                <col style="width: 300px;" />
+                <col style="width: 250px;" />
+                <col style="width: 80px;" />
                 <col style="width: 200px;" />
                 <col style="width: auto;" />
                 <col style="width: 200px;" />
@@ -47,6 +48,7 @@
                     <th><label><input type="checkbox" class="cnum_allchk" /></label></th>
                     <th>No.</th>
                     <th>수신 범위</th>
+                    <th>수신자수</th>
                     <th><a href="<?php echo $manage->orderlink("to_mb"); ?>">수신 회원 ID</a></th>
                     <th><a href="<?php echo $manage->orderlink("subject"); ?>">제목</a></th>
                     <th><a href="<?php echo $manage->orderlink("regdate"); ?>">발송일</a></th>
@@ -59,6 +61,7 @@
                     <td class="chk"><label><input type="checkbox" name="cnum[]" value="<?php echo $list['idx']; ?>" /></label></td>
                     <td class="no tac"><?php echo $list['no']; ?></td>
                     <td class="tac"><?php echo $list[0]['print_level']; ?></td>
+                    <td class="no tac"><?php echo $list[0]['to_count']; ?></td>
                     <td class="tac"><?php echo $list[0]['print_to_mb']; ?></td>
                     <td><a href="./historyview<?php echo $manage->lnk_def_param('&idx='.$list['idx']); ?>"><?php echo $list['subject']; ?></a></td>
                     <td class="tac"><?php echo $list['regdate']; ?></td>

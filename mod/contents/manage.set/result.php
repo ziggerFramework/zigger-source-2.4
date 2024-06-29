@@ -43,10 +43,8 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("mod:contents")}
-            ) contents_total
+            sum(case when regdate is not null then 1 else 0 end) as `contents_total`
+            from {$sql->table("mod:contents")}
             ", []
         );
         $sort_arr['contents_total'] = $sql->fetch('contents_total');

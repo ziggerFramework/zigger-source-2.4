@@ -17,6 +17,7 @@
     	<input type="hidden" name="category_ed" value="<?php echo $category; ?>" />
     	<input type="hidden" name="use_html" value="Y" />
     	<input type="hidden" name="thisuri" value="<?php echo $thisuri; ?>" />
+        <input type="hidden" name="temp_hash" value="<?php echo $temp_hash; ?>" />
 
         <table class="table1">
             <thead>
@@ -25,6 +26,18 @@
                 </tr>
             </thead>
             <tbody>
+                
+				<tr>
+					<th scope="row">
+						임시저장
+					</th>
+					<td>
+						<div id="board-temporary-btnbox" class="temp-btn">
+							<button type="button" class="save-btn">임시글 저장</button>
+							<button type="button" class="load-btn"><strong><?php echo $my_temporary_count; ?></strong></button>
+						</div>
+					</td>
+				</tr>
 
                 <?php if ($is_category_show) { ?>
 				<tr>
@@ -160,7 +173,7 @@
                     </th>
                     <td>
                         <input type="file" name="file1" title="첨부파일1" />
-                        <span class="tbl_sment">(<?php echo $print_filesize; ?> 까지 첨부 가능)</span>
+                        <span class="tbl_sment"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
                     </td>
                 </tr>
                 <?php } ?>
@@ -185,7 +198,7 @@
                     </th>
                     <td>
                         <input type="file" name="file2" title="첨부파일2" />
-                        <span class="tbl_sment">(<?php echo $print_filesize; ?> 까지 첨부 가능)</span>
+                        <span class="tbl_sment"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
                     </td>
                 </tr>
                 <?php } ?>

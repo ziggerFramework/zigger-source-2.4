@@ -43,10 +43,8 @@ class Template extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("mailtpl")}
-            ) total
+            sum(case when `regdate` is not null then 1 else 0 end) as `total`
+            from {$sql->table("mailtpl")}
             ", []
         );
         $sort_arr['total'] = $sql->fetch('total');
@@ -548,9 +546,7 @@ class Send_submit{
             if ($sql->getcount() < 1) Valid::error('', '존재하지 않는 회원 id 입니다.');
             if (!$sql->fetch('mb_email')) Valid::error('', '회원 email이 등록되어 있지 않습니다.');
 
-            $rcv_email[] = array(
-                'email' => $sql->fetch('mb_email')
-            );
+            $rcv_email[] = $sql->fetch('mb_email');
             $req['level_from'] = 0;
             $req['level_to'] = 0;
         }
@@ -573,57 +569,75 @@ class Send_submit{
             if ($sql->getcount() < 1) Valid::error('', '범위내 수신할 회원이 존재하지 않습니다.');
 
             do {
-                $rcv_email[] = array(
-                    'email' => $sql->fetch('mb_email')
-                );
+                $rcv_email[] = $sql->fetch('mb_email');
 
             } while ($sql->nextRec());
 
             $req['to_mb'] = '';
         }
 
+        Valid::set(
+            array(
+                'return' => 'callback',
+                'function' => "mailler_set_rcv_email(".count($rcv_email).", '".implode('|', $rcv_email)."')"
+            )
+        );
+        Valid::turn();
+    }
+
+}
+
+//
+// Controller for submit
+// ( Send-action )
+//
+class Send_action_submit{
+
+    public function init()
+    {
+        $sql = new Pdosql();
+        $mail = new Mail();
+        $manage = new ManageFunc();
+
+        Method::security('referer');
+        Method::security('request_post');
+        $req = Method::request('post', 'type, to_mb, level_from, level_to, subject, html, email, rcv_to_count, rcv_now_rcv_idx');
+        $manage->req_hidden_inp('post');
+
+        // 발송 수행
         $mail->set(
             array(
                 'tpl' => null,
-                'to' => $rcv_email,
+                'to' => array(
+                    [
+                        'email' => $req['email']
+                    ]
+                ),
                 'subject' => $req['subject'],
                 'memo' => stripslashes($req['html'])
             )
         );
         $mail->send();
 
-        $sql->query(
-            "
-            insert into {$sql->table("sentmail")}
-            (`to_mb`, `level_from`, `level_to`, `subject`, `html`, `regdate`)
-            VALUES
-            (:col1, :col2, :col3, :col4, :col5, now())
-            ",
-            array(
-                $req['to_mb'], $req['level_from'], $req['level_to'], $req['subject'], $req['html']
-            )
-        );
-
-        $sql->query(
-            "
-            select `idx`
-            from {$sql->table("sentmail")}
-            where `subject`=:col1
-            order by `regdate` DESC
-            limit 1
-            ",
-            array(
-                $req['subject']
-            )
-        );
-
-        $idx = $sql->fetch('idx');
+        // 발송 내역 기록
+        if ($req['rcv_now_rcv_idx'] == 1) {
+            $sql->query(
+                "
+                insert into {$sql->table("sentmail")}
+                (`to_mb`, `level_from`, `level_to`, `subject`, `html`, `regdate`, `to_count`)
+                values
+                (:col1, :col2, :col3, :col4, :col5, now(), :col6)
+                ",
+                array(
+                    $req['to_mb'], $req['level_from'], $req['level_to'], $req['subject'], $req['html'], $req['rcv_to_count']
+                )
+            );
+        }
 
         Valid::set(
             array(
-                'return' => 'alert->location',
-                'msg' => '성공적으로 발송 되었습니다.',
-                'location' => PH_MANAGE_DIR.'/mailler/historyview?idx='.$idx
+                'return' => 'callback',
+                'function' => "mailler_get_send_email()"
             )
         );
         Valid::turn();
@@ -691,20 +705,10 @@ class History extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("sentmail")}
-            ) total,
-            (
-                select count(*)
-                from {$sql->table("sentmail")}
-                where `to_mb` is not null and `to_mb`!=''
-            ) to_mb_total,
-            (
-                select count(*)
-                from {$sql->table("sentmail")}
-                where `to_mb` is null or `to_mb`=''
-            ) level_from_total
+            sum(case when regdate is not null then 1 else 0 end) as `total`,
+            sum(case when `to_mb` is not null and `to_mb`!='' then 1 else 0 end) as `to_mb_total`,
+            sum(case when `to_mb` is null or `to_mb`='' then 1 else 0 end) as `level_from_total`
+            from {$sql->table("sentmail")}
             ", []
         );
 
@@ -750,6 +754,7 @@ class History extends \Controller\Make_Controller {
                 $arr['regdate'] = Func::datetime($arr['regdate']);
                 $arr[0]['print_level'] = print_level($arr);
                 $arr[0]['print_to_mb'] = print_to_mb($arr);
+                $arr[0]['to_count'] = Func::number($arr['to_count']);
 
                 $print_arr[] = $arr;
 
@@ -893,6 +898,7 @@ class Historyview extends \Controller\Make_Controller {
         $sql->nl2br = 0;
         $arr['html'] = $sql->fetch('html');
         $arr['regdate'] = Func::datetime($arr['regdate']);
+        $arr[0]['to_count'] = Func::number($arr['to_count']);
 
         $is_level_show = false;
         $is_to_mb_show = false;

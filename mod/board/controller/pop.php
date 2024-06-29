@@ -747,3 +747,113 @@ class Writer extends \Controller\Make_Controller {
     }
 
 }
+
+//
+// Module Controller
+// ( Temporary )
+//
+class Temporary extends \Controller\Make_Controller {
+
+    public function init()
+    {
+        global $boardconf, $req;
+
+        $boardlib = new Board_Library();
+
+        $req = Method::request('get', 'board_id, temp_hash');
+
+        //load config
+        $boardconf = $boardlib->load_conf($req['board_id']);
+
+        $this->layout()->view(MOD_BOARD_THEME_PATH.'/board/'.$boardconf['theme'].'/temppop.tpl.php');
+    }
+
+    public function make()
+    {
+        global $MB, $req;
+        
+        $sql = new Pdosql();
+
+        // 자신의 임시저장글 가져옴
+        $sql->query(
+            "
+            select *
+            from {$sql->table("mod:board_temporary")}
+            where `mb_idx`=:col1
+            order by `regdate` desc
+            limit 30
+            ",
+            array(
+                $MB['idx']
+            )
+        );
+
+        $print_arr = array();
+
+        if ($sql->getcount() > 0) {
+            do {
+                $arr = $sql->fetchs();
+
+                $arr['regdate'] = Func::datetime($arr['regdate']);
+
+                $print_arr[] = $arr;
+
+            } while ($sql->nextRec());
+        }
+
+        $this->set('print_arr', $print_arr);
+    }
+
+    public function form()
+    {
+        $form = new \Controller\Make_View_Form();
+        $form->set('id', 'board_temporaryForm');
+        $form->set('type', 'html');
+        $form->set('action', MOD_BOARD_DIR.'/controller/pop/temporary-submit');
+        $form->run();
+    }
+
+}
+
+
+//
+// Controller for submit
+// ( Temporary )
+//
+class Temporary_submit {
+
+    public function init()
+    {
+        global $MB, $req;
+
+        $sql = new Pdosql();
+
+        Method::security('referer');
+        Method::security('request_post');
+        $req = Method::request('post', 'temp_hash');
+
+        if (!$req['temp_hash']) Valid::error('', ERR_MSG_1);
+
+        // 임시글 삭제
+        $sql->query(
+            "
+            delete
+            from {$sql->table("mod:board_temporary")}
+            where mb_idx=:col1 and hash=:col2
+            ",
+            array(
+                $MB['idx'], $req['temp_hash']
+            )
+        );
+        
+        // return
+        Valid::set(
+            array(
+                'return' => 'callback',
+                'function' => 'get_board_after_tempdata_delete(\''.$req['temp_hash'].'\')',
+            )
+        );
+        Valid::turn();
+    }
+
+}

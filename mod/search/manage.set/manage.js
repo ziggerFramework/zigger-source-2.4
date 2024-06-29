@@ -92,7 +92,7 @@ ph_mod_search_manage = {
         }
 
         var secc_modify = function() {
-            alert('성공적으로 수정 되었습니다.');
+            zigalert('성공적으로 수정 되었습니다.');
             list_reload();
         }
 
@@ -110,14 +110,21 @@ ph_mod_search_manage = {
 
         $(document).on('click', 'body.mod-search-manage #searchListForm .del-1d', function(e) {
             e.preventDefault();
-            if (!confirm('삭제하는 경우 복구할 수 없습니다.\n\n그래도 진행 하시겠습니까?')) {
-                return false;
-            }
+
             var $this = $(this);
-            $this.parents('.st-1d').remove();
-            $('body.mod-search-manage #searchListForm input[name=type]').val('modify');
-            $('body.mod-search-manage #searchModifyForm').empty().append($wait_box);
-            list_refrs();
+
+            zigconfirm('삭제하는 경우 복구할 수 없습니다.\r\n그래도 진행 하시겠습니까?', function(result) {
+                if (result) {
+                    $this.parents('.st-1d').remove();
+                    $('body.mod-search-manage #searchListForm input[name=type]').val('modify');
+                    $('body.mod-search-manage #searchModifyForm').empty().append($wait_box);
+                    list_refrs();
+
+                } else {
+                    return false;
+                }
+            });
+            
         });
 
         $(document).on('click', 'body.mod-search-manage #searchListForm a.modify-btn', function(e) {

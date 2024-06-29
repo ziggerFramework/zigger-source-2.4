@@ -1,0 +1,10 @@
+[
+    {
+        "title" : "게시판 레코딩 설정",
+        "href" : "result/setting"
+    },
+    {
+        "title" : "레코딩 현황 확인",
+        "href" : "result/result"
+    }
+]

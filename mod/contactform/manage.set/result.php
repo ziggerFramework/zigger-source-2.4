@@ -53,11 +53,8 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-            select count(*)
+            sum(case when regdate is not null then 1 else 0 end) as `contactform_total`
             from {$sql->table("mod:contactform")}
-            where `name` is not null
-            ) contactform_total
             ", []
         );
         $sort_arr['contactform_total'] = $sql->fetch('contactform_total');

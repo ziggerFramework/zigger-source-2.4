@@ -64,7 +64,8 @@ class Result extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            ( select count(*) from {$sql->table("config")} where `cfg_type` like 'mod:board:config:%' and `cfg_key`='id' ) board_total
+            sum(case when `cfg_type` like 'mod:board:config:%' and `cfg_key`='id' then 1 else 0 end) as `board_total`
+            from {$sql->table("config")}
             ", []
         );
         $sort_arr['board_total'] = $sql->fetch('board_total');
@@ -239,8 +240,8 @@ class Result_clone_submit{
             `writer` varchar(255) default null,
             `pwd` text,
             `email` varchar(255) default null,
-            `article` text,
-            `subject` varchar(255) default null,
+            `article` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+            `subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci default null,
             `file1` text,
             `file1_cnt` int(11) default '0',
             `file2` text,
@@ -264,7 +265,13 @@ class Result_clone_submit{
             `data_9` text,
             `data_10` text,
             primary key(`idx`)
-            )engine=InnoDB default charset=utf8;
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+            ", []
+        );
+
+        $sql->query(
+            "
+            alter table {$sql->table("mod:board_data_")}$clone_id add index(`ln`), add index(`rn`), add index(`regdate`);
             ", []
         );
 
@@ -279,7 +286,7 @@ class Result_clone_submit{
             `writer` varchar(255) default null,
             `parent_mb_idx` int(11) default '0',
             `parent_writer` varchar(255) default null,
-            `comment` text,
+            `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
             `ip` varchar(255) default null,
             `regdate` datetime default null,
             `cmt_1` text,
@@ -293,7 +300,13 @@ class Result_clone_submit{
             `cmt_9` text,
             `cmt_10` text,
             primary key(`idx`)
-            )engine=InnoDB default charset=utf8;
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+            ", []
+        );
+
+        $sql->query(
+            "
+            alter table {$sql->table("mod:board_cmt_")}$clone_id add index(`bo_idx`), add index(`mb_idx`), add index(`regdate`);
             ", []
         );
 
@@ -468,8 +481,8 @@ class Regist_submit {
             `writer` varchar(255) default null,
             `pwd` text,
             `email` varchar(255) default null,
-            `article` text,
-            `subject` varchar(255) default null,
+            `article` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+            `subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci default null,
             `file1` text,
             `file1_cnt` int(11) default '0',
             `file2` text,
@@ -493,7 +506,13 @@ class Regist_submit {
             `data_9` text,
             `data_10` text,
             primary key(`idx`)
-            )engine=InnoDB default charset=utf8;
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+            ", []
+        );
+
+        $sql->query(
+            "
+            alter table {$sql->table("mod:board_data_")}$board_id add index(`ln`), add index(`rn`), add index(`regdate`);
             ", []
         );
 
@@ -508,7 +527,7 @@ class Regist_submit {
             `writer` varchar(255) default null,
             `parent_mb_idx` int(11) default '0',
             `parent_writer` varchar(255) default null,
-            `comment` text,
+            `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
             `ip` varchar(255) default null,
             `regdate` datetime default null,
             `cmt_1` text,
@@ -522,7 +541,13 @@ class Regist_submit {
             `cmt_9` text,
             `cmt_10` text,
             primary key(`idx`)
-            )engine=InnoDB default charset=utf8;
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+            ", []
+        );
+
+        $sql->query(
+            "
+            alter table {$sql->table("mod:board_cmt_")}$board_id add index(`bo_idx`), add index(`mb_idx`), add index(`regdate`);
             ", []
         );
 
@@ -1611,9 +1636,18 @@ class Write extends \Controller\Make_Controller {
         // 첨부 가능한 파일 사이즈
         function print_filesize()
         {
-            global $func;
+            return Func::getbyte(Write::$boardconf['file_limit']);
+        }
 
-            return Func::getbyte(Write::$boardconf['file_limit'], 'm').'M';
+        // 게시글 임시 저장을 위한 hash 생성
+        function make_temp_hash($arr)
+        {
+            if (!empty($arr)) {
+                return $arr['hash'];
+
+            } else {
+                return Func::make_random_char(50);
+            }
         }
     }
 
@@ -1625,7 +1659,7 @@ class Write extends \Controller\Make_Controller {
         $sql = new Pdosql();
         $boardlib = new Board_Library();
 
-        $req = Method::request('get', 'id, mode, wrmode, read, page, where, keyword, category');
+        $req = Method::request('get', 'id, mode, wrmode, read, page, where, keyword, category, temp_hash');
 
         $board_id = $req['id'];
 
@@ -1672,6 +1706,45 @@ class Write extends \Controller\Make_Controller {
             $arr = null;
         }
 
+        // 임시 저장글 정보
+        $sql->query(
+            "
+            select count(*) as total_count
+            from {$sql->table("mod:board_temporary")}
+            where `mb_idx`=:col1
+            order by `regdate` desc
+            limit 30
+            ",
+            array(
+                $MB['idx']
+            )
+        );
+
+        $my_temporary_count = $sql->fetch('total_count');
+
+        // 임시 저장글 hash를 넘겨 받았다면 저장글 불러옴
+        $my_temporary_arr = array();
+        
+        if ($req['temp_hash']) {
+            $sql->query(
+                "
+                select *
+                from {$sql->table("mod:board_temporary")}
+                where `mb_idx`=:col1 and `hash`=:col2
+                ",
+                array(
+                    $MB['idx'], $req['temp_hash']
+                )
+            );
+
+            if ($sql->getcount() > 0) {
+                $sql->specialchars = 0;
+                $sql->nl2br = 0;
+
+                $my_temporary_arr = $sql->fetchs();
+            }
+        }
+
         // check
         if (!$board_id) Func::err_back('게시판이 지정되지 않았습니다.');
 
@@ -1699,6 +1772,7 @@ class Write extends \Controller\Make_Controller {
         }
 
         $is_file_show = array();
+        
 
         for ($i = 1; $i <= 2; $i++) {
             $is_file_show[$i] = (Write::$boardconf['use_file'.$i] == 'Y') ? true : false;
@@ -1736,6 +1810,12 @@ class Write extends \Controller\Make_Controller {
             $write['wdate_s'] = '';
         }
 
+        // 임시저장글 정보를 불러온 경우 초기화
+        if (!empty($my_temporary_arr)) {
+            $write['subject'] = $my_temporary_arr['subject'];
+            $write['article'] = $my_temporary_arr['article'];
+        }
+
         $this->set('manage', $manage);
         $this->set('write', $write);
         $this->set('uploaded_file', uploaded_file($arr,$req['wrmode']));
@@ -1761,6 +1841,9 @@ class Write extends \Controller\Make_Controller {
         $this->set('opt_secret', opt_secret($arr));
         $this->set('opt_return_email', opt_return_email($arr));
         $this->set('print_filesize', print_filesize());
+        $this->set('temp_hash', make_temp_hash($my_temporary_arr));
+        $this->set('my_temporary_count', Func::number($my_temporary_count));
+        $this->set('my_temporary_arr', $my_temporary_arr);
     }
 
     public function form()

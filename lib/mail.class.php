@@ -285,15 +285,43 @@ class Mail extends \Make\Database\Pdosql {
         $this->getSmtpServerInfo();
         $this->addHeader('Subject', $this->setSubject());
 
-        // socket 연결
+        // socket 연결 초기화
+        $sock_max_attempts = 30;
+        $sock_now_attempts = 0;
+
+        // socket 연결 (ssl / tls)
         if (strstr($this->smtp_server, 'ssl://') || strstr($this->smtp_server, 'tls://')) {
             $context = stream_context_create();
             $result = stream_context_set_option($context, 'ssl', 'verify_peer', false);
             $result = stream_context_set_option($context, 'ssl', 'verify_host', false);
-            $this->smtp_sock = stream_socket_client($this->smtp_server.':'.$this->smtp_port, $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $context) or die (ERR_MSG_7);
 
+            do {
+                $this->smtp_sock = stream_socket_client($this->smtp_server.':'.$this->smtp_port, $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $context);
+                $sock_now_attempts++;
+                
+                if (!$this->smtp_sock) {
+                    if ($sock_now_attempts >= $sock_max_attempts) break;  // 최대 시도 횟수 초과 시 연결 포기
+                    sleep(1);  // 재시도 전 대기 시간 (초)
+                }
+            } while (!$this->smtp_sock);
+
+            if (!$this->smtp_sock) exit(ERR_MSG_7);
+
+        // socket 연결 (default)
         } else {
-            $this->smtp_sock = fsockopen($this->smtp_server, $this->smtp_port) or die (ERR_MSG_7);
+            do {
+                $this->smtp_sock = fsockopen($this->smtp_server, $this->smtp_port);
+                $sock_now_attempts++;
+                
+                if (!$this->smtp_sock) {
+                    if ($sock_now_attempts >= $sock_max_attempts) {
+                        break;  // 최대 시도 횟수 초과 시 연결 포기
+                    }
+                    sleep(1);  // 재시도 전 대기 시간 (초)
+                }
+            } while (!$this->smtp_sock);
+
+            if (!$this->smtp_sock) exit(ERR_MSG_7);
         }
 
         if ($this->smtp_sock) {

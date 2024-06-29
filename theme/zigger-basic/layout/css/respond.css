@@ -94,9 +94,11 @@
     #slide-btn.on button:before {margin-top: -1px;top: 50%;transform: rotate(45deg);}
     #slide-btn.on button:after {bottom: 50%;margin-bottom: -1px;transform: rotate(-45deg);}
 
-    #mo-tnb {border: 1px solid #dddddd;border-radius: 4px;border-width: 1px 0 0 1px;margin-bottom: 5px;overflow: hidden;}
-    #mo-tnb li {border: 1px solid #dddddd;border-width: 0 1px 1px 0;box-sizing: border-box;display: inline-block;vertical-align: top;width: 50%;}
-    #mo-tnb li:first-child {border-left: none;}
+    #mo-tnb {border: 1px solid #dddddd;border-radius: 4px;margin-bottom: 5px;overflow: hidden;}
+    #mo-tnb li {border: 1px solid #dddddd;border-width: 1px 1px 0 0;box-sizing: border-box;display: inline-block;vertical-align: top;width: 50%;}
+    #mo-tnb li:nth-child(even) {border-right: none;}
+    #mo-tnb li:nth-child(1),
+    #mo-tnb li:nth-child(2) {border-top: none;}
     #mo-tnb li a {background: #f7f7f7;color: #666666;display: block;font-size: 13px;letter-spacing: -0.05em;line-height: 35px;text-align: center;text-decoration: none;}
     #mo-tnb li a em {color: #000;font-style: normal;font-weight: 700;margin-left: 5px;}
     
@@ -237,9 +239,20 @@
     /* Emailchk */
     #emailchk {margin: 40px 15px;width: auto;}
 
-    /* Zig alert */
-    #zig-alert-wrap {right: 5px;top: 0;width: 300px;}
-    #zig-alert {border-left: 3px solid #b82e24;margin-bottom: 3px;}
-    #zig-alert p {font-size: 12px;line-height: 15px;padding: 10px 6px;}
+    /* Zig Alert */
+    #zig-alert {left: 40px;transform: translate(0, -50%);width: calc(100% - 80px)}
+    #zig-alert .content {padding: 25px;}
+    #zig-alert .content p {font-size: 14px;line-height: 22px;}
+    #zig-alert .button {padding: 10px;text-align: center;}
+    #zig-alert .button button {font-size: 16px;padding: 0 30px;}
+    #zig-alert .button button.yes{background: #f7f7f7;}
+
+    /* Zig Confirm */
+    #zig-confirm {left: 40px;transform: translate(0, -50%);width: calc(100% - 80px)}
+    #zig-confirm .content {padding: 25px;}
+    #zig-confirm .content p {font-size: 14px;line-height: 22px;}
+    #zig-confirm .button {padding: 10px;text-align: center;}
+    #zig-confirm .button button {font-size: 16px;padding: 0 30px;}
+    #zig-confirm .button button.yes{background: #f7f7f7;}
 
 }

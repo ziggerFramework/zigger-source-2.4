@@ -128,14 +128,41 @@ class Func {
     }
 
     // 파일 사이즈 단위 계산
-    static public function getbyte($size, $byte, $comma = true)
+    static public function getbyte($size, $byte = 'auto', $comma = true)
     {
-        $byte = strtolower($byte);
+        $byte = strtoupper($byte);
 
-        $divisors = array('k' => 1024, 'm' => 1024 * 1024, 'g' => 1024 * 1024 * 1024);
-        $divisor = isset($divisors[$byte]) ? $divisors[$byte] : 1;
-        $size = (int)$size / $divisor;
-        $size = ($comma === true) ? number_format($size, 1) : $size;
+        $divisors = array(
+            'B' => 1,
+            'K' => 1024,
+            'M' => 1024 * 1024,
+            'G' => 1024 * 1024 * 1024,
+            'T' => 1024 * 1024 * 1024 * 1024
+        );
+
+        if (!array_key_exists($byte, $divisors)) $byte = 'auto';
+
+        // 환산 단위가 'auto'일 때
+        if ($byte == 'auto') {
+            $units = array('B', 'K', 'M', 'G', 'T');
+            $i = 0;
+
+            while ($size >= 1024 && $i < count($units) - 1) {
+                $size /= 1024;
+                $i++;
+            }
+
+            if ($comma === true) $size = number_format($size, ($i == 0 ? 0 : 1));
+
+            $size = $size.$units[$i];
+        
+        // 환산 단위가 수동일 때
+        } else {
+            $divisor = isset($divisors[$byte]) ? $divisors[$byte] : 1;
+            $size = (int)$size / $divisor;
+            $size = ($comma === true) ? number_format($size, 1) : $size;
+            $size = $size.$byte;
+        }
 
         return $size;
     }
@@ -143,28 +170,43 @@ class Func {
     // file_get_contents 대체 함수 (curl)
     static public function url_get_contents($url, $post = false, $headers = null, $bodys = null)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, SET_CURLOPT_CONNECTTIMEOUT);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, SET_CURLOPT_SSL_VERIFYPEER);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, SET_CURLOPT_RETURNTRANSFER);
-        curl_setopt($ch, CURLOPT_POST, ($post === true) ? true : false);
-        if (isset($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        if (isset($bodys)) curl_setopt($ch, CURLOPT_POSTFIELDS, $bodys);
-        $output = curl_exec($ch);
-        $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // socket 연결 초기화
+        $sock_max_attempts = 30;
+        $sock_now_attempts = 0;
 
-        $return_arr = array(
-            'status_code' => $status_code,
-            'data' => json_decode($output, true)
-        );
+        // 소켓 연결
+        do {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, SET_CURLOPT_CONNECTTIMEOUT);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, SET_CURLOPT_SSL_VERIFYPEER);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, SET_CURLOPT_RETURNTRANSFER);
+            curl_setopt($ch, CURLOPT_POST, ($post === true) ? true : false);
+            if (isset($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            if (isset($bodys)) curl_setopt($ch, CURLOPT_POSTFIELDS, $bodys);
+            $output = curl_exec($ch);
+            $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
 
+            $return_arr = array(
+                'status_code' => $status_code,
+                'data' => json_decode($output, true)
+            );
+
+            $sock_now_attempts++;
+            
+            if (!$output) {
+                if ($sock_now_attempts >= $sock_max_attempts) break;  // 최대 시도 횟수 초과 시 연결 포기
+                sleep(1);  // 재시도 전 대기 시간 (초)
+            }
+        } while (!$output);
+
+        if (!$output) exit(ERR_MSG_7);
         return $return_arr;
     }
 
     // 로그인이 되어있지 않다면 로그인 화면으로 이동
-    static public function getlogin($msg, $url = null)
+    static public function getlogin($msg = null, $url = null)
     {
         if (IS_MEMBER) return;
 

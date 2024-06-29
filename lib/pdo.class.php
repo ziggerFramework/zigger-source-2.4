@@ -15,7 +15,7 @@ class Pdosql {
     private $ROW_RE;
     private $ROW_NUM = 0;
     private $REC_COUNT;
-    private $pdo;
+    public $pdo;
     private $stmt;
     private $dsn;
     private $options;
@@ -28,7 +28,7 @@ class Pdosql {
         try {
             $this->dsn = 'mysql:host='.self::$DB_HOST.';dbname='.self::$DB_NAME;
             $this->options = array(
-                \PDO::MYSQL_ATTR_INIT_COMMAND => 'set names utf8',
+                \PDO::MYSQL_ATTR_INIT_COMMAND => 'set names utf8mb4',
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             );
 
@@ -101,7 +101,7 @@ class Pdosql {
     }
 
     // Query
-    public function query($query, $param = [], $dspError = true)
+    public function query($query, $param = [], $dspError = true, $getQuery = true)
     {
         try {
 
@@ -125,15 +125,17 @@ class Pdosql {
                 }
             }
 
-            $this->stmt->execute();
-            $this->REC_COUNT = $this->stmt->rowCount();
+            if ($getQuery === true) {
+                $this->stmt->execute();
+                $this->REC_COUNT = $this->stmt->rowCount();
 
-            $qryLower = strtolower($query);
+                $qryLower = strtolower($query);
 
-            if ( strpos($qryLower, 'select') !== false && ( strpos($qryLower, 'insert') === false && strpos($qryLower, 'update') === false ) ) {
-                $this->ROW = $this->stmt->fetch(\PDO::FETCH_ASSOC);
+                if ( strpos($qryLower, 'select') !== false && ( strpos($qryLower, 'insert') === false && strpos($qryLower, 'update') === false ) ) {
+                    $this->ROW = $this->stmt->fetch(\PDO::FETCH_ASSOC);
+                }
+                $this->ROW_NUM = 1;
             }
-            $this->ROW_NUM = 1;
 
             return $qryString;
 
@@ -175,7 +177,7 @@ class Pdosql {
             $this->ROW_RE = stripslashes($this->ROW[$fieldName]);
             if ($this->specialchars == 1) $this->ROW_RE = htmlspecialchars($this->ROW_RE);
             if ($this->nl2br == 1) $this->ROW_RE = nl2br($this->ROW_RE);
-            $this->ROW_RE = preg_replace(['/[\x00-\x08]/', '/\x0B-\x1F/'], [' ', ' '], $this->ROW_RE); // 입력된 Ascii 특수 문자를 공백으로 치환 (0x00 ~ 0x1F)
+            $this->ROW_RE = preg_replace('/[\x00-\x09\x0B-\x0C\x0E-\x1F\x7F]/', ' ', $this->ROW_RE); // 입력된 비인쇄 문자 Ascii(0~9, 11~12, 14~31, 127번) 를 공백으로 처리
 
             return $this->ROW_RE;
 

@@ -56,7 +56,7 @@
 
         <div class="rig">
             <form name="list-sch" id="list-sch" action="" method="get">
-                <?php echo $manage->print_hidden_inp(); ?>
+                <?php echo $manage->print_hidden_inp($is_search = true); ?>
 
                 <fieldset>
                     <div class="slt">

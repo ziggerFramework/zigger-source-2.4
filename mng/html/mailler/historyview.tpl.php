@@ -21,6 +21,12 @@
                         <?php echo $print_level; ?>
                     </td>
                 </tr>
+                <tr>
+                    <th>수신자수</th>
+                    <td>
+                        <?php echo $view[0]['to_count']; ?>
+                    </td>
+                </tr>
                 <?php } ?>
                 <?php if ($is_to_mb_show) { ?>
                 <tr>

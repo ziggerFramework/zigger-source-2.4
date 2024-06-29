@@ -149,9 +149,18 @@ class Write extends \Controller\Make_Controller {
         // 첨부 가능한 파일 사이즈
         function print_filesize()
         {
-            global $func;
+            return Func::getbyte(Write::$boardconf['file_limit']);
+        }
 
-            return Func::getbyte(Write::$boardconf['file_limit'], 'm').'M';
+        // 게시글 임시 저장을 위한 hash 생성
+        function make_temp_hash($arr)
+        {
+            if (!empty($arr)) {
+                return $arr['hash'];
+
+            } else {
+                return Func::make_random_char(50);
+            }
         }
     }
 
@@ -163,7 +172,7 @@ class Write extends \Controller\Make_Controller {
         $boardlib = new Board_Library();
         Write::$boardconf = $boardlib->load_conf($MOD_CONF['id']);
 
-        $req = Method::request('get','mode, wrmode, read, page, where, keyword, category');
+        $req = Method::request('get','mode, wrmode, read, page, where, keyword, category, temp_hash');
 
         $board_id = $MOD_CONF['id'];
 
@@ -219,6 +228,45 @@ class Write extends \Controller\Make_Controller {
 
         } else {
             $arr = null;
+        }
+
+        // 임시 저장글 정보
+        $sql->query(
+            "
+            select count(*) as total_count
+            from {$sql->table("mod:board_temporary")}
+            where `mb_idx`=:col1
+            order by `regdate` desc
+            limit 30
+            ",
+            array(
+                $MB['idx']
+            )
+        );
+
+        $my_temporary_count = $sql->fetch('total_count');
+
+        // 임시 저장글 hash를 넘겨 받았다면 저장글 불러옴
+        $my_temporary_arr = array();
+        
+        if ($req['temp_hash']) {
+            $sql->query(
+                "
+                select *
+                from {$sql->table("mod:board_temporary")}
+                where `mb_idx`=:col1 and `hash`=:col2
+                ",
+                array(
+                    $MB['idx'], $req['temp_hash']
+                )
+            );
+
+            if ($sql->getcount() > 0) {
+                $sql->specialchars = 0;
+                $sql->nl2br = 0;
+
+                $my_temporary_arr = $sql->fetchs();
+            }
         }
 
         // check
@@ -299,6 +347,7 @@ class Write extends \Controller\Make_Controller {
             }
 
             $is_captcha_show = (!IS_MEMBER) ? true : false;
+            $is_temporary_show = (!IS_MEMBER) ? false : true;
 
             $is_file_show = array();
 
@@ -341,8 +390,14 @@ class Write extends \Controller\Make_Controller {
                 }
             }
 
+            // 임시저장글 정보를 불러온 경우 초기화
+            if (!empty($my_temporary_arr)) {
+                $write['subject'] = $my_temporary_arr['subject'];
+                $write['article'] = $my_temporary_arr['article'];
+            }
+
             $this->set('write', $write);
-            $this->set('uploaded_file', uploaded_file($arr,$req['wrmode']));
+            $this->set('uploaded_file', uploaded_file($arr, $req['wrmode']));
             $this->set('cancel_btn', cancel_btn($req['page'], $req['category'], $req['where'], $req['keyword']));
             $this->set('is_category_show', $is_category_show);
             $this->set('is_writer_show', $is_writer_show);
@@ -351,6 +406,10 @@ class Write extends \Controller\Make_Controller {
             $this->set('is_file_show', $is_file_show);
             $this->set('is_filename_show', $is_filename_show);
             $this->set('is_captcha_show', $is_captcha_show);
+            $this->set('is_temporary_show', $is_temporary_show);
+            $this->set('temp_hash', make_temp_hash($my_temporary_arr));
+            $this->set('my_temporary_count', Func::number($my_temporary_count));
+            $this->set('my_temporary_arr', $my_temporary_arr);
 
         }
         $this->set('board_id', $board_id);
@@ -1048,6 +1107,115 @@ class Write_submit{
             )
         );
         Valid::turn();
+    }
+
+}
+
+//
+// Controller for submit
+// ( Write-temprary )
+//
+class Write_temporary_submit{
+
+    public function init(){
+        global $CONF, $MB;
+
+        $sql = new Pdosql();
+
+        Method::security('referer');
+        Method::security('request_post');
+        $req = Method::request('post', 'board_id, temp_hash, subject, article');
+
+        if (!IS_MEMBER) Valid::error('', '임시글 저장은 회원만 가능합니다.');
+
+        if (!$req['temp_hash']) Valid::error('', ERR_MSG_1);
+        
+        // 기본 입력 항목 검사
+        Valid::get(
+            array(
+                'input' => 'subject',
+                'value' => $req['subject']
+            )
+        );
+
+        Valid::get(
+            array(
+                'input' => 'article',
+                'value' => $req['article'],
+                'check' => array(
+                    'chkhtml' => true,
+                    'null' => true,
+                )
+            )
+        );
+
+        // 동일 hash의 임시글이 있는지 검사
+        $sql->query(
+            "
+            select count(*) as total_count
+            from {$sql->table("mod:board_temporary")}
+            where `mb_idx`=:col1 and `hash`=:col2
+            ",
+            array(
+                $MB['idx'], $req['temp_hash']
+            )
+        );
+
+        $temp_total_count = $sql->fetch('total_count');
+
+        // 임시글 처리 (insert)
+        if ($temp_total_count < 1) {
+            $sql->query(
+                "
+                insert into {$sql->table("mod:board_temporary")}
+                (`id`, `mb_idx`, `hash`, `subject`, `article`, `regdate`)
+                values
+                (:col1, :col2, :col3, :col4, :col5, now())
+                ",
+                array(
+                    $req['board_id'], $MB['idx'], $req['temp_hash'], $req['subject'], $req['article']
+                )
+            );
+
+        // 임시글 처리 (update)
+        } else {
+            $sql->query(
+                "
+                update {$sql->table("mod:board_temporary")}
+                set `id`=:col3, `subject`=:col4, `article`=:col5, `regdate`=now()
+                where `mb_idx`=:col1 and `hash`=:col2
+                ",
+                array(
+                    $MB['idx'], $req['temp_hash'], $req['board_id'], $req['subject'], $req['article']
+                )
+            );
+        }
+
+        // 자신의 임시글 개수 가져옴
+        $sql->query(
+            "
+            select count(*) as total_count
+            from {$sql->table("mod:board_temporary")}
+            where `mb_idx`=:col1
+            order by `regdate` desc
+            limit 30
+            ",
+            array(
+                $MB['idx']
+            )
+        );
+
+        $my_temp_total_count = $sql->fetch('total_count');
+
+        Valid::set(
+            array(
+                'return' => 'callback-txt',
+                'element' => '#board-temporary-btnbox .load-btn strong',
+                'msg' => Func::number($my_temp_total_count)
+            )
+        );
+        Valid::turn();
+     
     }
 
 }

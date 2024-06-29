@@ -11,17 +11,32 @@
 	<input type="hidden" name="category_ed" value="<?php echo $category; ?>" />
 	<input type="hidden" name="use_html" value="Y" />
 	<input type="hidden" name="thisuri" value="<?php echo $thisuri; ?>" />
+	<input type="hidden" name="temp_hash" value="<?php echo $temp_hash; ?>" />
 	<div id="board-write">
 		<h3><?php echo $write_title; ?></h3>
 
 		<table>
             <caption>게시글 작성하기</caption>
 			<colgroup>
-				<col style="width: 100px;" />
+				<col style="width: 120px;" />
 				<col style="width: auto;" />
 			</colgroup>
 			<tbody>
 
+				<?php if ($is_temporary_show) { ?>
+				<tr>
+					<th scope="row">
+						임시저장
+					</th>
+					<td>
+						<div id="board-temporary-btnbox" class="temp-btn">
+							<button type="button" class="save-btn">임시글 저장</button>
+							<button type="button" class="load-btn"><strong><?php echo $my_temporary_count; ?></strong></button>
+						</div>
+					</td>
+				</tr>
+				<?php } ?>
+				
 				<?php if ($is_category_show) { ?>
 				<tr>
 					<th scope="row">카테고리</th>
@@ -101,7 +116,7 @@
 					</th>
 					<td>
                         <label for="file1" class="sound_only_ele">첨부파일1</label>
-						<input type="file" name="file1" id="file1" title="첨부파일1" /><span class="bytetxt">(<?php echo $print_filesize; ?> 까지 첨부 가능)</span>
+						<input type="file" name="file1" id="file1" title="첨부파일1" /><span class="bytetxt"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
 					</td>
 				</tr>
 				<?php } ?>
@@ -125,7 +140,7 @@
 					</th>
 					<td>
                         <label for="file2" class="sound_only_ele">첨부파일2</label>
-						<input type="file" name="file2" id="file2" title="첨부파일2" /><span class="bytetxt">(<?php echo $print_filesize; ?> 까지 첨부 가능)</span>
+						<input type="file" name="file2" id="file2" title="첨부파일2" /><span class="bytetxt"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
 					</td>
 				</tr>
 				<?php } ?>

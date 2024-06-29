@@ -41,11 +41,9 @@ class Ip extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("blockmb")}
-                where `ip` is not null and `ip`!=''
-            ) total
+            sum(case when `regdate` is not null then 1 else 0 end) as `total`
+            from {$sql->table("blockmb")}
+            where `ip` is not null and `ip`!=''
             ", []
         );
         $sort_arr['total'] = $sql->fetch('total');
@@ -272,11 +270,9 @@ class Member extends \Controller\Make_Controller {
         $sql->query(
             "
             select
-            (
-                select count(*)
-                from {$sql->table("blockmb")}
-                where `mb_id` is not null and `mb_id`!=''
-            ) total
+            sum(case when `regdate` is not null then 1 else 0 end) as `total`
+            from {$sql->table("blockmb")}
+            where `mb_id` is not null and `mb_id`!=''
             ", []
         );
         $sort_arr['total'] = $sql->fetch('total');

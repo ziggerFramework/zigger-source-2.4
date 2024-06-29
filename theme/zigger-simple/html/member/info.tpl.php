@@ -77,7 +77,7 @@
                             <?php } else { ?>
                             <span class="tbltxt mb10">
                                 · 현재 등록된 프로필 이미지가 없습니다. <br />
-                                · 설정 가능한 이미지 최대 용량은 <strong><?php echo $max_pfimg_size; ?>Kbyte</strong> 입니다.
+                                · 설정 가능한 이미지 최대 용량은 <strong><?php echo $max_pfimg_size; ?></strong> 입니다.
                             </span>
                             <?php } ?>
 

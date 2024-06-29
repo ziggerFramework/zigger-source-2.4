@@ -8,6 +8,11 @@
     <form <?php echo $this->form(); ?>>
         <?php echo $manage->print_hidden_inp(); ?>
 
+        <textarea name="rcv_email" style="display: none;"></textarea>
+        <input type="hidden" name="email" value="" />
+        <input type="hidden" name="rcv_to_count" value="" />
+        <input type="hidden" name="rcv_now_rcv_idx" value="" />
+
         <table class="table1">
             <thead>
                 <tr>
@@ -80,6 +85,9 @@
         </table>
 
         <div class="btn-wrap">
+            <div class="rcv_count">
+                <strong>0</strong> / <em>0</em>
+            </div>
             <div class="center">
                 <button type="submit" class="btn1"><i class="fa fa-check"></i>메일 발송</button>
             </div>
