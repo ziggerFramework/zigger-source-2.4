@@ -78,12 +78,11 @@ class Index {
             );
             if ($sql->getcount() > 0) {
                 do {
-                    $sql->specialchars = 1;
+                    $sql->specialchars = 0;
                     $sql->nl2br = 0;
 
                     $rss_data[$sql->fetch('regdate')] = array(
                         'pubDate' => $sql->fetch('regdate'),
-                        'article' => strip_tags($sql->fetch('memo')),
                         'link' => $value['link'].'/'.$sql->fetch('idx'),
                         'title' => $value['title'],
                         'data' => $sql->fetchs()
@@ -118,9 +117,9 @@ class Index {
 
         foreach ($rss_data as $key => $value) {
             echo '<item>'.PHP_EOL;
-            echo '<title>'.$value['data']['subject'].'</title>'.PHP_EOL;
+            echo '<title>'.htmlspecialchars(strip_tags($value['data']['subject'])).'</title>'.PHP_EOL;
             echo '<link>'.$value['link'].'</link>'.PHP_EOL;
-            echo '<description>'.str_replace('&nbsp;', '', $value['data']['article']).'</description>'.PHP_EOL;
+            echo '<description>'.htmlspecialchars(str_replace(array("\r", "\n", '&nbsp;'), '', strip_tags($value['data']['article']))).'</description>'.PHP_EOL;
             echo '<category>'.$value['title'].'</category>'.PHP_EOL;
             echo '<author>'.$CONF['title'].'</author>'.PHP_EOL;
             echo '<guid isPermaLink="true">'.$value['link'].'</guid>'.PHP_EOL;

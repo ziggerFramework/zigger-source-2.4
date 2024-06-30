@@ -118,7 +118,7 @@ ph_mod_board = {
             zigconfirm('답글은 부모글 없이 단독으로 이동되지 않습니다.\n계속 진행 하시겠습니까?\n\n선택된 게시물이 많은 경우 시간이 다소 소요될 수 있습니다.', function(result) {
                 if (result) {
                     $('body.mod-board #board_ctrpopForm input[name=type]').val('move');
-                $('body.mod-board #board_ctrpopForm').submit();
+                    $('body.mod-board #board_ctrpopForm').submit();
                 }
             });
         });
