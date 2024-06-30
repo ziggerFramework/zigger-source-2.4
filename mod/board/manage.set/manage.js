@@ -347,7 +347,7 @@ ph_mod_board_manage = {
 
             $.ajax({
                 'type' : 'GET',
-                'url' : MOD_BOARD_DIR + '/controller/pop/temporary',
+                'url' : MOD_BOARD_DIR + '/controller/pop/temporary?request=manage',
                 'cache' : false,
                 'data' : {
                     'board_id' : board_id,
@@ -411,7 +411,7 @@ ph_mod_board_manage = {
             $ele.temppop = $('body.mod-board-manage #temppop');
             $ele.temppop.find('a.remove-btn[data-temphash="' + hash + '"]').closest('tr').remove();
 
-            if ($ele.temppop.find('a.remove-btn').length < 1) $ele.temppop.find('#board-nodata').show();
+            if ($ele.temppop.find('a.remove-btn').length < 1) $ele.temppop.find('#list-nodata').show();
 
             // 글작성 화면에서 임시글 개수 갱신
             var nowCount = parseInt($ele.btn_wrap.find('.load-btn strong').text());

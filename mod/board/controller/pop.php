@@ -760,12 +760,14 @@ class Temporary extends \Controller\Make_Controller {
 
         $boardlib = new Board_Library();
 
-        $req = Method::request('get', 'board_id, temp_hash');
+        $req = Method::request('get', 'request, board_id, temp_hash');
 
         //load config
         $boardconf = $boardlib->load_conf($req['board_id']);
 
-        $this->layout()->view(MOD_BOARD_THEME_PATH.'/board/'.$boardconf['theme'].'/temppop.tpl.php');
+        $tpl = (isset($req['request']) && $req['request'] == 'manage') ? MOD_BOARD_PATH.'/manage.set/html/temppop.tpl.php' : MOD_BOARD_THEME_PATH.'/board/'.$boardconf['theme'].'/temppop.tpl.php';
+        $this->layout()->view($tpl);
+        
     }
 
     public function make()
