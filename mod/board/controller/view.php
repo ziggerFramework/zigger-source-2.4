@@ -121,30 +121,30 @@ class View extends \Controller\Make_Controller {
         function print_imgfile($arr)
         {
             $files = array();
-            for ($i = 1; $i <= 2; $i++) {
-                if (!$arr['file'.$i]) {
-                    $files[$i] = null;
-                    continue;
-                }
 
-                $filetype = Func::get_filetype($arr['file'.$i]);
-                $fileinfo = Func::get_fileinfo($arr['file'.$i]);
+            if (!empty($arr)) {
+                foreach ($arr as $key => $value) {
+                    if (!$value['file_name']) continue;
 
-                if (Func::chkintd('match', $filetype, SET_IMGTYPE)) {
-                    if ($fileinfo['storage'] == 'N' && file_exists(MOD_BOARD_DATA_PATH.'/'.View::$boardconf['id'].'/thumb/'.$fileinfo['repfile'])) {
-                        $files[$i] = '<img src=\''.MOD_BOARD_DATA_DIR.'/'.View::$boardconf['id'].'/thumb/'.$fileinfo['repfile'].'\' alt=\'첨부된 이미지파일\' />';
-                        if (Func::get_filetype($fileinfo['repfile']) == 'gif') {
-                            $files[$i] = '<img src=\''.MOD_BOARD_DATA_DIR.'/'.View::$boardconf['id'].'/'.$fileinfo['repfile'].'\' alt=\'첨부된 이미지파일\' />';
+                    $filetype = Func::get_filetype($value['file_name']);
+                    $fileinfo = Func::get_fileinfo($value['file_name']);
+
+                    if (Func::chkintd('match', $filetype, SET_IMGTYPE)) {
+                        if ($fileinfo['storage'] == 'N' && file_exists(MOD_BOARD_DATA_PATH.'/'.View::$boardconf['id'].'/thumb/'.$fileinfo['repfile'])) {
+                            $files[] = '<img src=\''.MOD_BOARD_DATA_DIR.'/'.View::$boardconf['id'].'/thumb/'.$fileinfo['repfile'].'\' alt=\'첨부된 이미지파일\' />';
+                            if (Func::get_filetype($fileinfo['repfile']) == 'gif') {
+                                $files[] = '<img src=\''.MOD_BOARD_DATA_DIR.'/'.View::$boardconf['id'].'/'.$fileinfo['repfile'].'\' alt=\'첨부된 이미지파일\' />';
+                            }
+                        } else {
+                            $files[] = '<img src=\''.$fileinfo['replink'].'\' alt=\'첨부된 이미지파일\' />';
                         }
+    
                     } else {
-                        $files[$i] = '<img src=\''.$fileinfo['replink'].'\' alt=\'첨부된 이미지파일\' />';
+                        $files[] = null;
                     }
-
-                } else {
-                    $files[$i] = null;
                 }
             }
-
+            
             return $files;
         }
 
@@ -153,18 +153,18 @@ class View extends \Controller\Make_Controller {
         {
             $files = array();
 
-            for ($i = 1; $i <= 2; $i++) {
-                if ($arr['file'.$i]) {
-                    $fileinfo = Func::get_fileinfo($arr['file'.$i]);
+            foreach ($arr as $key => $value) {
+                if ($value['file_name']) {
+                    $fileinfo = Func::get_fileinfo($value['file_name']);
 
-                    $files[$i] = '
-                        <a href=\''.MOD_BOARD_DIR.'/controller/file/down?board_id='.View::$boardconf['id'].'&idx='.$arr['idx'].'&file='.$i.'\' target=\'_blank\'>'.Func::strcut($fileinfo['orgfile'],0,70).'</a>
-                        <span class=\'byte\'>('.number_format($fileinfo['byte'] / 1024, 0).'K)</span>
-                        <span class=\'cnt\'><strong>'.Func::number($arr['file'.$i.'_cnt']).'</strong> 회 다운로드</span>
+                    $files[$key] = '
+                        <a href=\''.MOD_BOARD_DIR.'/controller/file/down?board_id='.View::$boardconf['id'].'&idx='.$value['data_idx'].'&file='.$value['file_seq'].'\' target=\'_blank\'>'.Func::strcut($fileinfo['orgfile'], 0, 70).'</a>
+                        <span class=\'byte\'>('.Func::getbyte($fileinfo['byte']).')</span>
+                        <span class=\'cnt\'><strong>'.Func::number($value['file_cnt']).'</strong> 회 다운로드</span>
                     ';
 
                 } else {
-                    $files[$i] = null;
+                    $files[$key] = null;
                 }
             }
 
@@ -292,6 +292,28 @@ class View extends \Controller\Make_Controller {
                 $arr[0][$value]['writer'] = print_writer($arr[0][$value]);
                 $arr[0][$value]['comment_cnt'] = comment_cnt($arr[0][$value]);
             }
+        }
+
+        // 첨부파일 정보 불러옴
+        $sql->query(
+            "
+            select *
+            from {$sql->table("mod:board_files")}
+            where `id`=:col1 and `data_idx`=:col2
+            order by `file_seq` asc
+            ",
+            array(
+                $board_id, $req['read']
+            )
+        );
+
+        $file_arr = array();
+
+        if ($sql->getcount() > 0) {
+            do {
+                $file_arr[] = $sql->fetchs();
+
+            } while ($sql->nextRec());
         }
 
         // add title
@@ -474,18 +496,6 @@ class View extends \Controller\Make_Controller {
                 $is_article_show = true;
             }
 
-            $is_file_show = array();
-
-            for ($i = 1; $i <= 2; $i++) {
-                $is_file_show[$i] = ($arr['file'.$i]) ? true : false;
-            }
-
-            $is_img_show = array();
-
-            for ($i = 1; $i <= 2; $i++){
-                $is_img_show[$i] = (print_imgfile($arr)[$i] != '') ? true : false;
-            }
-
             $is_category_show = (View::$boardconf['use_category'] == 'Y' && $arr['category'] && $arr['use_notice'] == 'N') ? true : false;
             $is_comment_show = (View::$boardconf['use_comment'] == 'Y') ? true : false;
             $is_likes_show = (View::$boardconf['use_likes'] == 'Y' && !$arr['dregdate']) ? true : false;
@@ -512,8 +522,6 @@ class View extends \Controller\Make_Controller {
             $this->set('view', $view);
             $this->set('is_dropbox_show', $is_dropbox_show);
             $this->set('is_article_show', $is_article_show);
-            $this->set('is_file_show', $is_file_show);
-            $this->set('is_img_show', $is_img_show);
             $this->set('is_category_show', $is_category_show);
             $this->set('is_comment_show', $is_comment_show);
             $this->set('is_likes_show', $is_likes_show);
@@ -522,8 +530,8 @@ class View extends \Controller\Make_Controller {
             $this->set('secret_ico', secret_ico($arr));
             $this->set('print_writer', print_writer($arr));
             $this->set('print_profileimg', print_profileimg($arr));
-            $this->set('print_imgfile', print_imgfile($arr));
-            $this->set('print_file_name', print_file_name($arr));
+            $this->set('print_imgfile', print_imgfile($file_arr));
+            $this->set('print_file_name', print_file_name($file_arr));
             $this->set('list_btn', list_btn($req));
             $this->set('delete_btn', delete_btn($arr));
             $this->set('modify_btn', modify_btn($arr, $req));

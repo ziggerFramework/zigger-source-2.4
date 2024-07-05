@@ -10,7 +10,6 @@
         <input type="hidden" name="mode" value="mod" />
         <input type="hidden" name="idx" value="<?php echo $write['idx']; ?>" />
 
-
         <table class="table1">
             <thead>
                 <tr>
@@ -18,6 +17,13 @@
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <th>사용유무</th>
+                    <td>
+                        <label class="mr10"><input type="radio" name="use_popup" value="Y" <?php echo $use_popup['Y']; ?> /> 사용</label>
+                        <label><input type="radio" name="use_popup" value="N" <?php echo $use_popup['N']; ?> /> 사용안함</label>
+                    </td>
+                </tr>
                 <tr>
                     <th>팝업 id</th>
                     <td>

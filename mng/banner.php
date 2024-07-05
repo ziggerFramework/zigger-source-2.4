@@ -153,7 +153,7 @@ class Regist_submit{
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post', 'key, title, link, link_target, zindex');
+        $req = Method::request('post', 'key, title, link, link_target, zindex, level_from, level_to, show_from, show_to');
         $file = Method::request('file', 'pc_img, mo_img');
         $manage->req_hidden_inp('post');
 
@@ -182,6 +182,26 @@ class Regist_submit{
                 'value' => $req['title']
             )
         );
+        Valid::get(
+            array(
+                'input' => 'show_from',
+                'value' => $req['show_from']
+            )
+        );
+        Valid::get(
+            array(
+                'input' => 'show_to',
+                'value' => $req['show_to']
+            )
+        );
+
+        if ($req['level_from'] > $req['level_to']) {
+            Valid::error('level_to', '노출 종료 level 보다 시작 level이 클 수 없습니다.');
+        }
+
+        if ($req['show_from'] > $req['show_to']) {
+            Valid::error('show_to', '노출 일자가 올바르지 않습니다.');
+        }
 
         if (empty($file['pc_img']['name']) || empty($file['mo_img']['name'])) Valid::error('', '배너 이미지가 첨부되지 않았습니다.');
 
@@ -217,12 +237,12 @@ class Regist_submit{
         $sql->query(
             "
             insert into {$sql->table("banner")}
-            (`bn_key`, `title`, `link`, `link_target`, `pc_img`, `mo_img`, `zindex`, `regdate`)
+            (`bn_key`, `title`, `link`, `link_target`, `pc_img`, `mo_img`, `zindex`, `level_from`, `level_to`, `show_from`, `show_to`, `regdate`)
             VALUES
-            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, now())
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, now())
             ",
             array(
-                $req['key'], $req['title'], $req['link'], $req['link_target'], $pc_img_name, $mo_img_name, $req['zindex']
+                $req['key'], $req['title'], $req['link'], $req['link_target'], $pc_img_name, $mo_img_name, $req['zindex'], $req['level_from'], $req['level_to'], $req['show_from'], $req['show_to']
             )
         );
 
@@ -261,6 +281,22 @@ class Modify extends \Controller\Make_Controller {
         $this->layout()->mng_head();
         $this->layout()->view(PH_MANAGE_PATH.'/html/banner/modify.tpl.php');
         $this->layout()->mng_foot();
+    }
+
+    public function func()
+    {
+        function set_checked($arr, $val)
+        {
+            $setarr = array(
+                'Y' => '', 'N' => ''
+            );
+            foreach ($setarr as $key => $value) {
+                if ($key == $arr[$val]) {
+                    $setarr[$key] = 'checked';
+                }
+            }
+            return $setarr;
+        }
     }
 
     public function make()
@@ -304,6 +340,9 @@ class Modify extends \Controller\Make_Controller {
             $is_mo_img_show = false;
         }
 
+        $arr['show_from'] = substr($arr['show_from'], 0, 10);
+        $arr['show_to'] = substr($arr['show_to'], 0, 10);
+
         $write = array();
 
         if (isset($arr)) {
@@ -318,6 +357,7 @@ class Modify extends \Controller\Make_Controller {
         $this->set('write', $write);
         $this->set('is_pc_img_show', $is_pc_img_show);
         $this->set('is_mo_img_show', $is_mo_img_show);
+        $this->set('use_banner', set_checked($write, 'use_banner'));
     }
 
     public function form()
@@ -346,7 +386,7 @@ class Modify_submit{
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post', 'mode, idx, key, title, link, link_target, zindex');
+        $req = Method::request('post', 'mode, idx, key, title, link, link_target, zindex, level_from, level_to, show_from, show_to, use_banner');
         $file = Method::request('file', 'pc_img, mo_img');
         $manage->req_hidden_inp('post');
 
@@ -396,6 +436,23 @@ class Modify_submit{
                 'value' => $req['title']
             )
         );
+        Valid::get(
+            array(
+                'input' => 'show_from',
+                'value' => $req['show_from']
+            )
+        );
+        Valid::get(
+            array(
+                'input' => 'show_to',
+                'value' => $req['show_to']
+            )
+        );
+
+        if ($req['level_from'] > $req['level_to']) Valid::error('level_to', '노출 종료 level 보다 시작 level 클 수 없습니다.');
+        if ($req['show_from'] > $req['show_to']) Valid::error('show_to', '노출 일자가 올바르지 않습니다.');
+
+        $req['show_to'] = $req['show_to'].' 23:59:59';
 
         $uploader->path= PH_DATA_PATH.'/manage';
         $uploader->chkpath();
@@ -448,11 +505,11 @@ class Modify_submit{
         $sql->query(
             "
             update {$sql->table("banner")}
-            set `bn_key`=:col2, `title`=:col3, `link`=:col4, `link_target`=:col5, `pc_img`=:col6, `mo_img`=:col7, `zindex`=:col8
+            set `bn_key`=:col2, `title`=:col3, `link`=:col4, `link_target`=:col5, `pc_img`=:col6, `mo_img`=:col7, `zindex`=:col8, `level_from`=:col9, `level_to`=:col10, `show_from`=:col11, `show_to`=:col12, `use_banner`=:col13
             where `idx`=:col1
             ",
             array(
-                $req['idx'], $req['key'], $req['title'], $req['link'], $req['link_target'], $pc_img_name, $mo_img_name, $req['zindex']
+                $req['idx'], $req['key'], $req['title'], $req['link'], $req['link_target'], $pc_img_name, $mo_img_name, $req['zindex'], $req['level_from'], $req['level_to'], $req['show_from'], $req['show_to'], $req['use_banner']
             )
         );
 

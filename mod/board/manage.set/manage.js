@@ -381,11 +381,13 @@ ph_mod_board_manage = {
 
             var href = window.location.search;
             var temp_hash = $(this).data('temphash');
-            href = href + '&temp_hash=' + temp_hash;
+            
+            href = href.replace(/[?&]temp_hash=[^&]+/g, '');
+            href = href.replace(/&temp_hash=123$/, '');
 
             zigconfirm('기존 작성중인 글은 초기화됩니다.\r\n임시저장 글을 적용 하시겠습니까?', function(result) {
                 if (result) {
-                    window.document.location.href = href;
+                    window.document.location.href = href + '&temp_hash=' + temp_hash;
                 }
             });
         });

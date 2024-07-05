@@ -77,7 +77,7 @@ define('ERR_MSG_15', 'Submit Controller의 Class 가 올바르지 않습니다. 
 // 경고문구 상수
 define('SET_NODATA_MSG', '데이터가 존재하지 않습니다.'); // 데이터가 없는 경우 문구
 define('SET_NOAUTH_MSG', '로그인 후에 이용 가능합니다.'); // 접근 권한이 없는 경우 문구
-define('SET_ALRAUTH_MSG', '이미 로그인 되어 있습니다.'); // 접근 권한이 없는 경우 문구
+define('SET_ALRAUTH_MSG', '이미 로그인 되어 있습니다.'); // 이미 로그인 되어 있는 경우
 
 // 개발 옵션 상수
 define('SET_MAX_UPLOAD', 5242880); // Core 기본 업로드 최대 용량 (byte 단위)

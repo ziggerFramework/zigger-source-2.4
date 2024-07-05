@@ -7,7 +7,7 @@ class Banner_fetch
 
     public function init()
     {
-        global $CONF, $FETCH_CONF;
+        global $CONF, $MB, $FETCH_CONF;
 
         $sql = new Pdosql();
 
@@ -15,7 +15,7 @@ class Banner_fetch
             "
             select *
             from {$sql->table("banner")}
-            where `bn_key`=:col1
+            where `bn_key`=:col1 and `use_banner`='Y' and `show_from`<now() and `show_to`>now()
             order by `zindex` asc
             ",
             array(
@@ -23,14 +23,15 @@ class Banner_fetch
             )
         );
 
-        if ($sql->getcount() < 1) Func::core_err('Banner Key 가 존재하지 않습니다. : '.$FETCH_CONF['key'], false);
-        $bn_html = '<ul>';
-
         if ($sql->getcount() < 1) return;
+        
+        $bn_html = '<ul>';
 
         do {
             $bn_arr = $sql->fetchs();
 
+            if ($bn_arr['level_from'] > $MB['level'] || $bn_arr['level_to'] < $MB['level']) continue;
+            
             $bn_html .= '
                 <li alt="'.$bn_arr['title'].'" title="'.$bn_arr['title'].'">
             ';
@@ -78,6 +79,6 @@ class Banner_fetch
             </ul>
         ';
 
-        if ($sql->getcount() > 0) echo $bn_html;
+        echo $bn_html;
     }
 }

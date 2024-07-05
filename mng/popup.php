@@ -328,6 +328,22 @@ class Modify extends \Controller\Make_Controller {
         $this->layout()->mng_foot();
     }
 
+    public function func()
+    {
+        function set_checked($arr, $val)
+        {
+            $setarr = array(
+                'Y' => '', 'N' => ''
+            );
+            foreach ($setarr as $key => $value) {
+                if ($key == $arr[$val]) {
+                    $setarr[$key] = 'checked';
+                }
+            }
+            return $setarr;
+        }
+    }
+
     public function make()
     {
         $sql = new Pdosql();
@@ -372,6 +388,7 @@ class Modify extends \Controller\Make_Controller {
 
         $this->set('manage', $manage);
         $this->set('write', $write);
+        $this->set('use_popup', set_checked($write, 'use_popup'));
     }
 
     public function form()
@@ -399,7 +416,7 @@ class Modify_submit{
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post', 'mode, idx, title, link, link_target, width, height, pos_top, pos_left, level_from, level_to, show_from, show_to, html, mo_html');
+        $req = Method::request('post', 'mode, idx, title, link, link_target, width, height, pos_top, pos_left, level_from, level_to, show_from, show_to, html, mo_html, use_popup');
         $manage->req_hidden_inp('post');
 
         switch ($req['mode']) {
@@ -493,12 +510,12 @@ class Modify_submit{
         $sql->query(
             "
             update {$sql->table("popup")}
-            SET `title`=:col2, `link`=:col3, `link_target`=:col4, `width`=:col5, `height`=:col6, `pos_top`=:col7, `pos_left`=:col8, `level_from`=:col9, `level_to`=:col10, `show_from`=:col11, `show_to`=:col12, `html`=:col13, `mo_html`=:col14
+            SET `title`=:col2, `link`=:col3, `link_target`=:col4, `width`=:col5, `height`=:col6, `pos_top`=:col7, `pos_left`=:col8, `level_from`=:col9, `level_to`=:col10, `show_from`=:col11, `show_to`=:col12, `html`=:col13, `mo_html`=:col14, `use_popup`=:col15
             where `idx`=:col1
             ",
             array(
                 $req['idx'], $req['title'], $req['link'], $req['link_target'], $req['width'], $req['height'],
-                $req['pos_top'], $req['pos_left'], $req['level_from'], $req['level_to'], $req['show_from'], $req['show_to'], $req['html'], $req['mo_html']
+                $req['pos_top'], $req['pos_left'], $req['level_from'], $req['level_to'], $req['show_from'], $req['show_to'], $req['html'], $req['mo_html'], $req['use_popup']
             )
         );
 

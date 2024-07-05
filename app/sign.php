@@ -376,18 +376,20 @@ class signup_submit {
         );
 
         // 아이디 중복 검사
+        $where = ($CONF['use_allow_reuse_id'] == 'N') ? 'and `mb_dregdate` is null' : '';
+        
         $sql->query(
             "
             select count(*) as total
             from {$sql->table("member")}
-            where `mb_id`=:col1 and `mb_dregdate` is null
+            where `mb_id`=:col1 {$where}
             ",
             array(
                 $req['id']
             )
         );
 
-        if ($sql->fetch('total') > 0) Valid::error('id', '이미 존재하는 아이디입니다.');
+        if ($sql->fetch('total') > 0) Valid::error('id', '이미 존재하거나, 사용할 수 없는 아이디입니다.');
 
         // 이메일 중복 검사
         $sql->query(
@@ -402,6 +404,22 @@ class signup_submit {
         );
 
         if ($sql->fetch('total') > 0) Valid::error('email', '이미 사용중인 이메일입니다. \'회원정보 찾기\' 페이지에서 로그인 정보를 찾을 수 있습니다.');
+
+        // 닉네임 중복 검사
+        if ($CONF['use_allow_dup_name'] == 'Y') {
+            $sql->query(
+                "
+                select count(*) total
+                from {$sql->table("member")}
+                where `mb_name`=:col1 and `mb_dregdate` is null
+                ",
+                array(
+                    $req['name']
+                )
+            );
+    
+            if ($sql->fetch('total') > 0) Valid::error('name', '이미 존재하거나, 사용할 수 없는 이름입니다.');
+        }
 
         // insert
         $mbchk_var = ($CONF['use_emailchk'] == 'Y') ? 'N' : 'Y';
@@ -501,6 +519,8 @@ class Signup_check_id {
 
     public function init()
     {
+        global $CONF;
+
         $sql = new Pdosql();
 
         Method::security('referer');
@@ -518,18 +538,20 @@ class Signup_check_id {
             )
         );
 
+        $where = ($CONF['use_allow_reuse_id'] == 'N') ? 'and `mb_dregdate` is null' : '';
+
         $sql->query(
             "
             select count(*) total
             from {$sql->table("member")}
-            where `mb_id`=:col1 and `mb_dregdate` is null
+            where `mb_id`=:col1 {$where}
             ",
             array(
                 $req['id']
             )
         );
 
-        if ($sql->fetch('total') > 0) Valid::error('id', '이미 존재하는 아이디입니다.');
+        if ($sql->fetch('total') > 0) Valid::error('id', '이미 존재하거나, 사용할 수 없는 아이디입니다.');
 
         // return
         Valid::set(
@@ -621,6 +643,60 @@ class Signup_check_password {
             array(
                 'return' => 'ajax-validt',
                 'msg' => '사용할 수 있는 비밀번호입니다.'
+            )
+        );
+        Valid::turn();
+    }
+
+}
+
+//
+// Controller for submit
+// ( Signup id validator )
+//
+class Signup_check_name {
+
+    public function init()
+    {
+        global $CONF;
+
+        $sql = new Pdosql();
+
+        Method::security('referer');
+        Method::security('request_post');
+        $req = Method::request('post', 'name');
+
+        Valid::get(
+            array(
+                'input' => 'name',
+                'value' => $req['name'],
+                'msg' => '올바르게 입력하세요.',
+                'check' => array(
+                    'defined' => 'nickname'
+                )
+            )
+        );
+
+        if ($CONF['use_allow_dup_name'] == 'Y') {
+            $sql->query(
+                "
+                select count(*) total
+                from {$sql->table("member")}
+                where `mb_name`=:col1 and `mb_dregdate` is null
+                ",
+                array(
+                    $req['name']
+                )
+            );
+    
+            if ($sql->fetch('total') > 0) Valid::error('name', '이미 존재하거나, 사용할 수 없는 이름입니다.');
+        }
+
+        // return
+        Valid::set(
+            array(
+                'return' => 'ajax-validt',
+                'msg' => '사용할 수 있는 이름입니다.'
             )
         );
         Valid::turn();

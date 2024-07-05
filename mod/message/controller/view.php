@@ -20,7 +20,7 @@ class View extends \Controller\Make_Controller {
     {
         $sql = new Pdosql();
 
-        $req = Method::request('get', 'refmode, hash, page');
+        $req = Method::request('get', 'refmode, hash, page, where, keyword');
 
         Func::getlogin();
 
@@ -50,7 +50,7 @@ class View extends \Controller\Make_Controller {
         $arr = $sql->fetchs();
 
         $arr['regdate'] = Func::datetime($arr['regdate']);
-        $arr[0]['list-link'] = Func::get_param_combine('mode='.$req['refmode'].'&page='.$req['page'], '?');
+        $arr[0]['list-link'] = Func::get_param_combine('where='.$req['where'].'&keyword='.$req['keyword'].'&mode='.$req['refmode'].'&page='.$req['page'], '?');
 
         // 메시지 읽음 처리
         $chked_date = date('Y.m.d H:i:s');
@@ -81,11 +81,11 @@ class View extends \Controller\Make_Controller {
             left outer join
             {$sql->table("member")} as member
             on message.from_mb_idx=member.mb_idx
-            where message.parent_idx=:col1 and message.regdate<:col2 and message.hash!=:col3
+            where message.parent_hash=:col1 and message.regdate<:col2 and message.hash!=:col3
             order by message.regdate desc
             ",
             array(
-                $arr['parent_idx'], $arr['regdate'], $arr['hash']
+                $arr['parent_hash'], $arr['regdate'], $arr['hash']
             )
         );
 
@@ -104,7 +104,7 @@ class View extends \Controller\Make_Controller {
         $this->set('view', $arr);
         $this->set('history_arr', $history_arr);
         $this->set('from_mb_id', $arr['f_mb_id']);
-        $this->set('reply_parent_idx', $arr['parent_idx']);
+        $this->set('reply_parent_hash', $arr['parent_hash']);
         $this->set('refmode', $req['refmode']);
     }
 

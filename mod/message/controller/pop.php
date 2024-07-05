@@ -21,14 +21,14 @@ class Message_send extends \Controller\Make_Controller {
     {
         global $MB;
 
-        $req = Method::request('get', 'to_mb_id, reply_parent_idx');
+        $req = Method::request('get', 'to_mb_id, reply_parent_hash');
 
         $is_mbinfo_show = true;
 
         if (!IS_MEMBER) $is_mbinfo_show = false;
 
         $this->set('to_mb_id', $req['to_mb_id']);
-        $this->set('reply_parent_idx', $req['reply_parent_idx']);
+        $this->set('reply_parent_hash', $req['reply_parent_hash']);
         $this->set('is_mbinfo_show', $is_mbinfo_show);
 
     }
@@ -57,7 +57,7 @@ class Message_send_submit {
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post', 'to_mb_id, article, reply_parent_idx');
+        $req = Method::request('post', 'to_mb_id, article, reply_parent_hash');
 
         // 관리 권한 검사
         if (!IS_MEMBER) Valid::error('', '메시지를 발송할 권한이 없습니다.');
@@ -92,7 +92,7 @@ class Message_send_submit {
         Valid::get(
             array(
                 'input' => 'article',
-                'value' => $req['article'], //검사를 수행할 변수
+                'value' => $req['article'],
                 'check' => array(
                     'null' => false,
                     'minlen' => 5,
@@ -102,19 +102,19 @@ class Message_send_submit {
         );
 
         // parent_idx 처리
-        $reply_parent_idx = null;
-        if ($req['reply_parent_idx']) $reply_parent_idx = $req['reply_parent_idx'];
+        $reply_parent_hash = null;
+        if ($req['reply_parent_hash']) $reply_parent_hash = $req['reply_parent_hash'];
 
-        //메시지 발송
+        // 메시지 발송
         $sql->query(
             "
             insert into {$sql->table("mod:message")}
-            (`hash`, `from_mb_idx`, `to_mb_idx`, `parent_idx`, `article`, `regdate`)
+            (`hash`, `from_mb_idx`, `to_mb_idx`, `parent_hash`, `article`, `regdate`)
             values
             (:col1, :col2, :col3, :col4, :col5, now())
             ",
             array(
-                Func::make_random_char(), MB_IDX, $to_mb_idx, $reply_parent_idx, $req['article']
+                Func::make_random_char(), MB_IDX, $to_mb_idx, $reply_parent_hash, $req['article']
             )
         );
 
@@ -122,8 +122,8 @@ class Message_send_submit {
         $sql->query(
             "
             update {$sql->table("mod:message")}
-            set `parent_idx`=idx
-            where `parent_idx`=0 or `parent_idx` is null
+            set `parent_hash` = hash
+            where `parent_hash` is null
             ", []
         );
 

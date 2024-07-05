@@ -115,6 +115,8 @@ class Info extends \Controller\Make_Controller {
         $this->set('use_mb_telephone', set_checked($arr, 'use_mb_telephone'));
         $this->set('use_mb_address', set_checked($arr, 'use_mb_address'));
         $this->set('use_mb_gender', set_checked($arr, 'use_mb_gender'));
+        $this->set('use_allow_reuse_id', set_checked($arr, 'use_allow_reuse_id'));
+        $this->set('use_allow_dup_name', set_checked($arr, 'use_allow_dup_name'));
         $this->set('mb_division', mb_division($arr));
         $this->set('write', $write);
     }
@@ -144,7 +146,7 @@ class Info_submit {
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post', 'title, domain, description, use_mobile, use_emailchk, email, tel, mb_division, theme, privacy, policy, favicon_del, uploaded_favicon, logo_del, uploaded_logo, use_mb_phone, use_phonechk, use_mb_telephone, use_mb_address, use_mb_gender, st_1, st_2, st_3, st_4, st_5, st_6, st_7, st_8, st_9, st_10, st_exp');
+        $req = Method::request('post', 'title, domain, description, use_mobile, use_emailchk, email, tel, mb_division, theme, privacy, policy, favicon_del, uploaded_favicon, logo_del, uploaded_logo, use_mb_phone, use_phonechk, use_mb_telephone, use_mb_address, use_mb_gender, use_allow_reuse_id, use_allow_dup_name, st_1, st_2, st_3, st_4, st_5, st_6, st_7, st_8, st_9, st_10, st_exp');
         $file = Method::request('file', 'favicon, logo');
         $manage->req_hidden_inp('post');
 
@@ -242,7 +244,9 @@ class Info_submit {
             'use_phonechk' => $req['use_phonechk'],
             'use_mb_telephone' => $req['use_mb_telephone'],
             'use_mb_address' => $req['use_mb_address'],
+            'use_allow_reuse_id' => $req['use_allow_reuse_id'],
             'use_mb_gender' => $req['use_mb_gender'],
+            'use_allow_dup_name' => $req['use_allow_dup_name'],
             'st_1' => $req['st_1'],
             'st_2' => $req['st_2'],
             'st_3' => $req['st_3'],

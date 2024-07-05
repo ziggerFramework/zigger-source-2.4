@@ -6,7 +6,9 @@ ph_global_script = {
     'init' : function() {
 
         this.site_popup(); // Popup
+        this.get_point_giftpop(); // 포인트 선물 팝업
         this.get_phonecheck(); // 휴대전화번호 SMS 인증 코드 발송 및 검증
+        this.set_ui_datepicker(); // UI: datepicker
         this.get_kakao_address(); // 카카오 주소검색
         
     },
@@ -37,6 +39,58 @@ ph_global_script = {
             }
         });
         
+    },
+
+    //
+    // 포인트 선물 팝업
+    //
+    'get_point_giftpop' : function() {
+
+        var $ele = {
+            'form' : '',
+            'sendpop' : '',
+            'sendpopBG' : ''
+        }
+
+        // open
+        $(document).on('click', '*[data-pointgift-send]', function(e) {
+            e.preventDefault();
+
+            var to_mb_id = $(this).data('pointgift-send');
+
+            $('<div id="pointgift-send-bg" data-no-tab-index></div>').appendTo('body');
+            $('<div id="pointgift-send" data-no-tab-index></div>').appendTo('body');
+            $ele.sendpop = $('#pointgift-send');
+            $ele.sendpopBG = $('#pointgift-send-bg');
+
+            $.ajax({
+                'type' : 'GET',
+                'url' : PH_DIR + '/member/pointgift-pop',
+                'cache' : false,
+                'data' : {
+                    'to_mb_id' : to_mb_id,
+                },
+                'dataType' : 'html',
+                'success' : function(data) {
+                    $ele.sendpop.html(data).fadeIn(100);
+                    $ele.sendpopBG.fadeIn(100);
+
+                    //접근성 위해 layer로 focus 이동.
+                    $ele.sendpop.find('.close').focus();
+                }
+            });
+        });
+
+        // close
+        $(document).on('click', '#pointgift-send .close', function(e) {
+            e.preventDefault();
+
+            //접근성 위해 layer띄운 요소로 focus 이동.
+            $('*[data-tab-index='+PH_NOW_TABINDEX+']').focus();
+
+            $ele.sendpop.remove();
+            $ele.sendpopBG.remove();
+        });
     },
 
     //
@@ -107,6 +161,44 @@ ph_global_script = {
                     }
                 });
             }
+        });
+
+    },
+
+    //
+    // UI: datepicker
+    //
+    'set_ui_datepicker' : function() {
+
+        $(function() {
+            $('input[datepicker]').datepicker();
+            $.datepicker.setDefaults({
+                dateFormat: 'yy-mm-dd',
+                prevText: '이전 달',
+                nextText: '다음 달',
+                monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+                dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+                dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+                showMonthAfterYear: true,
+                yearSuffix: '년'
+            });
+        });
+        
+        $(function() {
+            $nowdate = $('#search-form input[name=nowdate]');
+            $fdate = $('#search-form input[name=fdate]');
+            $tdate = $('#search-form input[name=tdate]');
+        
+            $fdate.datepicker('option', 'maxDate', $nowdate.val());
+            $tdate.datepicker('option', 'maxDate', $nowdate.val());
+            $fdate.datepicker('option', 'onClose', function(selectedDate){
+                $tdate.datepicker('option', 'minDate', selectedDate);
+            });
+            $tdate.datepicker('option', 'onClose', function(selectedDate) {
+                $fdate.datepicker('option', 'maxDate', selectedDate);
+            });
         });
 
     },

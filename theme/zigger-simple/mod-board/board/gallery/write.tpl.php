@@ -15,7 +15,7 @@
 	<div id="board-write">
 		<h3><?php echo $write_title; ?></h3>
 
-        <table>
+		<table>
             <caption>게시글 작성하기</caption>
 			<colgroup>
 				<col style="width: 120px;" />
@@ -36,7 +36,7 @@
 					</td>
 				</tr>
 				<?php } ?>
-
+				
 				<?php if ($is_category_show) { ?>
 				<tr>
 					<th scope="row">카테고리</th>
@@ -109,53 +109,30 @@
 					</td>
 				</tr>
 
-				<?php if ($is_file_show[1]) { ?>
+				<?php
+				if ($is_file_show) {
+					for ($i = 1; $i <= $is_file_dsp_cnt; $i++) {
+				?>
 				<tr>
 					<th scope="row">
-						첨부파일
+						첨부파일<?php echo $i; ?>
 					</th>
 					<td>
-                        <label for="file1" class="sound_only_ele">첨부파일1</label>
-						<input type="file" name="file1" id="file1" title="첨부파일1" /><span class="bytetxt"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
+                        <label for="file_<?php echo $i; ?>" class="sound_only_ele">첨부파일<?php echo $i; ?></label>
+						<input type="file" name="file[<?php echo $i; ?>]" id="file_<?php echo $i; ?>" title="첨부파일<?php echo $i; ?>" /><span class="bytetxt"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
+						
+						<?php
+						// 첨부된 파일이 있다면 노출
+						if (isset($is_filename_show[$i]) && !empty($is_filename_show[$i])) {
+						?>
+						<div class="uploaded_wrap">
+							<span class="uploaded"><?php echo $is_filename_show[$i]['orgfile']; ?></span>
+							<label><input type="checkbox" name="file_del[<?php echo $i; ?>]" value="checked" alt="첨부파일<?php echo $i; ?> 삭제" />삭제</label>
+						</div>
+						<?php } ?>
 					</td>
 				</tr>
-				<?php } ?>
-
-				<?php if ($is_filename_show[1]) { ?>
-				<tr>
-					<th scope="row">
-						첨부된 파일
-					</th>
-					<td>
-						<span class="uploaded"><?php echo $uploaded_file[1]; ?></span>
-						<label><input type="checkbox" name="file1_del" value="checked" alt="첨부파일1 삭제" />삭제</label>
-					</td>
-				</tr>
-				<?php } ?>
-
-				<?php if ($is_file_show[2]) { ?>
-				<tr>
-					<th scope="row">
-						첨부파일2
-					</th>
-					<td>
-                        <label for="file2" class="sound_only_ele">첨부파일2</label>
-						<input type="file" name="file2" id="file2" title="첨부파일2" /><span class="bytetxt"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
-					</td>
-				</tr>
-				<?php } ?>
-
-				<?php if ($is_filename_show[2]) { ?>
-				<tr>
-					<th scope="row">
-						첨부된 파일2
-					</th>
-					<td>
-						<span class="uploaded"><?php echo $uploaded_file[2]; ?></span>
-						<label><input type="checkbox" name="file2_del" value="checked" alt="첨부파일2 삭제">삭제</label>
-					</td>
-				</tr>
-				<?php } ?>
+				<?php }} ?>
 
 				<?php if ($is_captcha_show) { ?>
 				<tr>

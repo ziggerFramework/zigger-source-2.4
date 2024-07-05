@@ -34,9 +34,19 @@ class ManageFunc{
             Func::chklevel(1);
         }
 
-        $keyword = (!empty($PARAM['keyword'])) ? addslashes(urldecode($PARAM['keyword'])) : '';
+        // 검색 처리
+        $where = (isset($PARAM['where']) && !empty($PARAM['where'])) ? $PARAM['where'] : '';
+        $keyword = (!empty($where) && !empty(trim($PARAM['keyword']))) ? addslashes(urldecode($PARAM['keyword'])) : '';
+        
         $searchby = '';
-        if (!empty($PARAM['keyword']) && trim(addslashes($PARAM['keyword'])) != '') $searchby = 'AND '.addslashes($PARAM['where']).' like \'%'.$keyword.'%\'';
+        if (!empty($where) && !empty($keyword)) {
+            $searchby = array();
+            
+            foreach ($this->exp_keywords($keyword) as $key => $value) {
+                $searchby[] = '`'.$where.'` like \'%'.addslashes($value).'%\'';
+            }
+            $searchby = 'and ('.implode(' and ', $searchby).')';
+        }
 
     }
 
@@ -173,6 +183,18 @@ class ManageFunc{
         }
 
         return $tab_arr;
+    }
+
+    function exp_keywords($keyword) {
+        $exp = explode(' ', $keyword);
+
+        $key_arr = array();
+
+        for ($i = 0; $i < count($exp); $i++) {
+            $key_arr[$i] = $exp[$i];
+        }
+
+        return $key_arr;
     }
 
 }

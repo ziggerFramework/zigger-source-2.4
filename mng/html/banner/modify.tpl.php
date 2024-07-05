@@ -10,7 +10,6 @@
         <input type="hidden" name="mode" value="mod" />
         <input type="hidden" name="idx" value="<?php echo $write['idx']; ?>" />
 
-
         <table class="table1">
             <thead>
                 <tr>
@@ -18,6 +17,13 @@
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <th>사용유무</th>
+                    <td>
+                        <label class="mr10"><input type="radio" name="use_banner" value="Y" <?php echo $use_banner['Y']; ?> /> 사용</label>
+                        <label><input type="radio" name="use_banner" value="N" <?php echo $use_banner['N']; ?> /> 사용안함</label>
+                    </td>
+                </tr>
                 <tr>
                     <th>배너 key</th>
                     <td>
@@ -90,6 +96,33 @@
                             </dd>
                         </dl>
                         <?php } ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>노출 대상</th>
+                    <td>
+                        <select name="level_from" class="inp">
+                            <?php for($i=1;$i<=10;$i++){ ?>
+                            <option value="<?php echo $i; ?>" <?php if($i==$write['level_from']){ echo "selected"; }?>><?php echo $i; ?> (<?php echo $MB['type'][$i]; ?>)</option>
+                            <?php } ?>
+                        </select>
+                        &nbsp;&nbsp;부터&nbsp;&nbsp;
+                        <select name="level_to" class="inp">
+                            <?php for($i=1;$i<=10;$i++){ ?>
+                            <option value="<?php echo $i; ?>" <?php if($i==$write['level_to']){ echo "selected"; }?>><?php echo $i; ?> (<?php echo $MB['type'][$i]; ?>)</option>
+                            <?php } ?>
+                        </select>
+                        &nbsp;&nbsp;까지&nbsp;&nbsp;
+                        <span class="tbl_sment">작은 숫자의 레벨 부터 입력. ex) 1 ~ 10</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>노출 기간</th>
+                    <td>
+                        <input type="text" name="show_from" class="inp" title="팝업 노출 시작일" value="<?php echo $write['show_from']; ?>" datepicker />
+                        &nbsp;&nbsp;부터&nbsp;&nbsp;
+                        <input type="text" name="show_to" class="inp" title="팝업 노출 종료일" value="<?php echo $write['show_to']; ?>" datepicker />
+                        &nbsp;&nbsp;까지&nbsp;&nbsp;
                     </td>
                 </tr>
             </tbody>

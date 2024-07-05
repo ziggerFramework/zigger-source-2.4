@@ -70,31 +70,13 @@ class Latest_fetch extends \Controller\Make_Controller {
         {
             global $CONF, $FETCH_CONF, $boardinfo;
 
-            // 본문내 첫번째 이미지 태그를 추출
-            preg_match(REGEXP_IMG,Func::htmldecode($list['article']), $match);
-
-            // 썸네일의 파일 타입을 추출
-            $file_type = array();
-
-            for ($i = 1; $i <= 2; $i++) {
-                $file_type[$i] = Func::get_filetype($list['file'.$i]);
+            $tmb = SET_BLANK_IMG;
+            
+            if ($list['file2']) {
+                $fileinfo = Func::get_fileinfo($list['file2']);
+                $tmb = ($fileinfo['storage'] == 'Y') ? $fileinfo['replink'] : PH_DOMAIN.MOD_BOARD_DATA_DIR.'/'.$FETCH_CONF['id'].'/thumb/'.$list['file2'];
             }
-
-            // 조건에 따라 썸네일 HTML코드 리턴
-            for ($i=1; $i <= sizeof($file_type); $i++) {
-                if (Func::chkintd('match', $file_type[$i], SET_IMGTYPE)) $tmb = $list['file'.$i];
-            }
-
-            if (isset($tmb)) {
-                $fileinfo = Func::get_fileinfo($tmb);
-                $tmb = ($fileinfo['storage'] == 'Y') ? $fileinfo['replink'] : MOD_BOARD_DATA_DIR.'/'.$FETCH_CONF['id'].'/thumb/'.$tmb;
-
-            } else if (isset($match[0])) {
-                $tmb = $match[1];
-            }
-
-            if (!isset($tmb)) $tmb = SET_BLANK_IMG;
-
+            
             return $tmb;
         }
 

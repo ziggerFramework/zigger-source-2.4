@@ -188,17 +188,20 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>첨부파일1 사용</th>
+                    <th>첨부파일 사용</th>
                     <td>
                         <label class="mr10"><input type="radio" name="use_file1" value="Y" checked /> 사용</label>
                         <label><input type="radio" name="use_file1" value="N" /> 사용안함</label>
                     </td>
                 </tr>
                 <tr>
-                    <th>첨부파일2 사용</th>
+                    <th>첨부파일 개수</th>
                     <td>
-                        <label class="mr10"><input type="radio" name="use_file2" value="Y" checked /> 사용</label>
-                        <label><input type="radio" name="use_file2" value="N" /> 사용안함</label>
+                        <select name="use_file2" class="inp">
+                            <?php for ($i = 1; $i <= 10; $i++) { ; ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?>개 첨부 가능</option>
+                            <?php } ; ?>
+                        </select>
                     </td>
                 </tr>
                 <tr>

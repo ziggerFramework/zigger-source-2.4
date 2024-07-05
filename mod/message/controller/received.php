@@ -18,16 +18,46 @@ class Received extends \Controller\Make_Controller {
         $this->layout()->view(MOD_MESSAGE_THEME_PATH.'/received.tpl.php');
     }
 
+    public function func()
+    {
+        function exp_keywords($keyword) {
+            $exp = explode(' ', $keyword);
+
+            $key_arr = array();
+
+            for ($i = 0; $i < count($exp); $i++) {
+                $key_arr[$i] = $exp[$i];
+            }
+
+            return $key_arr;
+        }
+    }
+
     public function make()
     {
         $sql = new Pdosql();
         $paging = new Paging();
         $Message_Library = new Message_Library();
 
-        $req = Method::request('get', 'page');
+        $req = Method::request('get', 'page, where, keyword');
 
         Func::getlogin();
 
+        // 검색 처리
+        $where = (isset($req['where']) && !empty($req['where']) && in_array($req['where'], ['mb_id', 'mb_name', 'article'])) ? $req['where'] : '';
+        $keyword = (!empty($where) && !empty(trim($req['keyword']))) ? addslashes(urldecode($req['keyword'])) : '';
+        
+        $searchby = '';
+        if (!empty($where) && !empty($keyword)) {
+            $searchby = array();
+            
+            foreach (exp_keywords($keyword) as $key => $value) {
+                $searchby[] = '`'.$where.'` like \'%'.addslashes($value).'%\'';
+            }
+            $searchby = 'and ('.implode(' and ', $searchby).')';
+        }
+
+        // 메시지 목록
         $sql->query(
             $paging->query(
                 "
@@ -36,7 +66,7 @@ class Received extends \Controller\Make_Controller {
                 left outer join
                 {$sql->table("member")} as member
                 on message.from_mb_idx=member.mb_idx
-                where message.to_mb_idx=:col1
+                where message.to_mb_idx=:col1 {$searchby}
                 order by message.idx desc
                 ",
                 array(
@@ -60,7 +90,7 @@ class Received extends \Controller\Make_Controller {
                 $arr['article'] = Func::strcut($arr['article'], 0, 50);
                 $arr['regdate'] = Func::date($arr['regdate']);
                 $arr['chked'] = Func::date($arr['chked']);
-                $arr[0]['view-link'] = Func::get_param_combine('mode=view&refmode=received&hash='.$arr['hash'].'&page='.$req['page'], '?');
+                $arr[0]['view-link'] = Func::get_param_combine('mode=view&refmode=received&where='.$where.'&keyword='.$keyword.'&hash='.$arr['hash'].'&page='.$req['page'], '?');
 
                 $print_arr[] = $arr;
 
@@ -70,7 +100,9 @@ class Received extends \Controller\Make_Controller {
 
         $this->set('total_new_message', Func::number($Message_Library->get_new_count()));
         $this->set('print_arr', $print_arr);
-        $this->set('pagingprint', $paging->pagingprint('&mode=received'));
+        $this->set('pagingprint', $paging->pagingprint('&mode=received&where='.$where.'&keyword='.$keyword));
+        $this->set('where', $where);
+        $this->set('keyword', $keyword);
     }
 
     public function message_tab()

@@ -383,6 +383,22 @@ class Info_submit {
         if ((isset($file['profileimg']) && $MB['profileimg'] != '')) $uploader->drop($MB['profileimg']);
         if ($MB['profileimg'] != '' && !isset($file['profileimg'])) $profileimg_name = $MB['profileimg'];
 
+        // 이름 중복 검사
+        if ($CONF['use_allow_dup_name'] == 'Y') {
+            $sql->query(
+                "
+                select count(*) total
+                from {$sql->table("member")}
+                where `mb_name`=:col1 and `mb_dregdate` is null and `mb_idx`!=:col2
+                ",
+                array(
+                    $req['name'], $MB['idx']
+                )
+            );
+    
+            if ($sql->fetch('total') > 0) Valid::error('name', '이미 존재하거나, 사용할 수 없는 이름입니다.');
+        }
+
         // update
         if ($req['pwd'] != '') {
             $sql->query(
@@ -512,17 +528,28 @@ class Point extends \Controller\Make_Controller {
     {
         global $MB;
 
+        $req = Method::request('get', 'fdate, tdate');
+
         $sql = new Pdosql();
         $paging = new Paging();
 
         Func::getlogin(SET_NOAUTH_MSG);
 
+        // where
+        $where = array();
+
+        if ($req['fdate'] && preg_match("/^\d{4}-\d{2}-\d{2}$/", $req['fdate'])) $where[] = "regdate >= '".addslashes($req['fdate'])."'";
+        if ($req['tdate'] && preg_match("/^\d{4}-\d{2}-\d{2}$/", $req['tdate'])) $where[] = "regdate < '".date('Y-m-d', strtotime(addslashes($req['tdate']) . ' +1 day'))."'";
+
+        $where = (!empty($where)) ? ' and '.implode(' and ', $where) : '';
+
+        // 포인트 내역 가져옴
         $sql->query(
             $paging->query(
                 "
                 select *
                 from {$sql->table("mbpoint")}
-                where `mb_idx`=:col1
+                where `mb_idx`=:col1 {$where}
                 order by `idx` desc
                 ",
                 array(
@@ -545,10 +572,176 @@ class Point extends \Controller\Make_Controller {
 
             } while ($sql->nextRec());
         }
-
+        
+        $this->set('req', $req);
         $this->set('print_arr', $print_arr);
-        $this->set('pagingprint', $paging->pagingprint());
+        $this->set('pagingprint', $paging->pagingprint('&fdate='.$req['fdate'].'&tdate='.$req['tdate']));
         $this->set('total_point', Func::number($MB['point']));
+    }
+
+}
+
+//
+// Controller
+// ( Pointgift_pop )
+//
+class Pointgift_pop extends \Controller\Make_Controller {
+
+    public function init()
+    {
+        $this->layout()->view(PH_THEME_PATH.'/html/member/pointgift-pop.tpl.php');
+    }
+
+    public function make()
+    {
+        global $MB;
+
+        $req = Method::request('get', 'to_mb_id, reply_parent_idx');
+
+        $is_mbinfo_show = true;
+
+        if (!IS_MEMBER) $is_mbinfo_show = false;
+
+        $now_total_point = Func::number($MB['point']);
+
+        $this->set('to_mb_id', $req['to_mb_id']);
+        $this->set('reply_parent_idx', $req['reply_parent_idx']);
+        $this->set('is_mbinfo_show', $is_mbinfo_show);
+        $this->set('now_total_point', $now_total_point);
+
+    }
+
+    public function form()
+    {
+        $form = new \Controller\Make_View_Form();
+        $form->set('type', 'html');
+        $form->set('action', PH_DIR.'/member/pointgift-pop-submit');
+        $form->run();
+    }
+
+}
+
+//
+// Controller for submit
+// ( Pointgift_pop )
+//
+class Pointgift_pop_submit {
+
+    public function init()
+    {
+        global $MB;
+
+        $sql = new Pdosql();
+        $alarm = new Alarm_Library();
+
+        Method::security('referer');
+        Method::security('request_post');
+        $req = Method::request('post', 'to_mb_id, to_point, article');
+
+        // 관리 권한 검사
+        if (!IS_MEMBER) Valid::error('', '포인트를 선물할 권한이 없습니다.');
+
+        // 회원 아이디 검증
+        Valid::get(
+            array(
+                'input' => 'to_mb_id',
+                'value' => $req['to_mb_id'],
+                'check' => array(
+                    'null' => false,
+                    'defined' => 'id'
+                )
+            )
+        );
+
+        // 포인트 검증
+        Valid::get(
+            array(
+                'input' => 'to_point',
+                'value' => $req['to_point'],
+                'check' => array(
+                    'charset' => 'number',
+                    'minint' => 10,
+                    'maxint' => 99999
+                )
+            )
+        );
+
+        // 보유 포인트 보다 큰 금액인지 검사
+        if ($req['to_point'] > $MB['point']) Valid::error('to_point', '포인트가 부족하여 선물할 수 없습니다.');
+
+        // 자기 자신에게 발송하는지 검사
+        if ($req['to_mb_id'] == $MB['id']) Valid::error('to_mb_id', '자신에게 선물할 수 없습니다.');
+
+        // 존재하는 회원인지 검사
+        $sql->query(
+            "
+            select *
+            from {$sql->table("member")}
+            where `mb_id`=:col1 and `mb_dregdate` is null
+            ",
+            array(
+                $req['to_mb_id']
+            )
+        );
+        if ($sql->getcount() < 1) Valid::error('to_mb_id', '존재하지 않는 회원 아이디 입니다.');
+
+        $to_mb_arr = $sql->fetchs();
+
+        // 내용 검증
+        Valid::get(
+            array(
+                'input' => 'article',
+                'value' => $req['article'],
+                'check' => array(
+                    'null' => false,
+                    'minlen' => 5,
+                    'maxlen' => 30
+                )
+            )
+        );
+
+        $to_msg = preg_replace('/\r\n|\r|\n/', '', $req['article']);
+
+        // 회원에게 포인트 발송
+        Func::set_mbpoint(
+            array(
+                'mode' => 'in',
+                'mb_idx' => $to_mb_arr['mb_idx'],
+                'point' => $req['to_point'],
+                'msg' => $MB['name'].'('.$MB['id'].')님이 포인트를 선물했습니다. ('.$to_msg.')'
+            )
+        );
+
+        // 자신의 포인트 차감
+        Func::set_mbpoint(
+            array(
+                'mode' => 'out',
+                'mb_idx' => $MB['idx'],
+                'point' => $req['to_point'],
+                'msg' => $to_mb_arr['mb_name'].'('.$to_mb_arr['mb_id'].')님에게 포인트를 선물했습니다. ('.$to_msg.')'
+            )
+        );
+
+        // 받는 회원에게 알림 발송
+        $alarm->get_add_alarm(
+            array(
+                'msg_from' => $MB['name'].'회원 ('.$MB['id'].')',
+                'from_mb_idx' => $MB['idx'],
+                'to_mb_idx' => $to_mb_arr['mb_idx'],
+                'memo' => '<strong>'.$MB['name'].'</strong>님이 <strong>'.Func::number($req['to_point']).'</strong>포인트를 선물 했습니다. ('.$to_msg.')',
+                'link' => PH_DIR.'/member/point'
+            )
+        );
+
+        // return
+        Valid::set(
+            array(
+                'return' => 'alert->reload',
+                'msg' => '포인트를 성공적으로 선물 하였습니다.'
+            )
+        );
+        Valid::turn();
+
     }
 
 }

@@ -536,10 +536,11 @@ get_zigalert = function(msg) {
 		$ele.alert.show().addClass('show').find('button').focus();
 		
 		// button click시 처리
-		$ele.alert.find('button').click(function() {
+		$ele.alert.find('button.yes').click(function() {
 			$ele.wrap.remove();
 			$ele.alert.remove();
 			resolve(true);
+			$('*[data-tab-index='+PH_NOW_TABINDEX+']').focus();
 		});
 
 		$(document).keydown(function(e) {
@@ -586,13 +587,14 @@ get_zigconfirm = function(msg) {
 			$ele.wrap.remove();
 			$ele.alert.remove();
 			resolve(true);
-            $('*[data-tab-index='+PH_NOW_TABINDEX+']').focus();
+			$('*[data-tab-index='+PH_NOW_TABINDEX+']').focus();
 		});
 		
 		$ele.alert.find('button.no').click(function() {
 			$ele.wrap.remove();
 			$ele.alert.remove();
 			resolve(false);
+			$('*[data-tab-index='+PH_NOW_TABINDEX+']').focus();
 		});
 
 		$(document).keydown(function(e) {

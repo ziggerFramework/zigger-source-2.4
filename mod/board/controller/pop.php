@@ -222,19 +222,46 @@ class Ctrl_submit {
         if ($sql->getcount() > 0) {
             do {
                 $del_arr = $sql->fetchs();
-                for ($i = 1; $i <= 2; $i++) {
 
-                    if ($del_arr['file'.$i]) {
+                $sql2->query(
+                    "
+                    select *
+                    from {$sql2->table("mod:board_files")}
+                    where `id`=:col1 and `data_idx`=:col2
+                    ",
+                    array(
+                        $board_id, $del_arr['idx']
+                    )
+                );
+
+                if ($sql2->getcount() < 1) continue;
+
+                $file_arr = $sql2->fetchs();
+                
+                do {
+                    if ($file_arr['file_name']) {
                         $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id;
-                        $uploader->drop($del_arr['file'.$i]);
+                        $uploader->drop($file_arr['file_name']);
 
-                        if ($uploader->isfile(MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/'.$del_arr['file'.$i]) && $CONF['use_s3'] == 'N') {
+                        if ($CONF['use_s3'] == 'N' && $uploader->isfile(MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/'.$file_arr['file_name'])) {
                             $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb';
-                            $uploader->drop($del_arr['file'.$i]);
+                            $uploader->drop($file_arr['file_name']);
                         }
                     }
 
-                }
+                } while ($sql2->nextRec());
+
+                $sql2->query(
+                    "
+                    delete
+                    from {$sql2->table("mod:board_files")}
+                    where `id`=:col1 and `data_idx`=:col2
+                    ",
+                    array(
+                        $board_id, $del_arr['idx']
+                    )
+                );
+                
             } while ($sql->nextRec());
         }
 
@@ -372,6 +399,29 @@ class Ctrl_submit {
                     $sql->nl2br = 0;
                     $arr = $sql->fetchs();
 
+                    // 원본 글의 첨부파일 정보 가져옴
+                    $cp_sql->query(
+                        "
+                        select *
+                        from {$cp_sql->table("mod:board_files")}
+                        where `id`=:col1 and `data_idx`=:col2
+                        ",
+                        array(
+                            $board_id, $arr['idx']
+                        )
+                    );
+
+                    $uploaded_files = array();
+                    $upload_files = array();
+
+                    if ($cp_sql->getcount() > 0) {
+                        do {
+                            $files_arr = $cp_sql->fetchs();
+                            $uploaded_files[$files_arr['file_seq']] = $files_arr;
+
+                        } while ($cp_sql->nextRec());
+                    }
+
                     // 대상 게시판으로 첨부파일 복사
                     $old_path = MOD_BOARD_DATA_PATH.'/'.$board_id;
                     $tar_path = MOD_BOARD_DATA_PATH.'/'.$t_board_id;
@@ -382,27 +432,55 @@ class Ctrl_submit {
                     $uploader->chkpath();
                     $uploader->path = '';
 
-                    $filename = array();
+                    if (!empty($uploaded_files)) {
+                        foreach ($uploaded_files as $key => $value) {
+                            if (!$value) continue;
 
-                    for ($fn = 1; $fn <= 2; $fn++) {
+                            $upload_files[$key] = $value;
+                            $upload_files[$key]['file_name'] = $uploader->replace_filename($value['file_name']);
+                            
+                            $uploader->filecopy($old_path.'/'.$value['file_name'], $tar_path.'/'.$upload_files[$key]['file_name']);
 
-                        if ($arr['file'.$fn] != '') {
-                            $filename[$fn] = $uploader->replace_filename($arr['file'.$fn]);
-                            $uploader->filecopy($old_path.'/'.$arr['file'.$fn],$tar_path.'/'.$filename[$fn]);
-
-                            if ($uploader->isfile($old_path.'/thumb/'.$arr['file'.$fn])) {
-                                $uploader->filecopy($old_path.'/thumb/'.$arr['file'.$fn],$tar_path.'/thumb/'.$fn_re);
+                            if ($uploader->isfile($old_path.'/thumb/'.$value['file_name'])) {
+                                $uploader->filecopy($old_path.'/thumb/'.$value['file_name'], $tar_path.'/thumb/'.$upload_files[$key]['file_name']);
                             }
 
                             $uploader->path = $old_path;
-                            $uploader->drop($arr['file'.$fn]);
+                            $uploader->drop($value['file_name']);
                             $uploader->path = $old_path.'/thumb';
-                            $uploader->drop($arr['file'.$fn]);
-
-                        } else {
-                            $filename[$fn] = '';
+                            $uploader->drop($value['file_name']);
                         }
+                    }
 
+                    // 첨부파일 종류 기록
+                    $ufile_icon_type = '';
+
+                    if (!empty($upload_files)) {
+                        $ufile_icon_type = 'file';
+
+                        foreach ($upload_files as $key => $value) {
+                            $file_type = Func::get_filetype($value['file_name']);
+                            if (Func::chkintd('match', $file_type, SET_IMGTYPE)) $ufile_icon_type = 'image';
+                        }
+                    }
+                    
+                    // 게시글 대표이미지 생성
+                    $ufile_tmb_filename = '';
+
+                    preg_match(REGEXP_IMG, Func::htmldecode($arr['article']), $match);
+
+                    if (!empty($upload_files)) {
+                        foreach ($upload_files as $key => $value) {
+                            $file_type = Func::get_filetype($value['file_name']);
+
+                            if (Func::chkintd('match', $file_type, SET_IMGTYPE)) {
+                                $ufile_tmb_filename = $value['file_name'];
+                            }
+                        }
+                    }
+
+                    if (!$ufile_tmb_filename) {
+                        $ufile_tmb_filename = (isset($match[1])) ? basename($match[1]) : '';
                     }
 
                     // 대상 게시판으로 글을 복사
@@ -419,7 +497,7 @@ class Ctrl_submit {
                         ",
                         array(
                             $arr['category'], $tar_ln,$arr['rn'], $arr['mb_idx'], $arr['mb_id'], $arr['writer'], $arr['pwd'], $arr['email'], $arr['article'], $arr['subject'],
-                            $filename[1], $arr['file1_cnt'], $filename[2], $arr['file2_cnt'], $arr['use_secret'], $arr['use_html'], $arr['use_email'], $arr['view'], $arr['ip'], $cp_dregdate,
+                            $ufile_icon_type, $arr['file1_cnt'], $ufile_tmb_filename, $arr['file2_cnt'], $arr['use_secret'], $arr['use_html'], $arr['use_email'], $arr['view'], $arr['ip'], $cp_dregdate,
                             $arr['data_1'], $arr['data_2'], $arr['data_3'], $arr['data_4'], $arr['data_5'], $arr['data_6'], $arr['data_7'], $arr['data_8'], $arr['data_9'], $arr['data_10']
                         )
                     );
@@ -436,6 +514,43 @@ class Ctrl_submit {
                         )
                     );
                     $cped_idx = $cp_sql->fetch('idx');
+
+                    // 첨부파일 정보 이동
+                    if (!empty($uploaded_files)) {
+
+                        // 파일 복사
+                        $insert_qry = array();
+
+                        foreach ($upload_files as $key => $value) {
+                            $insert_qry[] = "(:col1, :col2, '".addslashes($key)."', '".addslashes($value['file_name'])."', '".addslashes($value['file_cnt'])."', now())";
+                        }
+
+                        $insert_qry = implode(',', $insert_qry);
+
+                        $cp_sql->query(
+                            "
+                            insert into
+                            {$cp_sql->table("mod:board_files")}
+                            (`id`, `data_idx`, `file_seq`, `file_name`, `file_cnt`, `regdate`)
+                            values
+                            ".$insert_qry,
+                            array(
+                                $t_board_id, $cped_idx, 
+                            )
+                        );
+
+                        // 기존 파일 삭제
+                        $cp_sql->query(
+                            "
+                            delete
+                            from {$cp_sql->table("mod:board_files")}
+                            where `id`=:col1 and `data_idx`=:col2
+                            ",
+                            array(
+                                $board_id, $arr['idx'], 
+                            )
+                        );
+                    }
 
                     // 좋아요 이동
                     $cp_sql->query(
@@ -586,6 +701,29 @@ class Ctrl_submit {
             // 부모글인 경우만 복사 실행
             if($arr['rn'] == 0){
 
+                // 원본 글의 첨부파일 정보 가져옴
+                $sql->query(
+                    "
+                    select *
+                    from {$sql->table("mod:board_files")}
+                    where `id`=:col1 and `data_idx`=:col2
+                    ",
+                    array(
+                        $board_id, $arr['idx']
+                    )
+                );
+
+                $uploaded_files = array();
+                $upload_files = array();
+
+                if ($sql->getcount() > 0) {
+                    do {
+                        $files_arr = $sql->fetchs();
+                        $uploaded_files[$files_arr['file_seq']] = $files_arr;
+
+                    } while ($sql->nextRec());
+                }
+
                 // 대상 게시판의 최대 ln값 불러옴
                 $sql->query(
                     "
@@ -612,20 +750,50 @@ class Ctrl_submit {
 
                 $filename = array();
 
-                for ($fn = 1; $fn <= 2; $fn++) {
-                    if ($arr['file'.$fn] != '') {
-                        $fn_re = $uploader->replace_filename($arr['file'.$fn]);
-                        $uploader->filecopy($old_path.'/'.$arr['file'.$fn],$tar_path.'/'.$fn_re);
+                if (!empty($uploaded_files)) {
+                    foreach ($uploaded_files as $key => $value) {
+                        if (!$value) continue;
 
-                        if ($uploader->isfile($old_path.'/thumb/'.$arr['file'.$fn])) {
-                            $uploader->filecopy($old_path.'/thumb/'.$arr['file'.$fn],$tar_path.'/thumb/'.$fn_re);
+                        $upload_files[$key] = $value;
+                        $upload_files[$key]['file_name'] = $uploader->replace_filename($value['file_name']);
+                        
+                        $uploader->filecopy($old_path.'/'.$value['file_name'], $tar_path.'/'.$upload_files[$key]['file_name']);
+
+                        if ($uploader->isfile($old_path.'/thumb/'.$value['file_name'])) {
+                            $uploader->filecopy($old_path.'/thumb/'.$value['file_name'], $tar_path.'/thumb/'.$upload_files[$key]['file_name']);
                         }
-
-                        $filename[$fn] = $fn_re;
-
-                    } else {
-                        $filename[$fn] = '';
                     }
+                }
+
+                // 첨부파일 종류 기록
+                $ufile_icon_type = '';
+
+                if (!empty($upload_files)) {
+                    $ufile_icon_type = 'file';
+
+                    foreach ($upload_files as $key => $value) {
+                        $file_type = Func::get_filetype($value['file_name']);
+                        if (Func::chkintd('match', $file_type, SET_IMGTYPE)) $ufile_icon_type = 'image';
+                    }
+                }
+                
+                // 게시글 대표이미지 생성
+                $ufile_tmb_filename = '';
+
+                preg_match(REGEXP_IMG, Func::htmldecode($arr['article']), $match);
+
+                if (!empty($upload_files)) {
+                    foreach ($upload_files as $key => $value) {
+                        $file_type = Func::get_filetype($value['file_name']);
+
+                        if (Func::chkintd('match', $file_type, SET_IMGTYPE)) {
+                            $ufile_tmb_filename = $value['file_name'];
+                        }
+                    }
+                }
+
+                if (!$ufile_tmb_filename) {
+                    $ufile_tmb_filename = (isset($match[1])) ? basename($match[1]) : '';
                 }
 
                 // 대상 게시판으로 글을 복사
@@ -642,11 +810,48 @@ class Ctrl_submit {
                     (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, now(), :col20, :col21, :col22, :col23, :col24, :col25, :col26, :col27, :col28, :col29, :col30)
                     ",
                     array(
-                        $arr['category'], $tar_ln,$arr['rn'], $arr['mb_idx'], $arr['mb_id'], $arr['writer'], $arr['pwd'], $arr['email'], $arr['article'], $arr['subject'],
-                        $filename[1], 0, $filename[2], 0, $arr['use_secret'], $arr['use_html'], $arr['use_email'], 0, $arr['ip'], $cp_dregdate,
+                        $arr['category'], $tar_ln, $arr['rn'], $arr['mb_idx'], $arr['mb_id'], $arr['writer'], $arr['pwd'], $arr['email'], $arr['article'], $arr['subject'],
+                        $ufile_icon_type, 0, $ufile_tmb_filename, 0, $arr['use_secret'], $arr['use_html'], $arr['use_email'], 0, $arr['ip'], $cp_dregdate,
                         $arr['data_1'], $arr['data_2'], $arr['data_3'], $arr['data_4'], $arr['data_5'], $arr['data_6'], $arr['data_7'], $arr['data_8'], $arr['data_9'], $arr['data_10']
                     )
                 );
+
+                // 복사된 글의 idx값을 다시 불러옴
+                $sql->query(
+                    "
+                    select `idx`
+                    from {$t_board_data_table}
+                    where `ln`=:col1
+                    ",
+                    array(
+                        $tar_ln
+                    )
+                );
+                $cped_idx = $sql->fetch('idx');
+
+                // 첨부파일 정보 복사
+                if (!empty($uploaded_files)) {
+
+                    $insert_qry = array();
+
+                    foreach ($upload_files as $key => $value) {
+                        $insert_qry[] = "(:col1, :col2, '".addslashes($key)."', '".addslashes($value['file_name'])."', '".addslashes($value['file_cnt'])."', now())";
+                    }
+
+                    $insert_qry = implode(',', $insert_qry);
+
+                    $sql->query(
+                        "
+                        insert into
+                        {$sql->table("mod:board_files")}
+                        (`id`, `data_idx`, `file_seq`, `file_name`, `file_cnt`, `regdate`)
+                        values
+                        ".$insert_qry,
+                        array(
+                            $t_board_id, $cped_idx, 
+                        )
+                    );
+                }
             }
         }
 

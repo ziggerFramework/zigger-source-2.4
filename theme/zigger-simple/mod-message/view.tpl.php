@@ -71,7 +71,7 @@
         <a href="<?php echo $view[0]['list-link'] ?>" class="btn2">메시지함 이동</a>
 
         <?php if ($refmode != 'sent') { ?>
-        <button type="button" class="btn1" data-message-send="<?php echo $from_mb_id; ?>" data-message-send-reply="<?php echo $reply_parent_idx; ?>">답장하기</button>
+        <button type="button" class="btn1" data-message-send="<?php echo $from_mb_id; ?>" data-message-send-reply="<?php echo $reply_parent_hash; ?>">답장하기</button>
         <?php } ?>
     </div>
 </div>

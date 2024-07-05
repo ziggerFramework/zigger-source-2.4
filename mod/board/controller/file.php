@@ -25,19 +25,18 @@ class Down extends \Controller\Make_Controller {
         if (!$board_id || !$req['idx'] || !$req['file']) Func::err('필수 값이 누락 되었습니다.');
 
         // 게시글의 첨부파일 정보 불러옴
-        $board_data_table = str_replace(['`', '\`'], '', $sql->table("mod:board_data_".addslashes($board_id)));
         $sql->query(
             "
             select *
-            from {$board_data_table}
-            where `idx`=:col1
+            from {$sql->table("mod:board_files")}
+            where `id`=:col1 and `data_idx`=:col2 and file_seq=:col3
             ",
             array(
-                $req['idx']
+                $board_id, $req['idx'], $req['file']
             )
         );
 
-        $target_file = $sql->fetch('file'.$req['file']);
+        $target_file = $sql->fetch('file_name');
 
         // 첨부파일이 확인되지 않는 경우
         if (!$target_file) Func::err('첨부파일이 확인되지 않습니다.');
@@ -102,10 +101,13 @@ class Down extends \Controller\Make_Controller {
         // 파일 다운로드 횟수 증가
         $sql->query(
             "
-            update {$board_data_table}
-            set `file{$req['file']}_cnt` = `file{$req['file']}_cnt` + 1
-            where `idx`={$req['idx']}
-            ", []
+            update {$sql->table("mod:board_files")}
+            set `file_cnt` = `file_cnt` + 1
+            where `id`=:col1 and `data_idx`=:col2 and file_seq=:col3
+            ",
+            array(
+                $board_id, $req['idx'], $req['file']
+            )
         );
 
     }

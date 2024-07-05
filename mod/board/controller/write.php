@@ -48,26 +48,6 @@ class Write extends \Controller\Make_Controller {
             return $opt;
         }
 
-        // 파일명
-        function uploaded_file($arr, $wrmode)
-        {
-            if ($wrmode != 'reply') {
-                $files = array();
-
-                for ($i = 1; $i <= 2; $i++) {
-                    $files[$i] = '';
-
-                    if (isset($arr['file'.$i]) && $arr['file'.$i] != '') {
-                        $fileinfo = Func::get_fileinfo($arr['file'.$i]);
-                        $files[$i] = $fileinfo['orgfile'];
-                    }
-
-                }
-
-                return $files;
-            }
-        }
-
         // 공지글 옵션
         function opt_notice($arr, $wrmode)
         {
@@ -262,10 +242,12 @@ class Write extends \Controller\Make_Controller {
             );
 
             if ($sql->getcount() > 0) {
-                $sql->specialchars = 0;
+                $my_temporary_arr = $sql->fetchs();
+
+                $sql->specialchars = 1;
                 $sql->nl2br = 0;
 
-                $my_temporary_arr = $sql->fetchs();
+                $my_temporary_arr['article'] = $sql->fetch('article');
             }
         }
 
@@ -349,19 +331,41 @@ class Write extends \Controller\Make_Controller {
             $is_captcha_show = (!IS_MEMBER) ? true : false;
             $is_temporary_show = (!IS_MEMBER) ? false : true;
 
-            $is_file_show = array();
+            // 첨부파일 input 노출 처리
+            $is_file_dsp_cnt = (int)Write::$boardconf['use_file2'];
+            $is_file_show = (Write::$boardconf['use_file1'] == 'Y') ? true : false;
 
-            for ($i = 1; $i <= 2; $i++) {
+            // 수정 모드인 경우 첨부파일 정보가 있는지 확인
+            $is_filename_show = array();
 
-                $is_file_show[$i] = (Write::$boardconf['use_file'.$i] == 'Y') ? true : false;
-                $is_filename_show[$i] = false;
+            if ($req['wrmode'] == 'modify') {
+                $sql->query(
+                    "
+                    select *
+                    from {$sql->table("mod:board_files")}
+                    where `id`=:col1 and `data_idx`=:col2
+                    ",
+                    array(
+                        $board_id, $req['read']
+                    )
+                );
 
-                if ($req['wrmode'] == 'modify') {
-                    if ($arr['file'.$i] != '') $is_filename_show[$i] = true;
+                $max_file_seq_no = 0;
 
-                } else {
-                    $is_filename_show[$i] = false;
+                if ($sql->getcount() > 0) {
+                    do {
+                        $file_arr = $sql->fetchs();
+    
+                        $is_filename_show[$file_arr['file_seq']] = $file_arr;
+
+                        $orgfile = Func::get_fileinfo($file_arr['file_name']);
+                        $is_filename_show[$file_arr['file_seq']]['orgfile'] = $orgfile['orgfile'];
+
+                        if ($file_arr['file_seq'] > $is_file_dsp_cnt) $is_file_dsp_cnt = $file_arr['file_seq'];
+    
+                    } while ($sql->nextRec());
                 }
+    
             }
 
             if (Write::$boardconf['use_category'] == 'Y' && Write::$boardconf['category'] != '' && (!$req['wrmode'] || $req['wrmode'] != 'reply') && (!isset($arr['rn']) || $arr['rn'] == 0) && (!isset($arr['reply_cnt']) || $arr['reply_cnt'] < 1)) {
@@ -397,12 +401,12 @@ class Write extends \Controller\Make_Controller {
             }
 
             $this->set('write', $write);
-            $this->set('uploaded_file', uploaded_file($arr, $req['wrmode']));
             $this->set('cancel_btn', cancel_btn($req['page'], $req['category'], $req['where'], $req['keyword']));
             $this->set('is_category_show', $is_category_show);
             $this->set('is_writer_show', $is_writer_show);
             $this->set('is_pwd_show', $is_pwd_show);
             $this->set('is_email_show', $is_email_show);
+            $this->set('is_file_dsp_cnt', $is_file_dsp_cnt);
             $this->set('is_file_show', $is_file_show);
             $this->set('is_filename_show', $is_filename_show);
             $this->set('is_captcha_show', $is_captcha_show);
@@ -459,7 +463,8 @@ class Write extends \Controller\Make_Controller {
 //
 class Write_submit{
 
-    public function init(){
+    public function init()
+    {
         global $CONF, $MB, $board_id, $req, $ufile, $wr_opt, $org_arr;
 
         $boardlib = new Board_Library();
@@ -469,8 +474,8 @@ class Write_submit{
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post', 'thisuri, board_id, wrmode, read, page, where, keyword, category_ed, use_html, category, use_notice, use_secret, use_email, writer, password, email, subject, article, file1_del, file2_del, captcha, request, wdate_date, wdate_h, wdate_i, wdate_s, data_1, data_2, data_3, data_4, data_5, data_6, data_7, data_8, data_9, data_10');
-        $f_req = Method::request('file', 'file1, file2');
+        $req = Method::request('post', 'thisuri, board_id, wrmode, read, page, where, keyword, category_ed, use_html, category, use_notice, use_secret, use_email, writer, password, email, subject, article, file_del, captcha, request, wdate_date, wdate_h, wdate_i, wdate_s, data_1, data_2, data_3, data_4, data_5, data_6, data_7, data_8, data_9, data_10');
+        $f_req = Method::request('file', 'file');
 
         $board_id = $req['board_id'];
 
@@ -491,6 +496,24 @@ class Write_submit{
                 )
             );
             $org_arr = $sql->fetchs();
+
+            // 첨부파일 정보 가져옴
+            $sql->query(
+                "
+                select *
+                from {$sql->table("mod:board_files")}
+                where `id`=:col1 and `data_idx`=:col2
+                ",
+                array(
+                    $board_id, $req['read']
+                )
+            );
+            if ($sql->getcount() > 0) {
+                do {
+                    $org_arr['files'][$sql->fetch('file_seq')] = $sql->fetchs();
+
+                } while ($sql->nextRec());
+            }
         }
 
         // 수정 or 답글인 경우 삭제된 게시글인지 검사
@@ -698,27 +721,27 @@ class Write_submit{
         $ufile = array();
         $ufile_name = array();
 
-        for ($i = 1; $i <= 2; $i++) {
-            $ufile[$i] = $f_req['file'.$i];
-        }
-
-        for ($i = 1; $i <= 2; $i++) {
-            if (isset($ufile[$i]) && Write::$boardconf['use_file'.$i]) {
-                $uploader->file = $ufile[$i];
-
-                if ($uploader->chkfile('match') === true) Valid::error('file'.$i, ERR_MSG_8);
-                if ($uploader->chkbyte(Write::$boardconf['file_limit']) === false) Valid::error('file'.$i, '허용 파일 용량을 초과합니다.');
-            }
-        }
-
-        for ($i = 1; $i <= 2; $i++) {
-            if (isset($ufile[$i]) > 0 && Write::$boardconf['use_file'.$i]) {
-                $uploader->file = $ufile[$i];
-
-                $ufile[$i]['ufile_name'] = $uploader->replace_filename($ufile[$i]['name']);
-                array_push($ufile_name, $ufile[$i]['ufile_name']);
-
-                if (!$uploader->upload($ufile[$i]['ufile_name'])) Valid::error('file'.$i, '첨부파일'.$i.' 업로드 실패');
+        if (isset($f_req['file']) && !empty($f_req['file'])) {
+            foreach ($f_req['file']['name'] as $key => $value) {
+                $ufile[$key] = array(
+                    'name' => $value,
+                    'tmp_name' => $f_req['file']['tmp_name'][$key],
+                    'size' => $f_req['file']['size'][$key]
+                );
+                
+                $tmp_name = $ufile[$key];
+    
+                if (isset($tmp_name) && !empty($tmp_name)) {
+                    $uploader->file = $tmp_name;
+    
+                    if ($uploader->chkfile('match') === true) Valid::error('', '첨부파일'.$key.' : '.ERR_MSG_8);
+                    if ($uploader->chkbyte(Write::$boardconf['file_limit']) === false) Valid::error('', '첨부파일'.$key.' : 허용 파일 용량을 초과합니다.');
+    
+                    $ufile[$key]['ufile_name'] = $uploader->replace_filename($ufile[$key]['name']);
+                    array_push($ufile_name, $ufile[$key]['ufile_name']);
+    
+                    if (!$uploader->upload($ufile[$key]['ufile_name'])) Valid::error('', '첨부파일'.$key.' : 업로드 실패');
+                }
             }
         }
 
@@ -748,19 +771,73 @@ class Write_submit{
 
         // 수정모드인 경우 기존 파일 & 썸네일 삭제
         if ($req['wrmode'] == 'modify') {
-            for ($i = 1; $i <= 2; $i++) {
+            for ($i = 1; $i <= (int)Write::$boardconf['use_file2']; $i++) {
 
-                // 기존 파일을 삭제할 때
-                if ($req['file'.$i.'_del'] == 'checked' || (isset($ufile[$i]) && $org_arr['file'.$i] && $req['file'.$i.'_del'] != 'checked')) {
-                    $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb';
-                    $uploader->drop($org_arr['file'.$i]);
+                $get_delete_checked = (isset($req['file_del'][$i]) && $req['file_del'][$i] === 'checked') ? true : false;
+                $get_delete_not_checked = (!isset($req['file_del'][$i]) || $req['file_del'][$i] !== 'checked') ? true : false;
+                $is_has_orgfile = (isset($org_arr['files'][$i]) && !empty($org_arr['files'][$i])) ? true : false;
+                $is_uploaded_newfile = (isset($ufile[$i])) ? true : false;
+                
+                // 기존 파일을 삭제한뒤 새로 업로드한 파일로 대체
+                if ($get_delete_checked || ($is_uploaded_newfile && $is_has_orgfile && $get_delete_not_checked)) {
+                    $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id;
+                    $uploader->drop($org_arr['files'][$i]['file_name']);
+
+                    if ($CONF['use_s3'] == 'N' && $uploader->isfile(MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/'.$org_arr['files'][$i]['file_name'])) {
+                        $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/';
+                        $uploader->drop($org_arr['files'][$i]['file_name']);
+                    }
+
+                    $sql->query(
+                        "
+                        delete
+                        from {$sql->table("mod:board_files")}
+                        where `id`=:col1 and `data_idx`=:col2 and `file_seq`=:col3
+                        ",
+                        array(
+                            $board_id, $req['read'], $i
+                        )
+                    );
                 }
 
-                // 아무것도 하지 않았을 때
-                if ($org_arr['file'.$i] != '' && !isset($ufile[$i]) && $req['file'.$i.'_del'] != 'checked') {
-                    $ufile[$i]['ufile_name'] = $org_arr['file'.$i];
+                // 기존에 첨부된 파일이 있지만 아무것도 하지 않았을 때
+                if ($is_has_orgfile && !$is_uploaded_newfile && $get_delete_not_checked) {
+                    $ufile[$i]['ufile_name'] = $org_arr['files'][$i]['file_name'];
+
+                    $modified_files[$i] = 'modify';
                 }
             }
+        }
+
+        // 첨부파일 종류 기록
+        $req[0]['ufile_icon_type'] = '';
+
+        if (!empty($ufile)) {
+            $req[0]['ufile_icon_type'] = 'file';
+
+            foreach ($ufile as $key => $value) {
+                $file_type = Func::get_filetype($value['ufile_name']);
+                if (Func::chkintd('match', $file_type, SET_IMGTYPE)) $req[0]['ufile_icon_type'] = 'image';
+            }
+        }
+
+        // 대표이미지로 사용할 이미지 지정
+        $req[0]['ufile_tmb_filename'] = '';
+
+        preg_match(REGEXP_IMG, Func::htmldecode($req['article']), $match);
+
+        if (!empty($ufile)) {
+            foreach ($ufile as $key => $value) {
+                $file_type = Func::get_filetype($value['ufile_name']);
+
+                if (Func::chkintd('match', $file_type, SET_IMGTYPE)) {
+                    $req[0]['ufile_tmb_filename'] = $value['ufile_name'];
+                }
+            }
+        }
+
+        if (!$req[0]['ufile_tmb_filename']) {
+            $req[0]['ufile_tmb_filename'] = (isset($match[1])) ? basename($match[1]) : '';
         }
 
         // wrmode 별 처리
@@ -820,13 +897,12 @@ class Write_submit{
         $sql->query(
             "
             insert into {$sql->table("mod:board_data_".$board_id)}
-            (`category`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `file1`, `file2`, `use_secret`, `use_notice`, `use_html`, `use_email`, `ip`, `ln`, `rn`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`, `regdate`)
+            (`category`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `use_secret`, `use_notice`, `use_html`, `use_email`, `ip`, `ln`, `rn`, `file1`, `file2`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`, `regdate`)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, '".MB_REMOTE_ADDR."', :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25, :col26)
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, 'Y', :col11, '".MB_REMOTE_ADDR."', :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25, :col26)
             ",
             array(
-                $req['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], (isset($ufile[1])) ? $ufile[1]['ufile_name'] : '',
-                (isset($ufile[2])) ? $ufile[2]['ufile_name'] : '', $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], $ln_arr['ln_max'], 0,
+                $req['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], $ln_arr['ln_max'], 0, $req[0]['ufile_icon_type'], $req[0]['ufile_tmb_filename'],
                 $req['data_1'], $req['data_2'], $req['data_3'], $req['data_4'], $req['data_5'], $req['data_6'], $req['data_7'], $req['data_8'], $req['data_9'], $req['data_10'], $wdate
             )
         );
@@ -842,28 +918,46 @@ class Write_submit{
                 $req['writer']
             )
         );
+        $inserted_data_idx = $sql->fetch('max_idx');
 
-        // 관리자 Dashboard 소식 등록
-        $req['thisuri'] = htmlspecialchars($req['thisuri']);
-        $req['thisuri'] = str_replace(array("'", '"'), '', $req['thisuri']);
-        
-        $feed_uri = (PH_DIR) ? str_replace(PH_DIR, '', $req['thisuri']) : $req['thisuri'];
-
-        if (Write::$boardconf['use_mng_feed'] == 'Y') {
-            Func::add_mng_feed(
+        // 첨부파일 정보 insert
+        foreach ($ufile as $key => $value) {
+            $sql->query(
+                "
+                insert into {$sql->table("mod:board_files")}
+                (`id`, `data_idx`, `file_seq`, `file_name`, `regdate`)
+                values
+                (:col1, :col2, :col3, :col4, now())
+                ",
                 array(
-                    'from' => $MODULE_BOARD_CONF['title'],
-                    'msg' => '<strong>'.$req['writer'].'</strong>님이 <strong>'.Write::$boardconf['title'].'</strong> 게시판에 새로운 글을 등록했습니다.',
-                    'link' => $feed_uri.'/'.$sql->fetch('max_idx')
+                    $board_id, $inserted_data_idx, $key, $value['ufile_name']
                 )
             );
+        }
+
+        // 관리자 Dashboard 소식 등록
+        if (!isset($req['request'])) {
+            $req['thisuri'] = htmlspecialchars($req['thisuri']);
+            $req['thisuri'] = str_replace(array("'", '"'), '', $req['thisuri']);
+            
+            $feed_uri = (PH_DIR) ? str_replace(PH_DIR, '', $req['thisuri']) : $req['thisuri'];
+    
+            if (Write::$boardconf['use_mng_feed'] == 'Y') {
+                Func::add_mng_feed(
+                    array(
+                        'from' => $MODULE_BOARD_CONF['title'],
+                        'msg' => '<strong>'.$req['writer'].'</strong>님이 <strong>'.Write::$boardconf['title'].'</strong> 게시판에 새로운 글을 등록했습니다.',
+                        'link' => $feed_uri.'/'.$inserted_data_idx
+                    )
+                );
+            }
         }
 
         // return
         $req['category'] = (!empty($req['category'])) ? urlencode($req['category']) : '';
 
         if ($sql->getcount() > 0) {
-            $return_url = $req['thisuri'].'/'.$sql->fetch('max_idx').Func::get_param_combine('?category='.$req['category'], '?');
+            $return_url = $req['thisuri'].'/'.$inserted_data_idx.Func::get_param_combine('?category='.$req['category'], '?');
 
         } else {
             $return_url = $req['thisuri'].Func::get_param_combine('?category='.urlencode($req['category']), '?');
@@ -932,17 +1026,61 @@ class Write_submit{
         $sql->query(
             "
             update {$sql->table("mod:board_data_".$board_id)}
-            set `category`=:col2, `writer`=:col3, `pwd`=:col4, `email`=:col5, `article`=:col6, `subject`=:col7, `file1`=:col8, `file2`=:col9, `use_secret`=:col10, `use_notice`=:col11,
-            use_html='Y', `use_email`=:col12, `ip`='".MB_REMOTE_ADDR."', `regdate`=:col13, `data_1`=:col14, `data_2`=:col15, `data_3`=:col16, `data_4`=:col17, `data_5`=:col18, `data_6`=:col19, `data_7`=:col20, `data_8`=:col21, `data_9`=:col22, `data_10`=:col23
+            set `category`=:col2, `writer`=:col3, `pwd`=:col4, `email`=:col5, `article`=:col6, `subject`=:col7, `use_secret`=:col8, `use_notice`=:col9,
+            use_html='Y', `use_email`=:col10, `ip`='".MB_REMOTE_ADDR."', `file1`=:col11, `file2`=:col12, `regdate`=:col13, `data_1`=:col14, `data_2`=:col15, `data_3`=:col16, `data_4`=:col17, `data_5`=:col18, `data_6`=:col19, `data_7`=:col20, `data_8`=:col21, `data_9`=:col22, `data_10`=:col23
             where `idx`=:col1
             ",
             array(
                 $req['read'], $category, $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'],
-                (isset($ufile[1])) ? $ufile[1]['ufile_name'] : '', (isset($ufile[2])) ? $ufile[2]['ufile_name'] : '',
-                $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], $wdate, $req['data_1'], $req['data_2'], $req['data_3'], $req['data_4'], $req['data_5'],
+                $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], $req[0]['ufile_icon_type'], $req[0]['ufile_tmb_filename'], $wdate, $req['data_1'], $req['data_2'], $req['data_3'], $req['data_4'], $req['data_5'],
                 $req['data_6'], $req['data_7'], $req['data_8'], $req['data_9'], $req['data_10']
             )
         );
+        
+        // 첨부파일 정보 update
+        foreach ($ufile as $key => $value) {
+            
+            // 기존 첨부파일 정보 있는지 확인
+            $sql->query(
+                "
+                select count(*) total_count
+                from {$sql->table("mod:board_files")}
+                where `id`=:col1 and `data_idx`=:col2 and `file_seq`=:col3
+                ",
+                array(
+                    $board_id, $req['read'], $key
+                )
+            );
+
+            // 기존에 첨부파일 정보가 있다면 새로운 파일로 갱신
+            if ($sql->fetch('total_count') > 0) {
+                $sql->query(
+                    "
+                    update {$sql->table("mod:board_files")}
+                    set `file_name`=:col4, regdate=now()
+                    where `id`=:col1 and `data_idx`=:col2 and `file_seq`=:col3 and `file_name`!=:col4
+                    ",
+                    array(
+                        $board_id, $req['read'], $key, $value['ufile_name']
+                    )
+                );   
+            }
+            
+            // 기존에 첨부파일 정보가 없다면 신규 등록
+            else {
+                $sql->query(
+                    "
+                    insert into {$sql->table("mod:board_files")}
+                    (`id`, `data_idx`, `file_seq`, `file_name`, `regdate`)
+                    values
+                    (:col1, :col2, :col3, :col4, now())
+                    ",
+                    array(
+                        $board_id, $req['read'], $key, $value['ufile_name']
+                    )
+                );
+            }
+        }
 
         // 조회수 session
         Session::set_sess('BOARD_VIEW_'.$req['read'], $req['read']);
@@ -1020,8 +1158,7 @@ class Write_submit{
             (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, '".MB_REMOTE_ADDR."', now(), :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25)
             ",
             array(
-                $org_arr['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], (isset($ufile[1])) ? $ufile[1]['ufile_name'] : '',
-                (isset($ufile[2])) ? $ufile[2]['ufile_name'] : '', $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], $ln_me, $rn_arr['rn_max'],
+                $org_arr['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], $req[0]['ufile_icon_type'], $req[0]['ufile_tmb_filename'], $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], $ln_me, $rn_arr['rn_max'],
                 $req['data_1'], $req['data_2'], $req['data_3'], $req['data_4'], $req['data_5'], $req['data_6'], $req['data_7'], $req['data_8'], $req['data_9'], $req['data_10']
             )
         );

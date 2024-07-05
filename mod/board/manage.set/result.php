@@ -1534,26 +1534,6 @@ class Write extends \Controller\Make_Controller {
             return $opt;
         }
 
-        // 파일명
-        function uploaded_file($arr, $wrmode)
-        {
-            if ($wrmode != 'reply') {
-                $files = array();
-
-                for ($i = 1; $i <= 2; $i++) {
-                    $files[$i] = '';
-
-                    if (!empty($arr['file'.$i])) {
-                        $fileinfo = Func::get_fileinfo($arr['file'.$i]);
-                        $files[$i] = $fileinfo['orgfile'];
-                    }
-
-                }
-
-                return $files;
-            }
-        }
-
         // 공지글 옵션
         function opt_notice($arr, $wrmode)
         {
@@ -1759,35 +1739,49 @@ class Write extends \Controller\Make_Controller {
         // 답글 모드인 경우 권한 검사
         if ($req['wrmode'] == 'reply' && $arr['use_notice'] == 'Y') Func::err_back('공지글에는 답글을 달 수 없습니다.');
 
-        //작성 폼 노출
-        if ($req['wrmode'] == 'modify' && $arr['mb_idx'] == '0') {
-            $is_writer_show = true;
-            $is_pwd_show = true;
-            $is_email_show = true;
+        // 첨부파일 input 노출 처리
+        $is_file_dsp_cnt = (int)Write::$boardconf['use_file2'];
+        $is_file_show = (Write::$boardconf['use_file1'] == 'Y') ? true : false;
+
+        // 수정 모드인 경우 첨부파일 정보가 있는지 확인
+        $is_filename_show = array();
+
+        if ($req['wrmode'] == 'modify') {
+            $sql->query(
+                "
+                select *
+                from {$sql->table("mod:board_files")}
+                where `id`=:col1 and `data_idx`=:col2
+                ",
+                array(
+                    $board_id, $req['read']
+                )
+            );
+
+            $max_file_seq_no = 0;
+
+            if ($sql->getcount() > 0) {
+                do {
+                    $file_arr = $sql->fetchs();
+
+                    $is_filename_show[$file_arr['file_seq']] = $file_arr;
+
+                    $orgfile = Func::get_fileinfo($file_arr['file_name']);
+                    $is_filename_show[$file_arr['file_seq']]['orgfile'] = $orgfile['orgfile'];
+
+                    if ($file_arr['file_seq'] > $is_file_dsp_cnt) $is_file_dsp_cnt = $file_arr['file_seq'];
+
+                } while ($sql->nextRec());
+            }
+
+        }
+
+        if (Write::$boardconf['use_category'] == 'Y' && Write::$boardconf['category'] != '' && (!$req['wrmode'] || $req['wrmode'] != 'reply') && (!isset($arr['rn']) || $arr['rn'] == 0) && (!isset($arr['reply_cnt']) || $arr['reply_cnt'] < 1)) {
+            $is_category_show = true;
 
         } else {
-            $is_writer_show = false;
-            $is_pwd_show = false;
-            $is_email_show = false;
+            $is_category_show = false;
         }
-
-        $is_file_show = array();
-        
-
-        for ($i = 1; $i <= 2; $i++) {
-            $is_file_show[$i] = (Write::$boardconf['use_file'.$i] == 'Y') ? true : false;
-
-            $is_filename_show[$i] = false;
-
-            if ($req['wrmode'] == 'modify') {
-                if ($arr['file'.$i] != '') $is_filename_show[$i] = true;
-
-            } else {
-                $is_filename_show[$i] = false;
-            }
-        }
-
-        $is_category_show = (Write::$boardconf['use_category'] == 'Y' && Write::$boardconf['category'] != '' && $req['wrmode'] != 'reply' && $arr['rn'] == 0 && $arr['reply_cnt'] < 1) ? true : false;
 
         $write = array();
         if (isset($arr)) {
@@ -1818,12 +1812,9 @@ class Write extends \Controller\Make_Controller {
 
         $this->set('manage', $manage);
         $this->set('write', $write);
-        $this->set('uploaded_file', uploaded_file($arr,$req['wrmode']));
         $this->set('cancel_btn', cancel_btn($req['page'], $req['category']));
         $this->set('is_category_show', $is_category_show);
-        $this->set('is_writer_show', $is_writer_show);
-        $this->set('is_pwd_show', $is_pwd_show);
-        $this->set('is_email_show', $is_email_show);
+        $this->set('is_file_dsp_cnt', $is_file_dsp_cnt);
         $this->set('is_file_show', $is_file_show);
         $this->set('is_filename_show', $is_filename_show);
         $this->set('board_id', $board_id);
@@ -1914,24 +1905,30 @@ class Board_view extends \Controller\Make_Controller {
         function print_imgfile($arr)
         {
             $files = array();
-            for ($i = 1; $i <= 2; $i++) {
-                $filetype = Func::get_filetype($arr['file'.$i]);
-                $fileinfo = Func::get_fileinfo($arr['file'.$i]);
 
-                if (Func::chkintd('match', $filetype,SET_IMGTYPE)) {
-                    if ($fileinfo['storage'] == 'N' && file_exists(MOD_BOARD_DATA_PATH.'/'.Board_view::$boardconf['id'].'/thumb/'.$fileinfo['repfile'])) {
-                        $files[$i] = '<img src=\''.PH_DOMAIN.MOD_BOARD_DATA_DIR.'/'.Board_view::$boardconf['id'].'/thumb/'.$fileinfo['repfile'].'\' alt=\'첨부된 이미지파일\' />';
-                        if (Func::get_filetype($fileinfo['repfile']) == 'gif') $files[$i] = '<img src=\''.PH_DOMAIN.MOD_BOARD_DATA_DIR.'/'.Board_view::$boardconf['id'].'/'.$fileinfo['repfile'].'\' alt=\'첨부된 이미지파일\' />';
+            if (!empty($arr)) {
+                foreach ($arr as $key => $value) {
+                    if (!$value['file_name']) continue;
 
+                    $filetype = Func::get_filetype($value['file_name']);
+                    $fileinfo = Func::get_fileinfo($value['file_name']);
+
+                    if (Func::chkintd('match', $filetype, SET_IMGTYPE)) {
+                        if ($fileinfo['storage'] == 'N' && file_exists(MOD_BOARD_DATA_PATH.'/'.Board_view::$boardconf['id'].'/thumb/'.$fileinfo['repfile'])) {
+                            $files[] = '<img src=\''.MOD_BOARD_DATA_DIR.'/'.Board_view::$boardconf['id'].'/thumb/'.$fileinfo['repfile'].'\' alt=\'첨부된 이미지파일\' />';
+                            if (Func::get_filetype($fileinfo['repfile']) == 'gif') {
+                                $files[] = '<img src=\''.MOD_BOARD_DATA_DIR.'/'.Board_view::$boardconf['id'].'/'.$fileinfo['repfile'].'\' alt=\'첨부된 이미지파일\' />';
+                            }
+                        } else {
+                            $files[] = '<img src=\''.$fileinfo['replink'].'\' alt=\'첨부된 이미지파일\' />';
+                        }
+    
                     } else {
-                        $files[$i] = '<img src=\''.$fileinfo['replink'].'\' alt=\'첨부된 이미지파일\' />';
+                        $files[] = null;
                     }
-
-                } else {
-                    $files[$i] = null;
                 }
             }
-
+            
             return $files;
         }
 
@@ -1940,18 +1937,18 @@ class Board_view extends \Controller\Make_Controller {
         {
             $files = array();
 
-            for ($i = 1; $i <= 2; $i++) {
-                if ($arr['file'.$i]) {
-                    $fileinfo = Func::get_fileinfo($arr['file'.$i]);
+            foreach ($arr as $key => $value) {
+                if ($value['file_name']) {
+                    $fileinfo = Func::get_fileinfo($value['file_name']);
 
-                    $files[$i] = '
-                    <a href=\''.MOD_BOARD_DIR.'/controller/file/down?board_id='.Board_view::$boardconf['id'].'&idx='.$arr['idx'].'&file='.$i.'\' target=\'_blank\'>'.Func::strcut($fileinfo['orgfile'],0,70).'</a>
-                    <span class=\'byte\'>('.number_format($fileinfo['byte'] / 1024, 0).'K)</span>
-                    <span class=\'cnt\'><strong>'.Func::number($arr['file'.$i.'_cnt']).'</strong> 회 다운로드</span>
+                    $files[$key] = '
+                        <a href=\''.MOD_BOARD_DIR.'/controller/file/down?board_id='.Board_view::$boardconf['id'].'&idx='.$value['data_idx'].'&file='.$value['file_seq'].'\' target=\'_blank\'>'.Func::strcut($fileinfo['orgfile'], 0, 70).'</a>
+                        <span class=\'byte\'>('.Func::getbyte($fileinfo['byte']).')</span>
+                        <span class=\'cnt\'><strong>'.Func::number($value['file_cnt']).'</strong> 회 다운로드</span>
                     ';
 
                 } else {
-                    $files[$i] = null;
+                    $files[$key] = null;
                 }
             }
 
@@ -2010,6 +2007,28 @@ class Board_view extends \Controller\Make_Controller {
 
         $arr['article'] = $sql->fetch('article');
 
+        // 첨부파일 정보 불러옴
+        $sql->query(
+            "
+            select *
+            from {$sql->table("mod:board_files")}
+            where `id`=:col1 and `data_idx`=:col2
+            order by `file_seq` asc
+            ",
+            array(
+                $board_id, $req['read']
+            )
+        );
+
+        $file_arr = array();
+
+        if ($sql->getcount() > 0) {
+            do {
+                $file_arr[] = $sql->fetchs();
+
+            } while ($sql->nextRec());
+        }
+
         // 게시물이 답글이며 회원에 대한 답글인 경우 부모글의 회원 idx 가져옴
         if ($arr['rn'] > 0 && $arr['pwd'] == '') {
             $sql->query(
@@ -2036,18 +2055,6 @@ class Board_view extends \Controller\Make_Controller {
         } else {
             $is_dropbox_show = false;
             $is_article_show = true;
-        }
-
-        $is_file_show = array();
-
-        for ($i = 1; $i <= 2; $i++) {
-            $is_file_show[$i] = ($arr['file'.$i]) ? true : false;
-        }
-
-        $is_img_show = array();
-
-        for ($i = 1; $i <= 2; $i++){
-            $is_img_show[$i] = (print_imgfile($arr)[$i] != '') ? true : false;
         }
 
         $is_category_show = (Board_view::$boardconf['use_category'] == 'Y' && $arr['category'] && $arr['use_notice'] == 'N') ? true : false;
@@ -2077,8 +2084,6 @@ class Board_view extends \Controller\Make_Controller {
         $this->set('view', $view);
         $this->set('is_dropbox_show', $is_dropbox_show);
         $this->set('is_article_show', $is_article_show);
-        $this->set('is_file_show', $is_file_show);
-        $this->set('is_img_show', $is_img_show);
         $this->set('is_category_show', $is_category_show);
         $this->set('is_comment_show', $is_comment_show);
         $this->set('is_likes_show', $is_likes_show);
@@ -2086,8 +2091,8 @@ class Board_view extends \Controller\Make_Controller {
         $this->set('is_seeklist_show', $is_seeklist_show);
         $this->set('secret_ico', secret_ico($arr));
         $this->set('print_writer', print_writer($arr));
-        $this->set('print_imgfile', print_imgfile($arr));
-        $this->set('print_file_name', print_file_name($arr));
+        $this->set('print_imgfile', print_imgfile($file_arr));
+        $this->set('print_file_name', print_file_name($file_arr));
         $this->set('list_btn', list_btn($req['category']));
         $this->set('delete_btn', delete_btn());
         $this->set('modify_btn', modify_btn($arr, $req['read'], $req['category']));

@@ -118,6 +118,22 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>탈퇴 ID 중복사용</th>
+                    <td>
+                        <label class="mr10"><input type="radio" name="use_allow_reuse_id" value="Y" <?php echo $use_allow_reuse_id['Y']; ?> /> 허용</label>
+                        <label><input type="radio" name="use_allow_reuse_id" value="N" <?php echo $use_allow_reuse_id['N']; ?> /> 허용안함</label>
+                        <span class="tbl_sment">탈퇴된 ID와 중복되는 ID를 다른 사람이 회원가입시 사용 할 수 있도록 하려면 '허용' 선택</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>이름(닉네임) 중복 검사</th>
+                    <td>
+                        <label class="mr10"><input type="radio" name="use_allow_dup_name" value="Y" <?php echo $use_allow_dup_name['Y']; ?> /> 사용</label>
+                        <label><input type="radio" name="use_allow_dup_name" value="N" <?php echo $use_allow_dup_name['N']; ?> /> 사용안함</label>
+                        <span class="tbl_sment">이름(닉네임) 중복 검사 여부를 설정. '사용' 선택시 중복되지 않는 유일한 이름만 사용 가능</span>
+                    </td>
+                </tr>
+                <tr>
                     <th>휴대전화 입력</th>
                     <td>
                         <label class="mr10"><input type="radio" name="use_mb_phone" value="Y" <?php echo $use_mb_phone['Y']; ?> /> 필수입력</label>

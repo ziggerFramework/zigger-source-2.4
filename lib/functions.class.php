@@ -6,7 +6,7 @@ use Make\Library\Sms;
 
 class Func {
 
-    static public function chk_update_config_field($fields)
+    static public function chk_update_config_field($fields, $type = 'engine')
     {
         global $CONF;
 
@@ -29,9 +29,9 @@ class Func {
                     {$sql->table("config")}
                     (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regdate`)
                     values
-                    ('engine', :col1, :col2, now())
+                    (:col1, :col2, :col3, now())
                     ", array(
-                        $field_key, $field_value
+                        $type, $field_key, $field_value
                     )
                 );
             }

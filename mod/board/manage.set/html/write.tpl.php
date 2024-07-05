@@ -59,39 +59,6 @@
 					</td>
 				</tr>
 
-                <?php if ($is_writer_show) { ?>
-                <tr>
-                    <th>
-                        작성자
-                    </th>
-                    <td>
-                        <input type="text" name="writer" title="작성자" value="<?php echo $write['writer']; ?>" maxlength="8" class="inp w100" />
-                    </td>
-                </tr>
-                <?php } ?>
-
-                <?php if ($is_pwd_show) { ?>
-                <tr>
-                    <th>
-                        비밀번호
-                    </th>
-                    <td>
-                        <input type="password" name="password" title="비밀번호" value="<?php echo $write['pwd']; ?>" maxlength="20" class="inp w100" />
-                    </td>
-                </tr>
-                <?php } ?>
-
-                <?php if ($is_email_show) { ?>
-                <tr>
-                    <th>
-                        이메일주소
-                    </th>
-                    <td>
-                        <input type="text" name="email" title="이메일주소" value="<?php echo $write['email']; ?>" class="inp w100" />
-                    </td>
-                </tr>
-                <?php } ?>
-
                 <tr>
                     <th>
                         제목
@@ -166,55 +133,30 @@
 					</td>
 				</tr>
 
-                <?php if ($is_file_show[1]) { ?>
-                <tr>
-                    <th>
-                        첨부파일
-                    </th>
-                    <td>
-                        <input type="file" name="file1" title="첨부파일1" />
+                <?php
+				if ($is_file_show) {
+					for ($i = 1; $i <= $is_file_dsp_cnt; $i++) {
+				?>
+				<tr>
+					<th>
+						첨부파일<?php echo $i; ?>
+					</th>
+					<td>
+						<input type="file" name="file[<?php echo $i; ?>]" id="file_<?php echo $i; ?>" title="첨부파일<?php echo $i; ?>" />
                         <span class="tbl_sment"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
-                    </td>
-                </tr>
-                <?php } ?>
-
-                <?php if ($is_filename_show[1]) { ?>
-                <tr>
-                    <th>
-                        첨부된 파일
-                    </th>
-                    <td>
-                        <span class="uploaded"><?php echo $uploaded_file[1]; ?></span>
-                        <br />
-                        <label class="mt10"><input type="checkbox" name="file1_del" value="checked" />첨부파일 삭제</label>
-                    </td>
-                </tr>
-                <?php } ?>
-
-                <?php if ($is_file_show[2]) { ?>
-                <tr>
-                    <th>
-                        첨부파일2
-                    </th>
-                    <td>
-                        <input type="file" name="file2" title="첨부파일2" />
-                        <span class="tbl_sment"><?php echo $print_filesize; ?> 까지 첨부 가능</span>
-                    </td>
-                </tr>
-                <?php } ?>
-
-                <?php if ($is_filename_show[2]) { ?>
-                <tr>
-                    <th>
-                        첨부된 파일2
-                    </th>
-                    <td>
-                        <span class="uploaded"><?php echo $uploaded_file[2]; ?></span>
-                        <br />
-                        <label class="mt10"><input type="checkbox" name="file2_del" value="checked">삭제</label>
-                    </td>
-                </tr>
-                <?php } ?>
+						
+						<?php
+						// 첨부된 파일이 있다면 노출
+						if (isset($is_filename_show[$i]) && !empty($is_filename_show[$i])) {
+						?>
+						<div class="uploaded_wrap">
+							<span class="uploaded"><?php echo $is_filename_show[$i]['orgfile']; ?></span>
+							<label><input type="checkbox" name="file_del[<?php echo $i; ?>]" value="checked" alt="첨부파일<?php echo $i; ?> 삭제" />삭제</label>
+						</div>
+						<?php } ?>
+					</td>
+				</tr>
+				<?php }} ?>
             </tbody>
         </table>
 

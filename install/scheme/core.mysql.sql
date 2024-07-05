@@ -3,6 +3,7 @@ $SCHEME_CORE = "
 
 create table if not exists `{$req['pfx']}banner` (
     `idx` int(11) not null auto_increment,
+    `use_banner` char(1) default 'Y',
     `bn_key` varchar(255) not null,
     `pc_img` text,
     `mo_img` text,
@@ -11,6 +12,10 @@ create table if not exists `{$req['pfx']}banner` (
     `link_target` varchar(255) default null,
     `hit` int(11) not null default '0',
     `zindex` int(11) not null default '1',
+    `level_from` int(11) default null,
+    `level_to` int(11) default null,
+    `show_from` datetime default null,
+    `show_to` datetime default null,
     `regdate` datetime default null,
     primary key (`idx`)
 ) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci;
@@ -130,6 +135,7 @@ alter table `{$req['pfx']}mng_feeds` add index(`regdate`);
 create table if not exists `{$req['pfx']}popup` (
     `idx` int(11) not null auto_increment,
     `id` varchar(255) not null,
+    `use_popup` char(1) default 'Y',
     `title` varchar(255) not null,
     `link` text,
     `link_target` varchar(255) default null,
@@ -264,6 +270,8 @@ insert into `{$req['pfx']}config` (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regd
 ('engine', 'use_mb_telephone', 'N', now()),
 ('engine', 'use_mb_address', 'N', now()),
 ('engine', 'use_mb_gender', 'N', now()),
+('engine', 'use_allow_reuse_id', 'Y', now()),
+('engine', 'use_allow_dup_name', 'N', now()),
 ('engine', 'use_rss', 'N', now()),
 ('engine', 'rss_boards', '{\r\n \"rss\" : [\r\n  {\r\n   \"board_id\" : \"news\",\r\n   \"title\" : \"News\",\r\n   \"link\" : \"{$protocol}{$_SERVER['HTTP_HOST']}{$realdir}/sub/board/news\"\r\n  },\r\n  {\r\n   \"board_id\" : \"freeboard\",\r\n   \"title\" : \"Freeboard\",\r\n   \"link\" : \"{$protocol}{$_SERVER['HTTP_HOST']}{$realdir}/sub/board/free\"\r\n  }\r\n ]\r\n}', now()),
 ('engine', 'st_1', '', now()),

@@ -44,7 +44,7 @@ class Info extends \Controller\Make_Controller {
 
         $manage = new ManageFunc();
 
-        if ($MB['adm'] != 'Y') $func->err_back(ERR_MSG_1);
+        if ($MB['adm'] != 'Y') Func::err_back(ERR_MSG_1);
 
         $profileimg = '';
         if ($MB['profileimg']) {

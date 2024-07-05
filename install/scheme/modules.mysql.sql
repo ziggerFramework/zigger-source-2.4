@@ -259,6 +259,19 @@ create table if not exists `{$req['pfx']}mod_board_like` (
 
 alter table `{$req['pfx']}mod_board_like` add index(`data_idx`), add index(`mb_idx`), add index(`regdate`);
 
+create table `{$req['pfx']}mod_board_files` (
+  `idx` int(11) not null AUTO_INCREMENT,
+  `id` varchar(255) default null,
+  `data_idx` int(11) default null,
+  `file_seq` int(11) default null,
+  `file_name` text,
+  `file_cnt` int(11) default '0',
+  `regdate` datetime default null,
+  primary key (`idx`)
+) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci;
+
+alter table `{$req['pfx']}mod_board_files` add index(`data_idx`), add index(`regdate`);
+
 create table if not exists `{$req['pfx']}mod_contactform` (
     `idx` int(11) not null auto_increment,
     `rep_idx` int(11) default '0',
@@ -303,14 +316,14 @@ create table if not exists `{$req['pfx']}mod_message` (
     `hash` varchar(255) default null,
     `from_mb_idx` int(11) not null,
     `to_mb_idx` int(11) not null,
-    `parent_idx` int(11) default null,
+    `parent_hash` varchar(255) default null,
     `article` text character set utf8mb4 collate utf8mb4_unicode_ci,
     `regdate` datetime not null,
     `chked` datetime default null,
     primary key (idx)
 ) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
-alter table `{$req['pfx']}mod_message` add index(`from_mb_idx`), add index(`to_mb_idx`), add index(`parent_idx`), add index(`regdate`);
+alter table `{$req['pfx']}mod_message` add index(`from_mb_idx`), add index(`to_mb_idx`), add index(`parent_hash`), add index(`regdate`);
 
 create table if not exists `{$req['pfx']}mod_alarm` (
     `idx` int(11) not null auto_increment,

@@ -64,12 +64,8 @@
 
                         <div class="article">
 
-                            <?php if ($is_img_show[1]) { ?>
-                            <div class="img-wrap"><?php echo $print_imgfile[1]; ?></div>
-                            <?php } ?>
-
-                            <?php if ($is_img_show[2]) { ?>
-                            <div class="img-wrap"><?php echo $print_imgfile[2]; ?></div>
+                            <?php foreach ($print_imgfile as $img) { ?>
+                            <div class="img-wrap"><?php echo $img; ?></div>
                             <?php } ?>
 
                             <?php if ($is_article_show) { ?>
@@ -88,24 +84,13 @@
                     </td>
                 </tr>
 
-                <?php if ($is_file_show[1]) { ?>
+                <?php foreach ($print_file_name as $key => $value) { ?>
                 <tr>
                     <th>
-                        첨부파일
+                        첨부파일<?php echo $key + 1; ?>
                     </th>
                     <td class="fileinfo">
-                        <?php echo $print_file_name[1]; ?>
-                    </td>
-                </tr>
-                <?php } ?>
-
-                <?php if ($is_file_show[2]) { ?>
-                <tr>
-                    <th>
-                        첨부파일2
-                    </th>
-                    <td class="fileinfo">
-                        <?php echo $print_file_name[2]; ?>
+                        <?php echo $value; ?>
                     </td>
                 </tr>
                 <?php } ?>

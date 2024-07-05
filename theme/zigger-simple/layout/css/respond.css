@@ -203,6 +203,30 @@
     .mypagebox > li .txt strong {font-size: 14px;margin-right: 3px;}
     .mypagebox > li .btn2 {font-size: 12px;height: 32px;line-height: 30px;}
 
+    .list-head{margin-bottom: 20px;display: block;}
+    .list-head .right{width: 100%;text-align: right;margin-top: 20px;}
+
+    #search-form fieldset {display: block;margin: 4px 0;width: 100%;}
+    #search-form fieldset .datebox {margin-bottom: -1px;width: calc(50% + 0.5px);}
+    #search-form fieldset .datebox .inp {height: 35px;padding-right: 35px;width: 100%;}
+    #search-form fieldset .keyword {height: 35px;margin-top: 5px;width: calc(100% - 70px);}
+    #search-form fieldset .sltbox {height: 35px;margin-bottom: -1px;margin-right: -1px;width: 100%;}
+    #search-form fieldset .sltbox select {height: 33px;}
+    #search-form fieldset .keyword {width: 100%;margin-top: 0;}
+    #search-form fieldset .submit {height: 35px;line-height: 33px;margin-top: 5px;}
+    #search-form fieldset .submit.mo-w100p {width: 100%;}
+    #search-form fieldset hr {display: none;}
+    #search-form .reset-btn {background: #f7f7f7;border: 1px solid #eeeeee;box-sizing: border-box;display: block;font-size: 13px;line-height: 32px;margin-left: 0;text-align: center;width: 100%;}
+
+    #pointgift-send {height: 60%;left: 5%;margin-left: 0;margin-top: 0;padding-top: 45px;top: 20%;width: 90%;}
+    #pointgift-send .tit {line-height: 50px;padding: 0 15px;}
+    #pointgift-send .tit h2 {font-size: 14px;}
+    #pointgift-send .tit .close {height: 50px;line-height: 50px;width: 50px;}
+    #pointgift-send .cont {padding: 15px;}
+    #pointgift-send .tbl colgroup {display: none;}
+    #pointgift-send .tbl tbody th {font-size: 12px;width: 50px;}
+    #pointgift-send .tbl tbody td {font-size: 12px;}
+    
     /* About manager */
     #gui-content h2.sub-tit {font-size: 22px;letter-spacing: -1px;line-height: 24px;padding: 35px 25px;}
     #gui-content h2.sub-tit em {font-size: 13px;line-height: 18px;margin: 0;margin-top: 10px;}

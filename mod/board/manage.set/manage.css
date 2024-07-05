@@ -42,6 +42,8 @@
 #board-writeForm .temp-btn button.load-btn {background: none;border: none;border-left: 1px solid #eeeeee;cursor: pointer;}
 #board-writeForm .temp-btn button.load-btn strong {color: #6b52e9;font-size: 14px;font-weight: bold;}
 #board-writeForm .temp-btn button.save-btn {background: none;border: none;color: #000000;font-size: 14px;letter-spacing: -1px;}
+#board-writeForm .uploaded_wrap {background: #f7f7f7;border-radius: 3px;margin-top: 10px;padding: 15px;}
+#board-writeForm .uploaded {color: #000000;display: block;font-size: 14px;margin-bottom: 5px;}
 
 /* board view */
 #board-view .view-tit img {height: 15px;width: 15px;}

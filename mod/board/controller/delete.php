@@ -186,28 +186,39 @@ class Delete extends \Controller\Make_Controller {
             $sql->query(
                 "
                 select *
-                from {$sql->table("mod:board_data_".$board_id)}
-                where `idx`=:col1
+                from {$sql->table("mod:board_files")}
+                where `id`=:col1 and `data_idx`=:col2
                 ",
                 array(
-                    $req['read']
+                    $board_id, $req['read']
                 )
             );
 
             do {
                 $f_arr = $sql->fetchs();
-                for ($i = 1; $i <= 2; $i++) {
-                    if ($f_arr['file'.$i] != '') {
-                        $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id;
-                        $uploader->drop($f_arr['file'.$i]);
+                
+                if (!empty($f_arr['file_name'])) {
+                    $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id;
+                    $uploader->drop($f_arr['file_name']);
 
-                        if ($uploader->isfile(MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/'.$f_arr['file'.$i]) && $CONF['use_s3'] == 'Y') {
-                            $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/';
-                            $uploader->drop($f_arr['file'.$i]);
-                        }
+                    if ($CONF['use_s3'] == 'N' && $uploader->isfile(MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/'.$f_arr['file'.$i])) {
+                        $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/';
+                        $uploader->drop($f_arr['filefile_name']);
                     }
                 }
+
             } while ($sql->nextRec());
+
+            $sql->query(
+                "
+                delete
+                from {$sql->table("mod:board_files")}
+                where `id`=:col1 and `data_idx`=:col2
+                ",
+                array(
+                    $board_id, $req['read']
+                )
+            );
 
             // 댓글 삭제 (엮인 글이 없는 경우)
             if ($rp_count < 2) {

@@ -8,10 +8,29 @@
 	메시지함에 <strong><?php echo $total_new_message; ?></strong> 개의 새로운 메시지가 도착했습니다.
 </div>
 
-<div class="btn-wrap mb20">
-    <div class="right">
-        <button type="button" class="btn1" data-message-send="" data-message-send-reply="">새로운 메시지 발송</button>
-    </div>
+<div class="list-head">
+	<form name="search-form" id="search-form">
+		<legend>검색</legend>
+		<fieldset>
+			<input type="hidden" name="mode" value="received" />
+			<div class="sltbox">
+				<select name="where">
+					<option value="mb_id" <?php echo ($where == 'mb_id') ? 'selected' : ''; ?>>보낸회원(id)</option>
+					<option value="mb_name" <?php echo ($where == 'mb_name') ? 'selected' : ''; ?>>보낸회원(이름)</option>
+					<option value="article" <?php echo ($where == 'article') ? 'selected' : ''; ?>>내용</option>
+				</select>
+			</div>
+			<input type="text" name="keyword" class="inp keyword" value="<?php echo $keyword; ?>" placeholder="검색어를 입력하세요." />
+			<hr>
+			<button type="submit" class="submit btn2 small mo-w100p">검색</button>
+		</fieldset>
+		
+		<a href="?mode=received" class="reset-btn"><i class="fas fa-times"></i></a>
+	</form>
+
+	<div class="right clear">
+		<button type="button" class="btn1" data-message-send="" data-message-send-reply="">새로운 메시지 발송</button>
+	</div>
 </div>
 
 <table class="table listtbl">

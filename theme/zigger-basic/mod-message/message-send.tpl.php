@@ -7,7 +7,7 @@
 
     <?php if ($is_mbinfo_show) { ?>
     <form action="<?php $this->form(); ?>">
-        <input type="hidden" name="reply_parent_idx" value="<?php echo $reply_parent_idx; ?>" />
+        <input type="hidden" name="reply_parent_hash" value="<?php echo $reply_parent_hash; ?>" />
     	<table class="table_wrt">
             <caption>새로운 메시지 발송</caption>
     		<colgroup>

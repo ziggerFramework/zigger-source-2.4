@@ -63,6 +63,33 @@
                         <input type="file" name="mo_img" />
                     </td>
                 </tr>
+                <tr>
+                    <th>노출 대상</th>
+                    <td>
+                        <select name="level_from" class="inp">
+                            <?php for($i=1;$i<=10;$i++){ ?>
+                            <option value="<?php echo $i; ?>" <?php if($i==1){ echo "selected"; }?>><?php echo $i; ?> (<?php echo $MB['type'][$i]; ?>)</option>
+                            <?php } ?>
+                        </select>
+                        &nbsp;&nbsp;부터&nbsp;&nbsp;
+                        <select name="level_to" class="inp">
+                            <?php for($i=1;$i<=10;$i++){ ?>
+                            <option value="<?php echo $i; ?>" <?php if($i==10){ echo "selected"; }?>><?php echo $i; ?> (<?php echo $MB['type'][$i]; ?>)</option>
+                            <?php } ?>
+                        </select>
+                        &nbsp;&nbsp;까지&nbsp;&nbsp;
+                        <span class="tbl_sment">작은 숫자의 레벨 부터 입력. ex) 1 ~ 10</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>노출 기간</th>
+                    <td>
+                        <input type="text" name="show_from" class="inp" title="팝업 노출 시작일" datepicker />
+                        &nbsp;&nbsp;부터&nbsp;&nbsp;
+                        <input type="text" name="show_to" class="inp" title="팝업 노출 종료일" datepicker />
+                        &nbsp;&nbsp;까지&nbsp;&nbsp;
+                    </td>
+                </tr>
             </tbody>
         </table>
 

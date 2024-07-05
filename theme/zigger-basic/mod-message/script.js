@@ -25,7 +25,7 @@ ph_mod_message = {
             e.preventDefault();
 
             var to_mb_id = $(this).data('message-send');
-            var reply_parent_idx = $(this).data('message-send-reply');
+            var reply_parent_hash = $(this).data('message-send-reply');
 
             $('<div id="message-send-bg" data-no-tab-index></div>').appendTo('body');
             $('<div id="message-send" data-no-tab-index></div>').appendTo('body');
@@ -38,7 +38,7 @@ ph_mod_message = {
                 'cache' : false,
                 'data' : {
                     'to_mb_id' : to_mb_id,
-                    'reply_parent_idx' : reply_parent_idx
+                    'reply_parent_hash' : reply_parent_hash
                 },
                 'dataType' : 'html',
                 'success' : function(data) {

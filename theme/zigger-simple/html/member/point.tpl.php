@@ -8,6 +8,24 @@
 		회원님은 현재 <strong><?php echo $total_point; ?></strong> 포인트 보유 중입니다.
 	</div>
 
+	<div class="list-head">
+		<form name="search-form" id="search-form">
+			<legend>검색</legend>
+			<fieldset>
+				<div class="datebox"><input type="text" name="fdate" class="inp" datepicker placeholder="조회 시작일" value="<?php echo $req['fdate']; ?>" autocomplete="off" /></div>
+				<div class="datebox"><input type="text" name="tdate" class="inp" datepicker placeholder="조회 종료일" value="<?php echo $req['tdate']; ?>" autocomplete="off" /></div>
+				<hr>
+				<button type="submit" class="submit btn2 small mo-w100p">검색</button>
+			</fieldset>
+			
+			<a href="./point" class="reset-btn"><i class="fas fa-times"></i></a>
+		</form>
+
+		<div class="right clear">
+			<button type="button" class="btn1" data-pointgift-send="">포인트 선물</button>
+		</div>
+	</div>
+	
 	<table class="table listtbl">
         <caption>포인트 내역</caption>
 		<colgroup>

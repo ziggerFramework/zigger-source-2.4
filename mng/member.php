@@ -373,7 +373,8 @@ class Modify extends \Controller\Make_Controller {
         $this->layout()->mng_foot();
     }
 
-    public function func(){
+    public function func()
+    {
         function set_checked($arr, $val)
         {
             $setarr = array(
