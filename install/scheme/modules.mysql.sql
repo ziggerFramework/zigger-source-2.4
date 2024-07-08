@@ -157,7 +157,7 @@ insert into `{$req['pfx']}config` (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regd
 ('mod:board:config:freeboard', 'use_likes', 'Y', now()),
 ('mod:board:config:freeboard', 'use_reply', 'Y', now()),
 ('mod:board:config:freeboard', 'use_file1', 'Y', now()),
-('mod:board:config:freeboard', 'use_file2', 'Y', now()),
+('mod:board:config:freeboard', 'use_file2', '2', now()),
 ('mod:board:config:freeboard', 'use_mng_feed', 'Y', now()),
 ('mod:board:config:freeboard', 'use_category', 'N', now()),
 ('mod:board:config:freeboard', 'category', '', now()),
@@ -206,7 +206,7 @@ insert into `{$req['pfx']}config` (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regd
 ('mod:board:config:news', 'use_likes', 'Y', now()),
 ('mod:board:config:news', 'use_reply', 'Y', now()),
 ('mod:board:config:news', 'use_file1', 'Y', now()),
-('mod:board:config:news', 'use_file2', 'Y', now()),
+('mod:board:config:news', 'use_file2', '2', now()),
 ('mod:board:config:news', 'use_mng_feed', 'Y', now()),
 ('mod:board:config:news', 'use_category', 'N', now()),
 ('mod:board:config:news', 'category', '', now()),
@@ -313,12 +313,14 @@ insert into `{$req['pfx']}mod_contents` (`idx`, `data_key`, `title`, `html`, `mo
 
 create table if not exists `{$req['pfx']}mod_message` (
     `idx` int(11) not null auto_increment,
+    `msg_type` varchar(20) not null,
     `hash` varchar(255) default null,
     `from_mb_idx` int(11) not null,
     `to_mb_idx` int(11) not null,
     `parent_hash` varchar(255) default null,
     `article` text character set utf8mb4 collate utf8mb4_unicode_ci,
     `regdate` datetime not null,
+    `dregdate` datetime null,
     `chked` datetime default null,
     primary key (idx)
 ) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci;

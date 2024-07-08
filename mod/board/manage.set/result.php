@@ -1189,27 +1189,15 @@ class Board extends \Controller\Make_Controller {
         {
             global $boardconf;
 
-            $is_img = false;
-            $is_file = false;
-
-            if ($boardconf['ico_file'] == 'Y') {
-                for ($i = 1; $i<=2; $i++) {
-                    $file_type = Func::get_filetype($arr['file'.$i]);
-
-                    if (Func::chkintd('match', $file_type, SET_IMGTYPE)) {
-                        $is_img = true;
-
-                    } else if ($arr['file'.$i]) {
-                        $is_file = true;
-                    }
+            if ($boardconf['ico_file'] == 'Y' && !empty($arr['file1'])) {
+                if ($arr['file1'] == 'image') {
+                    return '<img src="'.MOD_BOARD_THEME_DIR.'/images/picture-ico.png" align="absmiddle" title="이미지파일" alt="이미지파일" />';
+                } else {
+                    return '<img src="'.MOD_BOARD_THEME_DIR.'/images/file-ico.png" align="absmiddle" title="파일" alt="파일" />';
                 }
-            }
 
-            if ($is_img === true) {
-                return '<img src="'.MOD_BOARD_DIR.'/manage.set/images/picture-ico.png" align="absmiddle" title="이미지파일" alt="이미지파일" />';
-
-            } else if ($is_file === true) {
-                return '<img src="'.MOD_BOARD_DIR.'/manage.set/images/file-ico.png" align="absmiddle" title="파일" alt="파일" />';
+            } else {
+                return '';
             }
         }
 

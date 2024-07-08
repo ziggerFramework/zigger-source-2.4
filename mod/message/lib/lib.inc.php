@@ -31,11 +31,11 @@ class Library {
             $sql->query(
                 "
                 select count(*) as total
-                from {$sql->table("mod:message")}
-                where `to_mb_idx`=:col1 and `chked` is null
+                from {$sql->table("mod:message")} a
+                where `to_mb_idx`=:col1 and a.`msg_type`=:col2 and `chked` is null and `dregdate` is null
                 ",
                 array(
-                    MB_IDX
+                    MB_IDX, 'received'
                 )
             );
             $total_count = $sql->fetch('total');

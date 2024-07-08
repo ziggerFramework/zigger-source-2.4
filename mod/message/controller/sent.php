@@ -3,6 +3,7 @@ namespace Module\Message;
 
 use Corelib\Func;
 use Corelib\Method;
+use Corelib\Valid;
 use Make\Database\Pdosql;
 use Make\Library\Paging;
 
@@ -64,11 +65,11 @@ class Sent extends \Controller\Make_Controller {
                 left outer join
                 {$sql->table("member")} as member
                 on message.to_mb_idx=member.mb_idx
-                where message.from_mb_idx=:col1 {$searchby}
+                where message.from_mb_idx=:col1 and message.msg_type=:col2 and message.dregdate is null {$searchby}
                 order by message.idx desc
                 ",
                 array(
-                    MB_IDX
+                    MB_IDX, 'sent'
                 )
             )
         );
@@ -101,6 +102,14 @@ class Sent extends \Controller\Make_Controller {
         $this->set('keyword', $keyword);
     }
 
+    public function form()
+    {
+        $form = new \Controller\Make_View_Form();
+        $form->set('type', 'html');
+        $form->set('action',  MOD_MESSAGE_DIR.'/controller/sent/sent-submit');
+        $form->run();
+    }
+
     public function message_tab()
     {
         $fetch = new \Controller\Make_View_Fetch();
@@ -110,3 +119,74 @@ class Sent extends \Controller\Make_Controller {
     }
 
 }
+
+//
+// Controller for submit
+// ( Sent )
+//
+class Sent_submit {
+
+    public function init()
+    {
+        global $req;
+
+        $sql = new Pdosql();
+
+        Method::security('referer');
+        Method::security('request_post');
+        $req = Method::request('post', 'mode, cnum');
+
+        if (!isset($req['mode']) || !$req['mode']) Valid::error('', '필수 값이 누락 되었습니다.');
+
+        // 선택 항목 검사
+        if (!isset($req['cnum']) || !$req['cnum'] || !is_array($req['cnum'])) Valid::error('', '선택된 항목이 없습니다.');
+
+        switch ($req['mode']) {
+
+            case 'del' :
+                $this->get_del();
+                break;
+
+        }
+    }
+
+    public function get_del()
+    {
+        global $req;
+
+        $sql = new Pdosql();
+
+        // where 조합
+        $cnum = array();
+
+        foreach ($req['cnum'] as $key => $value) {
+            $cnum[] = "hash='".addslashes($value)."'";
+        }
+
+        $where = implode(' or ', $cnum);
+
+        // 데이터 삭제
+        $sql->query(
+            "
+            update {$sql->table("mod:message")}
+            set dregdate=now()
+            where msg_type=:col1 and from_mb_idx=:col2 and {$where}
+            ",
+            array(
+                'sent', MB_IDX
+            )
+        );
+
+        // return
+        Valid::set(
+            array(
+                'return' => 'alert->reload',
+                'msg' => '성공적으로 삭제 되었습니다.'
+            )
+        );
+        Valid::turn();
+
+    }
+
+}
+

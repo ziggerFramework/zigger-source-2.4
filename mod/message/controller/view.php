@@ -55,12 +55,12 @@ class View extends \Controller\Make_Controller {
         // 메시지 읽음 처리
         $chked_date = date('Y.m.d H:i:s');
 
-        if (!$arr['chked'] && $arr['to_mb_idx'] == MB_IDX) {
+        if (!$arr['chked'] && $arr['to_mb_idx'] == MB_IDX && $req['refmode'] == 'received') {
             $sql->query(
                 "
                 update {$sql->table("mod:message")}
                 set `chked`=:col1
-                where `hash`=:col2 and `to_mb_idx`=:col3
+                where `hash`=:col2 and `to_mb_idx`=:col3 and `chked` is null
                 ",
                 array(
                     $chked_date, $req['hash'], MB_IDX
@@ -82,6 +82,7 @@ class View extends \Controller\Make_Controller {
             {$sql->table("member")} as member
             on message.from_mb_idx=member.mb_idx
             where message.parent_hash=:col1 and message.regdate<:col2 and message.hash!=:col3
+            group by message.hash
             order by message.regdate desc
             ",
             array(

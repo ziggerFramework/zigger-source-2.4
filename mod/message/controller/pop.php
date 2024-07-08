@@ -104,17 +104,31 @@ class Message_send_submit {
         // parent_idx 처리
         $reply_parent_hash = null;
         if ($req['reply_parent_hash']) $reply_parent_hash = $req['reply_parent_hash'];
+        $this_hash = Func::make_random_char();
 
-        // 메시지 발송
+        // 메시지 발송 (나의 메시지함)
         $sql->query(
             "
             insert into {$sql->table("mod:message")}
-            (`hash`, `from_mb_idx`, `to_mb_idx`, `parent_hash`, `article`, `regdate`)
+            (`msg_type`, `hash`, `from_mb_idx`, `to_mb_idx`, `parent_hash`, `article`, `regdate`)
             values
-            (:col1, :col2, :col3, :col4, :col5, now())
+            (:col1, :col2, :col3, :col4, :col5, :col6, now())
             ",
             array(
-                Func::make_random_char(), MB_IDX, $to_mb_idx, $reply_parent_hash, $req['article']
+                'sent', $this_hash, MB_IDX, $to_mb_idx, $reply_parent_hash, $req['article']
+            )
+        );
+
+        // 메시지 발송 (수신자 메시지함)
+        $sql->query(
+            "
+            insert into {$sql->table("mod:message")}
+            (`msg_type`, `hash`, `from_mb_idx`, `to_mb_idx`, `parent_hash`, `article`, `regdate`)
+            values
+            (:col1, :col2, :col3, :col4, :col5, :col6, now())
+            ",
+            array(
+                'received', $this_hash, MB_IDX, $to_mb_idx, $reply_parent_hash, $req['article']
             )
         );
 

@@ -812,6 +812,8 @@ class Write_submit{
         // 첨부파일 종류 기록
         $req[0]['ufile_icon_type'] = '';
 
+        ksort($ufile); // key 오름차순으로 순서 정리
+
         if (!empty($ufile)) {
             $req[0]['ufile_icon_type'] = 'file';
 
@@ -830,7 +832,7 @@ class Write_submit{
             foreach ($ufile as $key => $value) {
                 $file_type = Func::get_filetype($value['ufile_name']);
 
-                if (Func::chkintd('match', $file_type, SET_IMGTYPE)) {
+                if (!$req[0]['ufile_tmb_filename'] && Func::chkintd('match', $file_type, SET_IMGTYPE)) {
                     $req[0]['ufile_tmb_filename'] = $value['ufile_name'];
                 }
             }

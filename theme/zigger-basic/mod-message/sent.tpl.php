@@ -29,57 +29,73 @@
 	</div>
 </div>
 
-<table class="table listtbl">
-    <caption>보낸 메시지함</caption>
-	<colgroup>
-		<col style="width: 70px;" />
-		<col style="width: 250px;" />
-        <col style="width: auto;" />
-		<col style="width: 120px;" />
-		<col style="width: 120px;" />
-	</colgroup>
-	<thead>
-		<tr>
-			<th scope="col">No.</th>
-			<th scope="col">받는회원</th>
-			<th scope="col" class="tal">내용</th>
-			<th scope="col">발송일</th>
-			<th scope="col">수신확인</th>
-		</tr>
-	</thead>
-	<tbody>
 
-		<?php foreach ($print_arr as $list) { ?>
-		<tr>
-			<td class="no"><?php echo $list['no']; ?></td>
-			<td>
-                <?php echo $list['mb_name']; ?> (<?php echo $list['mb_id']; ?>)
-            </td>
-            <td class="tal">
-                <a href="<?php echo $list[0]['view-link']; ?>">
-                    <?php echo $list['article']; ?>
-                </a>
-            </td>
-			<td><?php echo $list['regdate']; ?></td>
-			<td>
-                <?php
-                if (!$list['chked']) {
-                    echo '읽지않음';
-                } else {
-                    echo $list['chked'];
-                }
-                ?>
-            </td>
-		</tr>
-		<?php } ?>
+<form <?php $this->form(); ?>>
+	<input type="hidden" name="mode" value="" />
 
-		<?php if (!$print_arr) { ?>
-		<tr>
-			<td colspan="5"><?php echo SET_NODATA_MSG; ?></td>
-		</tr>
-		<?php } ?>
+	<table class="table listtbl">
+		<caption>보낸 메시지함</caption>
+		<colgroup>
+			<col style="width: 50px;" />
+			<col style="width: 70px;" />
+			<col style="width: 250px;" />
+			<col style="width: auto;" />
+			<col style="width: 120px;" />
+			<col style="width: 120px;" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th scope="col"><input type="checkbox" class="cnum_allchk" alt="메시지 전체 선택" /></th>
+				<th scope="col">No.</th>
+				<th scope="col">받는회원</th>
+				<th scope="col" class="tal">내용</th>
+				<th scope="col">발송일</th>
+				<th scope="col">수신확인</th>
+			</tr>
+		</thead>
+		<tbody>
 
-	</tbody>
-</table>
+			<?php foreach ($print_arr as $list) { ?>
+			<tr>
+				<td class="chk"><input type="checkbox" name="cnum[]" value="<?php echo $list['hash']; ?>" /></td>
+				<td class="no"><?php echo $list['no']; ?></td>
+				<td>
+					<?php echo $list['mb_name']; ?> (<?php echo $list['mb_id']; ?>)
+				</td>
+				<td class="tal">
+					<a href="<?php echo $list[0]['view-link']; ?>">
+						<?php echo $list['article']; ?>
+					</a>
+				</td>
+				<td><?php echo $list['regdate']; ?></td>
+				<td>
+					<?php
+					if (!$list['chked']) {
+						echo '읽지않음';
+					} else {
+						echo $list['chked'];
+					}
+					?>
+				</td>
+			</tr>
+			<?php } ?>
+
+			<?php if (!$print_arr) { ?>
+			<tr>
+				<td colspan="6"><?php echo SET_NODATA_MSG; ?></td>
+			</tr>
+			<?php } ?>
+
+		</tbody>
+	</table>
+
+	<?php if ($print_arr) { ?>
+	<div class="btn-wrap">
+		<div class="left">
+			<button type="button" class="btn2 small" data-form-before-confirm="수신사 메시지함에서는 삭제되지 않습니다.\r\n정말로 삭제 하시겠습니까? => mode:del"><i class="fa fa-trash-alt"></i> 선택 삭제</button>
+		</div>
+	</div>
+	<?php } ?>
+</form>
 
 <?php echo $pagingprint; ?>

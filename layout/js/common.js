@@ -444,6 +444,8 @@ formBeforeConfirm = {
             for (var i=0; i < val_exp.length; i++) {
                 val_exp[i] = val_exp[i].replace(/^\s+|\s+$/g, '');
             }
+
+			val_exp[0] = val_exp[0].replace(/\\r?\\n/g, "<br />");
 			
 			zigconfirm(val_exp[0], function(result) {
 				if (result) {

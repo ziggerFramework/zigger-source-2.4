@@ -6,6 +6,7 @@ ph_mod_message = {
     'init' : function() {
 
         this.send_msg(); // 새로운 메시지 발송
+        this.cnum_allchk(); // 관리 checkbox 전체 선택
 
     },
 
@@ -72,7 +73,25 @@ ph_mod_message = {
                 $ele.sendpopBG.remove();
             });
         }
-    }
+    },
+
+    //
+    // 관리 checkbox 전체 선택
+    //
+    'cnum_allchk' : function() {
+
+        $(document).on('click', 'body.mod-message .cnum_allchk', function() {
+            var chked = $(this).is(':checked');
+    
+            if (chked) {
+                $('body.mod-message input[name="cnum[]"]').prop('checked', true);
+    
+            } else {
+                $('body.mod-message input[name="cnum[]"]').prop('checked', false);
+            }
+        });
+
+    },
 
 }
 
