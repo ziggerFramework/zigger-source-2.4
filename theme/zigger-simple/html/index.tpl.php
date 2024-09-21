@@ -37,6 +37,6 @@ $this->popup_fetch();
 <div class="mid-bn">
     <?php
     // 배너 출력
-    $this->banner_fetch();
+    $this->banner_fetch('test_banner');
     ?>
 </div>

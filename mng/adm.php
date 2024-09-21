@@ -80,7 +80,7 @@ class Info_submit{
 
     public function init()
     {
-        global $MB;
+        global $CONF, $MB;
 
         $sql = new Pdosql();
         $uploader = new Uploader();
@@ -141,6 +141,7 @@ class Info_submit{
             )
         );
 
+        // 아이디 중복 체크
         $sql->query(
             "
             select *
@@ -154,11 +155,28 @@ class Info_submit{
 
         if ($sql->getcount() > 0) Valid::error('id', '이미 존재하는 아이디입니다.');
 
+        // 이름 중복 체크
+        if ($CONF['use_allow_dup_name'] == 'Y') {
+            $sql->query(
+                "
+                select *
+                from {$sql->table("member")}
+                where `mb_name`=:col1 and `mb_dregdate` is null and `mb_adm`!='Y'
+                ",
+                array(
+                    $req['name']
+                )
+            );
+    
+            if ($sql->getcount() > 0) Valid::error('name', '다른 회원이 사용중인 이름 입니다.');
+        }
+
+        // 이메일 중복 체크
         $sql->query(
             "
             select *
             from {$sql->table("member")}
-            where `mb_id`=:col1 and `mb_dregdate` is null
+            where `mb_email`=:col1 and `mb_dregdate` is null and `mb_adm`!='Y'
             ",
             array(
                 $req['email']

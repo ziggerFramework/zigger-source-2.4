@@ -29,11 +29,11 @@ class Index extends \Controller\Make_Controller {
     }
 
     // 배너 Fetch
-    public function banner_fetch()
+    public function banner_fetch($key)
     {
         $fetch = new \Controller\Make_View_Fetch();
         $fetch->set('doc', PH_PATH.'/lib/banner.fetch.php');
-        $fetch->set('key', 'test_banner'); // 배너 key
+        $fetch->set('key', $key); // 배너 key
         $fetch->run();
     }
 

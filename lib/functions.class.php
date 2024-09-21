@@ -51,12 +51,14 @@ class Func {
         return true;
     }
 
-    static public function add_javascript($file)
+    static public function add_javascript($file, $param = null)
     {
         global $ob_src_js;
 
         if (strstr((!empty($ob_src_js)) ? $ob_src_js : '', $file)) return false;
-        $ob_src_js .= '<script src="'.$file.'"></script>'.PHP_EOL;
+
+        if (!empty($param) && is_array($param)) $param = implode(' ', $param);
+        $ob_src_js .= '<script src="'.$file.'" '.$param.'></script>'.PHP_EOL;
         
         return true;
     }

@@ -251,7 +251,7 @@ ajaxSubmit = {
             'data' : $form.find('input, select, textarea').serialize(),
             'dataType' : 'html',
             'beforeSend' : function() {
-                $form.find('button,:button').attr('disabled', true);
+                $form.find('button, :button').attr('disabled', true);
             },
             'success' : function(data) {
                 returnAjaxSubmit($form,data);

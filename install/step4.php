@@ -4,7 +4,7 @@ use Corelib\Func;
 
 require_once './install.core.php';
 
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ? 'https://' : 'http://';
 $realdir = str_replace($_SERVER['DOCUMENT_ROOT'], '', str_replace("\\", '/', str_replace(basename(__FILE__), '', realpath(__FILE__))));
 $realdir = str_replace('/install/', '', $realdir);
 
