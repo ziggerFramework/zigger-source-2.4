@@ -252,7 +252,7 @@ class Uploader {
     }
 
     // copy
-    public function filecopy($old_file, $new_file)
+    public function filecopy($old_file, $new_file, $get_record = true)
     {
         $old_filename = basename($old_file);
         $new_filename = basename($new_file);
@@ -264,13 +264,15 @@ class Uploader {
         if ($fileinfo['storage'] == 'Y') {
             $this->get_s3_action('copy', $old_file, $new_file);
         }
+        
         // local
         else if ($this->isfile($old_file)) {
             copy($old_file, $new_file);
-
         }
 
-        $this->record_datacopy($old_file, $new_file);
+        if ($get_record === true) {
+            $this->record_datacopy($old_file, $new_file);
+        }
     }
 
     // save
@@ -297,10 +299,18 @@ class Uploader {
     }
 
     // delete
-    public function drop($file)
+    public function drop($file, $get_fileinfo = true)
     {
         global $CONF;
 
+        // get_fileinfo 가 false인 경우 무조건 삭제
+        if ($get_fileinfo === false) {
+            if ($this->isfile($this->path.'/'.$file)) {
+                unlink($this->path.'/'.$file);
+            }
+        }
+        
+        // get_fileinfo true인 file lookup
         $fileinfo = Func::get_fileinfo($file);
 
         if (!$fileinfo) return false;

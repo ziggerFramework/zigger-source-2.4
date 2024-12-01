@@ -18,7 +18,7 @@ class Statistic {
             $user_info = array(
                 'device' => Func::chkdevice(),
                 'remote_addr' => MB_REMOTE_ADDR,
-                'user_agent' => ($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''
+                'user_agent' => (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : ''
             );
 
             $sql->query(

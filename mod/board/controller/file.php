@@ -75,26 +75,26 @@ class Down extends \Controller\Make_Controller {
         // Local에 저장된 파일인 경우
         else if ($fileinfo['storage'] == 'N') {
 
-            $fileinfo = array();
-            $fileinfo['path'] = MOD_BOARD_DATA_PATH.'/'.$board_id.'/'.$target_file;
-            $fileinfo['size'] = filesize($fileinfo['path']);
-            $fileinfo['parts'] = pathinfo($fileinfo['path']);
-            $fileinfo['name'] = $fileinfo['parts']['basename'];
+            $localfile = array();
+            $localfile['path'] = PH_DATA_PATH.$fileinfo['filepath'].'/'.$target_file;
+            $localfile['size'] = filesize($localfile['path']);
+            $localfile['parts'] = pathinfo($localfile['path']);
+            $localfile['name'] = $localfile['parts']['basename'];
 
             // 파일 다운로드 스트림
-            $file_datainfo = Func::get_fileinfo($fileinfo['name']);
+            $file_datainfo = Func::get_fileinfo($localfile['name']);
 
             header('Content-Type:application/octet-stream');
             header('Content-Disposition:attachment; filename='.$file_datainfo['orgfile']);
             header('Content-Transfer-Encoding:binary');
-            header('Content-Length:'.(string)$fileinfo['size']);
+            header('Content-Length:'.(string)$localfile['size']);
             header('Cache-Control:Cache,must-revalidate');
             header('Pragma:No-Cache');
             header('Expires:0');
             ob_clean();
             flush();
 
-            readfile($fileinfo['path']);
+            readfile($localfile['path']);
 
         }
 

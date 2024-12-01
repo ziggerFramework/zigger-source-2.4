@@ -31,6 +31,9 @@ require_once PH_PATH.'/lib/statistic.class.php';
 require_once PH_PATH.'/lib/blocked.class.php';
 require_once PH_MANAGE_PATH.'/lib/functions.class.php';
 require_once PH_PLUGIN_PATH.'/aws/aws-autoloader.php';
+require_once PH_PLUGIN_PATH.'/phpmailer/src/Exception.php';
+require_once PH_PLUGIN_PATH.'/phpmailer/src/PHPMailer.php';
+require_once PH_PLUGIN_PATH.'/phpmailer/src/SMTP.php';
 
 // 모듈별 기본 설정 파일
 foreach ($MODULE as $key => $val) {

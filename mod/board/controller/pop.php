@@ -235,17 +235,22 @@ class Ctrl_submit {
                 );
 
                 if ($sql2->getcount() < 1) continue;
-
-                $file_arr = $sql2->fetchs();
                 
                 do {
+                    $file_arr = $sql2->fetchs();
+
                     if ($file_arr['file_name']) {
-                        $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id;
+                        // file lookup
+                        $fileinfo = Func::get_fileinfo($file_arr['file_name']);
+
+                        // 원본 파일 삭제
+                        $uploader->path = PH_DATA_PATH.$fileinfo['filepath'];
                         $uploader->drop($file_arr['file_name']);
 
-                        if ($CONF['use_s3'] == 'N' && $uploader->isfile(MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/'.$file_arr['file_name'])) {
-                            $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb';
-                            $uploader->drop($file_arr['file_name']);
+                        // 썸네일이 있다면 삭제
+                        if ($CONF['use_s3'] == 'N' && $uploader->isfile(PH_DATA_PATH.$fileinfo['filepath'].'/thumb/'.$file_arr['file_name'])) {
+                            $uploader->path = PH_DATA_PATH.$fileinfo['filepath'].'/thumb';
+                            $uploader->drop($file_arr['file_name'], false);
                         }
                     }
 
@@ -423,32 +428,37 @@ class Ctrl_submit {
                     }
 
                     // 대상 게시판으로 첨부파일 복사
-                    $old_path = MOD_BOARD_DATA_PATH.'/'.$board_id;
-                    $tar_path = MOD_BOARD_DATA_PATH.'/'.$t_board_id;
-
-                    $uploader->path = MOD_BOARD_DATA_PATH;
-                    $uploader->chkpath();
-                    $uploader->path = $tar_path.'/thumb';
-                    $uploader->chkpath();
-                    $uploader->path = '';
-
                     if (!empty($uploaded_files)) {
                         foreach ($uploaded_files as $key => $value) {
                             if (!$value) continue;
 
+                            // file lookup
+                            $fileinfo = Func::get_fileinfo($value['file_name']);
+
+                            // path
+                            $upload_dir = date('ym');
+
+                            $old_path = PH_DATA_PATH.$fileinfo['filepath'];
+                            $uploader->path = MOD_BOARD_DATA_PATH.'/'.$t_board_id.'/'.$upload_dir.'/thumb';
+                            $uploader->chkpath();
+                            $tar_path = $uploader->path = MOD_BOARD_DATA_PATH.'/'.$t_board_id.'/'.$upload_dir;
+                            $uploader->chkpath();
+
+                            // copy
                             $upload_files[$key] = $value;
                             $upload_files[$key]['file_name'] = $uploader->replace_filename($value['file_name']);
                             
                             $uploader->filecopy($old_path.'/'.$value['file_name'], $tar_path.'/'.$upload_files[$key]['file_name']);
 
                             if ($uploader->isfile($old_path.'/thumb/'.$value['file_name'])) {
-                                $uploader->filecopy($old_path.'/thumb/'.$value['file_name'], $tar_path.'/thumb/'.$upload_files[$key]['file_name']);
+                                $uploader->filecopy($old_path.'/thumb/'.$value['file_name'], $tar_path.'/thumb/'.$upload_files[$key]['file_name'], false);
                             }
 
+                            // delete old file
                             $uploader->path = $old_path;
                             $uploader->drop($value['file_name']);
                             $uploader->path = $old_path.'/thumb';
-                            $uploader->drop($value['file_name']);
+                            $uploader->drop($value['file_name'], false);
                         }
                     }
 
@@ -739,28 +749,30 @@ class Ctrl_submit {
                 $tar_ln = ceil($tar_ln / 1000) * 1000;
 
                 // 대상 게시판으로 첨부파일 복사
-                $old_path = MOD_BOARD_DATA_PATH.'/'.$board_id;
-                $tar_path = MOD_BOARD_DATA_PATH.'/'.$t_board_id;
-
-                $uploader->path = MOD_BOARD_DATA_PATH;
-                $uploader->chkpath();
-                $uploader->path = $tar_path.'/thumb';
-                $uploader->chkpath();
-                $uploader->path = '';
-
-                $filename = array();
-
                 if (!empty($uploaded_files)) {
                     foreach ($uploaded_files as $key => $value) {
                         if (!$value) continue;
 
+                        // file lookup
+                        $fileinfo = Func::get_fileinfo($value['file_name']);
+
+                        // path
+                        $upload_dir = date('ym');
+
+                        $old_path = PH_DATA_PATH.$fileinfo['filepath'];
+                        $uploader->path = MOD_BOARD_DATA_PATH.'/'.$t_board_id.'/'.$upload_dir.'/thumb';
+                        $uploader->chkpath();
+                        $tar_path = $uploader->path = MOD_BOARD_DATA_PATH.'/'.$t_board_id.'/'.$upload_dir;
+                        $uploader->chkpath();
+
+                        // copy
                         $upload_files[$key] = $value;
                         $upload_files[$key]['file_name'] = $uploader->replace_filename($value['file_name']);
                         
                         $uploader->filecopy($old_path.'/'.$value['file_name'], $tar_path.'/'.$upload_files[$key]['file_name']);
 
                         if ($uploader->isfile($old_path.'/thumb/'.$value['file_name'])) {
-                            $uploader->filecopy($old_path.'/thumb/'.$value['file_name'], $tar_path.'/thumb/'.$upload_files[$key]['file_name']);
+                            $uploader->filecopy($old_path.'/thumb/'.$value['file_name'], $tar_path.'/thumb/'.$upload_files[$key]['file_name'], false);
                         }
                     }
                 }

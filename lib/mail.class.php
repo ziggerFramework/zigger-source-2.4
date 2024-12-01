@@ -1,28 +1,31 @@
 <?php
 namespace Make\Library;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class Mail extends \Make\Database\Pdosql {
 
-    public $tpl = 'default';
-    public $to = array();
-    public $from = array();
+    public $mailer;
+    public $tpl;
+    public $to;
+    public $from;
     public $chk_url;
-    public $mb_id ;
+    public $mb_id;
     public $mb_pwd ;
     public $subject;
     public $memo;
     public $st_tit;
-    public $smtp_sock;
     public $smtp_id;
     public $smtp_pwd;
     public $smtp_server;
     public $smtp_port;
-    public $attach = array();
-    protected $mailBoundary;
-    protected $mailFromArray = array();
-    protected $mailToArray = array();
-    protected $mailHeaderArray = array();
-    protected $mailAttachArray = array();
+    public $attach;
+    protected $maile;
+    protected $mailFromArray;
+    protected $smtp_charset;
+    protected $smtp_secure_verify_peer;
+    protected $smtp_secure_verify_peer_name;
 
     // mail init
     private function init()
@@ -36,17 +39,15 @@ class Mail extends \Make\Database\Pdosql {
         $this->subject = '';
         $this->memo = '';
         $this->st_tit = '';
-        $this->smtp_sock = '';
         $this->smtp_id = '';
         $this->smtp_pwd = '';
         $this->smtp_server = '';
         $this->smtp_port = '';
         $this->attach = array();
-        $this->mailBoundary = '';
         $this->mailFromArray = array();
-        $this->mailToArray = array();
-        $this->mailHeaderArray = array();
-        $this->mailAttachArray = array();
+        $this->smtp_charset = 'UTF-8';
+        $this->smtp_secure_verify_peer = false;
+        $this->smtp_secure_verify_peer_name = false;
     }
 
     // mail set
@@ -58,67 +59,28 @@ class Mail extends \Make\Database\Pdosql {
             $this->{$key} = $value;
         }
 
-        $this->mailBoundary = md5(uniqid(microtime()));
+        $this->mailer = new PHPMailer(true);
+        $this->mailer->isHTML(true);
     }
 
     // headers
-    protected function getBoundary()
-    {
-        return $this->mailBoundary;
-    }
-
     protected function setCommonHeader()
     {
-        $this->addHeader('From', $this->getFrom());
-        $this->addHeader('User-Agent', 'Zigger Sendmail System');
-        $this->addHeader('X-Accept-Language', 'ko, en');
-        $this->addHeader('X-Sender', $this->mailFromArray['email']);
-        $this->addHeader('X-Mailer', 'PHP');
-        $this->addHeader('X-Priority', 1);
-        $this->addHeader('Reply-to', $this->mailFromArray['email']);
-        $this->addHeader('Return-Path', $this->mailFromArray['email']);
-
-        if (count($this->mailAttachArray) > 0) {
-            $this->addHeader('MIME-Version', '1.0');
-            $this->addHeader('Content-Type', 'multipart/mixed; boundary = "'.$this->getBoundary().'"');
-
-        } else {
-            $this->addHeader('Content-Type', 'text/html; charset=UTF-8');
-            $this->addHeader('Content-Transfer-Encoding', '8bit');
-        }
-    }
-
-    protected function addHeader($content, $value)
-    {
-        $this->mailHeaderArray[$content] = $value;
-    }
-
-    protected function makeHeaders()
-    {
-        $header = '';
-        foreach ($this->mailHeaderArray as $key => $value) {
-            $header .= $key.": ".$value."\n";
-        }
-        return $header."\r\n";
+        $this->mailer->addCustomHeader('User-Agent', 'Zigger Sendmail System');
+        $this->mailer->addCustomHeader('X-Accept-Language', 'ko, en');
+        $this->mailer->addCustomHeader('X-Sender', $this->mailFromArray['email']);
+        $this->mailer->addCustomHeader('X-Mailer', 'PHP');
+        $this->mailer->addCustomHeader('Reply-to', $this->mailFromArray['email']);
+        $this->mailer->addCustomHeader('Return-Path', $this->mailFromArray['email']);
     }
 
     // body
     protected function setSubject()
     {
-        return ($this->subject) ? $return = $this->base64Contents($this->subject) : '';
+        $this->mailer->Subject = $this->subject;
     }
 
-    protected function base64Contents($contets)
-    {
-        return "=?UTF-8?B?".base64_encode($contets)."?=";
-    }
-
-    protected function encodingContents($contets)
-    {
-        return chunk_split(base64_encode($contets));
-    }
-
-    protected function makeHtmlBody($email)
+    protected function setHtmlBody($to)
     {
         global $CONF;
 
@@ -151,92 +113,49 @@ class Mail extends \Make\Database\Pdosql {
         $html = str_replace('{{check_url}}', ($this->chk_url) ? $this->chk_url : '', $html);
         $html = str_replace('{{id}}', ($this->mb_id) ? $this->mb_id : '', $html);
         $html = str_replace('{{password}}', ($this->mb_pwd) ? $this->mb_pwd : '', $html);
-        $html = str_replace('{{name}}', ($this->mailToArray[$email]) ? $this->mailToArray[$email] : '', $html);
+        $html = str_replace('{{email}}', (isset($to['email'])) ? $to['email'] : '', $html);
+        $html = str_replace('{{name}}', (isset($to['name'])) ? $to['name'] : '', $html);
         $html = str_replace('{{article}}', ($this->memo) ? $this->memo : '', $html);
         $html = str_replace('{{site_title}}', ($this->st_tit) ? $this->st_tit : '', $html);
 
-        if (count($this->mailAttachArray) > 0) {
-            $body .= "--".$this->getBoundary()."\r\n";
-            $body .= "Content-Type: text/html; charset=UTF-8\r\n";
-            $body .= "Content-Transfer-Encoding: base64\r\n\r\n";
-            $body .= $this->encodingContents($html)."\r\n\r\n";
-            $body .= "\r\n".$this->makeAttach();
-
-        } else {
-            $body = $html;
-        }
-
-        return $body;
+        $this->mailer->Body = $html;
     }
 
     // attach
     public function setAttach()
     {
         foreach ($this->attach as $attach) {
-            $fp = fopen($attach['path'], 'r');
-
-            if ($fp) {
-                $fBody = fread($fp, filesize($attach['path']));
-                @fclose($fp);
-
-                $this->mailAttachArray[$attach['name']] = $fBody;
-            }
+            if (!file_exists($attach['path'])) continue;
+            $this->mailer->addAttachment($attach['path'], $attach['name']);
         }
     }
-
-    protected function makeAttach()
-    {
-        $arrRet = array();
-
-        if (count($this->mailAttachArray) > 0) {
-            foreach ($this->mailAttachArray as $name => $fBody) {
-                $tmpAttach = "--".$this->getBoundary()."\r\n";
-                $tmpAttach .= "Content-Type: application/octet-stream\r\n";
-                $tmpAttach .= "Content-Transfer-Encoding: base64\r\n";
-                $tmpAttach .= "Content-Disposition: attachment; filename=\"".$name."\"\r\n\r\n";
-                $tmpAttach .= $this->encodingContents($fBody)."\r\n\r\n";
-                $arrRet[] = $tmpAttach;
-            }
-        }
-
-        return implode('', $arrRet);
-    }
-
+    
     // mail from
     public function setFrom()
     {
         global $CONF;
 
-        if (!isset($this->from['name'])) {
-            $this->mailFromArray['name'] = $CONF['title'];
+        $from_name = (isset($this->from['name']) && !empty($this->from['name'])) ? $this->from['name'] : $CONF['title'];
+        $from_email = (isset($this->from['email']) && !empty($this->from['email'])) ? $this->from['email'] : $CONF['email'];
+        
+        $this->mailer->setFrom($from_email, $from_name);
 
-        } else {
-            $this->mailFromArray['name'] = $this->from['name'];
-        }
-
-        if (!isset($this->from['email'])) {
-            $this->mailFromArray['email'] = $CONF['email'];
-
-        } else {
-            $this->mailFromArray['email'] = $this->from['email'];
-        }
-    }
-
-    protected function getFrom()
-    {
-        return $this->base64Contents($this->mailFromArray['name']).' <'.$this->mailFromArray['email'].'>';
+        $this->mailFromArray['name'] = (!isset($this->from['name'])) ? $CONF['title'] : $this->from['name'];
+        $this->mailFromArray['email'] = (!isset($this->from['email'])) ? $CONF['email'] : $this->from['email'];
     }
 
     // mail to
-    public function setTo()
+    public function setTo($to)
     {
-        foreach ($this->to as $to) {
-            if (!isset($to['name'])) $to['name'] = '';
-            $this->mailToArray[$to['email']] = $to['name'];
-        }
+        $this->mailer->clearAddresses();
+
+        $to_email = (isset($to['email']) && !empty($to['email'])) ? $to['email'] : '';
+        $to_name = (isset($to['name']) && !empty($to['name'])) ? $to['name'] : '';
+
+        $this->mailer->addAddress($to_email, $to_name);
     }
 
-    // use SMTP Server
+    // use smtp
     protected function useSmtpServer()
     {
         global $CONF;
@@ -252,125 +171,60 @@ class Mail extends \Make\Database\Pdosql {
         $this->smtp_pwd = base64_encode($CONF['smtp_pwd']);
         $this->smtp_server = $CONF['smtp_server'];
         $this->smtp_port = $CONF['smtp_port'];
-    }
+        
+        $this->mailer->isSMTP();
+        $this->mailer->Host = ($this->useSmtpServer() === true) ? $CONF['smtp_server'] : 'localhost';
+        $this->mailer->SMTPAuth = $this->useSmtpServer();
+        $this->mailer->Username = $CONF['smtp_id'];
+        $this->mailer->Password = $CONF['smtp_pwd'];
+        $this->mailer->CharSet = $this->smtp_charset;
+        if ($this->useSmtpServer() === true) $this->mailer->SMTPSecure = $CONF['use_smtp_secure']; // Secure Mode (ssl / tls)
+        if ($this->useSmtpServer() === true) $this->mailer->Port = $CONF['smtp_port']; // SMTP Port
 
-    protected function putSocket($val)
-    {
-        @fputs($this->smtp_sock, $val."\r\n");
-        return @fgets($this->smtp_sock, 512);
+        // Secure Options
+        $this->mailer->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => $this->smtp_secure_verify_peer,
+                'verify_peer_name' => $this->smtp_secure_verify_peer_name
+            )
+        );
     }
 
     // send
     public function send()
     {
-        $this->setFrom();
-        $this->setTo();
-        $this->setAttach();
-        $this->setCommonHeader();
-
-        // SMTP 발송
-        if ($this->useSmtpServer() !== false) {
-            $this->send_smtp();
-
-        // Local 발송
-        } else {
-            $this->send_local();
-        }
-    }
-
-    // SMTP 발송
-    protected function send_smtp()
-    {
-        $successCount = 0;
         $this->getSmtpServerInfo();
-        $this->addHeader('Subject', $this->setSubject());
+        $this->setFrom();
+        $this->setCommonHeader();
+        $this->setSubject();
 
-        // socket 연결 초기화
-        $sock_max_attempts = 30;
-        $sock_now_attempts = 0;
+        $successCount = 0;
 
-        // socket 연결 (ssl / tls)
-        if (strstr($this->smtp_server, 'ssl://') || strstr($this->smtp_server, 'tls://')) {
-            $context = stream_context_create();
-            $result = stream_context_set_option($context, 'ssl', 'verify_peer', false);
-            $result = stream_context_set_option($context, 'ssl', 'verify_host', false);
+        foreach ($this->to as $to) {
 
+            $this->setTo($to);
+            $this->setAttach();
+            $this->setHtmlBody($to);
+    
+            $smtp_max_attempts = 5;
+            $smtp_now_attempts = 0;
+    
             do {
-                $this->smtp_sock = stream_socket_client($this->smtp_server.':'.$this->smtp_port, $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $context);
-                $sock_now_attempts++;
+                $smtp_sent = $this->mailer->send();
+                $smtp_now_attempts++;
                 
-                if (!$this->smtp_sock) {
-                    if ($sock_now_attempts >= $sock_max_attempts) break;  // 최대 시도 횟수 초과 시 연결 포기
-                    sleep(1);  // 재시도 전 대기 시간 (초)
-                }
-            } while (!$this->smtp_sock);
-
-            if (!$this->smtp_sock) exit(ERR_MSG_7);
-
-        // socket 연결 (default)
-        } else {
-            do {
-                $this->smtp_sock = fsockopen($this->smtp_server, $this->smtp_port);
-                $sock_now_attempts++;
-                
-                if (!$this->smtp_sock) {
-                    if ($sock_now_attempts >= $sock_max_attempts) {
+                if (!$smtp_sent) {
+                    if ($smtp_now_attempts >= $smtp_max_attempts) {
                         break;  // 최대 시도 횟수 초과 시 연결 포기
                     }
                     sleep(1);  // 재시도 전 대기 시간 (초)
                 }
-            } while (!$this->smtp_sock);
+            } while (!$smtp_sent);
+    
+            if (!$smtp_sent) exit(ERR_MSG_7);
 
-            if (!$this->smtp_sock) exit(ERR_MSG_7);
-        }
+            $successCount++;
 
-        if ($this->smtp_sock) {
-            $this->putSocket('HELO '.$this->smtp_server);
-
-            if ($this->smtp_id) {
-                $this->putSocket('AUTH LOGIN');
-                $this->putSocket($this->smtp_id);
-                $this->putSocket($this->smtp_pwd);
-            }
-        }
-
-        // socket 발송
-        foreach ($this->mailToArray as $email => $name) {
-
-            $html = $this->makeHtmlBody($email);
-
-            $to = ($name) ? $this->base64Contents($name).' <'.$email.'>' : $email;
-
-            $this->addHeader('To', $to);
-
-            $contents = $this->makeHeaders()."\r\n".$html;
-
-            $this->putSocket('MAIL From:'.$this->mailFromArray['email']);
-            $this->putSocket('RCPT To:'.$email);
-            $this->putSocket('DATA');
-            $this->putSocket($contents);
-            $this->putSocket(".\r\n");
-        }
-
-        $this->putSocket('QUIT');
-        
-        return $successCount;
-    }
-
-    // Local 발송
-    protected function send_local()
-    {
-        $successCount = 0;
-
-        foreach ($this->mailToArray as $email => $name) {
-
-            $html = $this->makeHtmlBody($email);
-
-            $to = ($name) ? $this->base64Contents($name).' <'.$email.'>' : $email;
-
-            $header = $this->makeHeaders();
-
-            if (mail($to, $this->setSubject(), $html, $header)) $successCount++;
         }
 
         return $successCount;

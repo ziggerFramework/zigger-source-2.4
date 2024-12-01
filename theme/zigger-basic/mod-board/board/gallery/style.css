@@ -268,16 +268,16 @@
     #board-write .bytetxt {display: block;font-size: 13px;line-height: 13px;margin: 5px 0 0 0;}
     #board-write .uploaded {font-size: 13px;}
 
-    #board-view .view-tit h3 {font-size: 18px;font-weight: bold;letter-spacing: -0.05em;line-height: 22px;padding: 20px 15px;}
+    #board-view .view-tit h3 {font-size: 18px;font-weight: bold;letter-spacing: -0.05em;line-height: 22px;padding: 20px 5px;}
     #board-view .view-tit h3 em {display: block;font-size: 13px;font-weight: normal;margin-bottom: 5px;margin-right: 0;}
     #board-view .view-tit h3 em:after {display: none;}
-    #board-view .view-tit .info {line-height: 18px;padding: 10px 15px;}
+    #board-view .view-tit .info {line-height: 18px;padding: 10px 5px;}
     #board-view .view-tit .info li {font-size: 13px;letter-spacing: -0.05em;margin: 5px 15px 0 0;}
     #board-view .view-tit .info li strong {margin-right: 5px;}
     #board-view table colgroup {display: none;}
     #board-view table th {font-size: 13px;letter-spacing: -0.05em;width: 70px;}
     #board-view table tr > * {padding: 10px 5px;}
-    #board-view .article-wrap {padding: 20px 0;}
+    #board-view .article-wrap {padding: 20px 5px;}
     #board-view .article {min-height: 200px;}
     #board-view .article .nostyle p {margin: 15px 0;}
     #board-view .article img {height: auto !important;max-width: 100% !important;}

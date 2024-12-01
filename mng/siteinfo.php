@@ -302,7 +302,7 @@ class Plugins extends \Controller\Make_Controller {
     {
         function set_checked($arr, $val)
         {
-            $setarr = array('Y' => '', 'N' => '');
+            $setarr = array('Y' => '', 'N' => '', 'ssl' => '', 'tls' => '');
 
             foreach ($setarr as $key => $value) {
                 if ($key == $arr[$val] || ($key == 'N' && !$arr[$val])) {
@@ -361,6 +361,7 @@ class Plugins extends \Controller\Make_Controller {
         $this->set('use_sns_ka', set_checked($arr, 'use_sns_ka'));
         $this->set('use_sns_nv', set_checked($arr, 'use_sns_nv'));
         $this->set('use_smtp', set_checked($arr, 'use_smtp'));
+        $this->set('use_smtp_secure', set_checked($arr, 'use_smtp_secure'));
         $this->set('use_sms', set_checked($arr, 'use_sms'));
         $this->set('use_feedsms', set_checked($arr, 'use_feedsms'));
         $this->set('use_rss', set_checked($arr, 'use_rss'));
@@ -391,7 +392,7 @@ class Plugins_submit {
 
         Method::security('referer');
         Method::security('request_post');
-        $req = Method::request('post', 'use_recaptcha, recaptcha_key1, recaptcha_key2, use_sns_ka, sns_ka_key1, sns_ka_key2, use_sns_nv, sns_nv_key1, sns_nv_key2, use_smtp, smtp_server, smtp_port, smtp_id, smtp_pwd, use_s3, s3_key1, s3_key2, s3_key3, s3_key4, s3_key5, s3_path_style, use_sms, use_feedsms, sms_toadm, sms_from, sms_key1, sms_key2, sms_key3, sms_key4, use_rss, rss_boards');
+        $req = Method::request('post', 'use_recaptcha, recaptcha_key1, recaptcha_key2, use_sns_ka, sns_ka_key1, sns_ka_key2, use_sns_nv, sns_nv_key1, sns_nv_key2, use_smtp, use_smtp_secure, smtp_server, smtp_port, smtp_id, smtp_pwd, use_s3, s3_key1, s3_key2, s3_key3, s3_key4, s3_key5, s3_path_style, use_sms, use_feedsms, sms_toadm, sms_from, sms_key1, sms_key2, sms_key3, sms_key4, use_rss, rss_boards');
         $manage->req_hidden_inp('post');
 
         if ($req['use_recaptcha'] == 'Y') {
@@ -557,7 +558,7 @@ class Plugins_submit {
         $matchs = array(
             'use_recaptcha', 'recaptcha_key1', 'recaptcha_key2',
             'use_sns_ka', 'sns_ka_key1', 'sns_ka_key2', 'use_sns_nv', 'sns_nv_key1', 'sns_nv_key2',
-            'use_smtp', 'smtp_server', 'smtp_port', 'smtp_id', 'smtp_pwd',
+            'use_smtp', 'use_smtp_secure', 'smtp_server', 'smtp_port', 'smtp_id', 'smtp_pwd',
             'use_s3', 's3_key1', 's3_key2', 's3_key3', 's3_key4', 's3_key5', 's3_path_style',
             'use_sms', 'use_feedsms', 'sms_toadm', 'sms_from', 'sms_key1', 'sms_key2', 'sms_key3', 'sms_key4', 'use_rss', 'rss_boards'
         );

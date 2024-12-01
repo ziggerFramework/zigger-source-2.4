@@ -153,6 +153,7 @@ Func::chk_update_config_field(
         'use_mb_phone:N', 'use_phonechk:N', 'use_mb_telephone:N', 'use_mb_address:N', 'use_mb_gender:N', //ver 2.2.2
         'use_rss:N', 'rss_boards', //ver 2.3.3
         's3_path_style:N', //ver 2.3.7
-        'use_allow_reuse_id:Y', 'use_allow_dup_name:N' //ver 2.5.2
+        'use_allow_reuse_id:Y', 'use_allow_dup_name:N', //ver 2.5.2
+        'use_smtp_secure:N' //ver 2.5.5
     )
 );

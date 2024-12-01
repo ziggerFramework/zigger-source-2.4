@@ -238,7 +238,7 @@ class Result extends \Controller\Make_Controller {
             
             if ($arr['file2']) {
                 $fileinfo = Func::get_fileinfo($arr['file2']);
-                $tmb = ($fileinfo['storage'] == 'Y') ? $fileinfo['replink'] : PH_DOMAIN.MOD_BOARD_DATA_DIR.'/'.$board_id.'/thumb/'.$arr['file2'];
+                $tmb = ($fileinfo['storage'] == 'Y') ? $fileinfo['replink'] : PH_DOMAIN.PH_DATA_DIR.$fileinfo['filepath'].'/thumb/'.$arr['file2'];
             }
             
             return $tmb;

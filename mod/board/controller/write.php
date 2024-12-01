@@ -714,8 +714,11 @@ class Write_submit{
             }
         }
 
+        //월별로 디렉토리 구분
+        $upload_dir = date('ym');
+
         // 첨부파일 저장
-        $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id;
+        $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/'.$upload_dir;
         $uploader->chkpath();
 
         $ufile = array();
@@ -747,7 +750,7 @@ class Write_submit{
 
         // 썸네일 생성
         if ($CONF['use_s3'] == 'N') {
-            $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb';
+            $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/'.$upload_dir.'/thumb';
             $uploader->chkpath();
 
             for ($i = 0; $i < count($ufile_name); $i++) {
@@ -758,7 +761,7 @@ class Write_submit{
                     if ($f_type == trim($intd[$j])) {
                         $imgresize->set(
                             array(
-                                'orgimg' => MOD_BOARD_DATA_PATH.'/'.$board_id.'/'.$ufile_name[$i],
+                                'orgimg' => MOD_BOARD_DATA_PATH.'/'.$board_id.'/'.$upload_dir.'/'.$ufile_name[$i],
                                 'newimg' => $uploader->path.'/'.$ufile_name[$i],
                                 'width' => 800
                             )
@@ -780,14 +783,20 @@ class Write_submit{
                 
                 // 기존 파일을 삭제한뒤 새로 업로드한 파일로 대체
                 if ($get_delete_checked || ($is_uploaded_newfile && $is_has_orgfile && $get_delete_not_checked)) {
-                    $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id;
+
+                    // file lookup
+                    $fileinfo = Func::get_fileinfo($org_arr['files'][$i]['file_name']);
+
+                    // 원본 파일 삭제
+                    $uploader->path = PH_DATA_PATH.$fileinfo['filepath'];
                     $uploader->drop($org_arr['files'][$i]['file_name']);
 
-                    if ($CONF['use_s3'] == 'N' && $uploader->isfile(MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/'.$org_arr['files'][$i]['file_name'])) {
-                        $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/';
-                        $uploader->drop($org_arr['files'][$i]['file_name']);
+                    // 썸네일이 있다면 삭제
+                    if ($CONF['use_s3'] == 'N' && $uploader->isfile(PH_DATA_PATH.$fileinfo['filepath'].'/thumb/'.$org_arr['files'][$i]['file_name'])) {
+                        $uploader->path = PH_DATA_PATH.$fileinfo['filepath'].'/thumb';
+                        $uploader->drop($org_arr['files'][$i]['file_name'], false);
                     }
-
+                    
                     $sql->query(
                         "
                         delete

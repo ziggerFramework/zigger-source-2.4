@@ -43,8 +43,11 @@ if ($uploader->chkbyte(SET_MAX_UPLOAD) !== true) {
     exit;
 }
 
+//월별로 디렉토리 구분
+$directory = date('ym');
+
 //업로드
-$uploader->path = PH_PATH.'/data/'.PH_PLUGIN_CKEDITOR;
+$uploader->path = PH_PATH.'/data/'.PH_PLUGIN_CKEDITOR.'/'.$directory;
 $uploader->chkpath();
 $uploader->upload($file_name);
 

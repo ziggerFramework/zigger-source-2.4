@@ -69,8 +69,8 @@ class Library {
     {
         global $mode;
 
-        Func::add_stylesheet(MOD_BOARD_THEME_DIR.'/board/'.$theme.'/style.css');
-        Func::add_javascript(MOD_BOARD_THEME_DIR.'/board/'.$theme.'/script.js');
+        Func::add_stylesheet(MOD_BOARD_THEME_DIR.'/board/'.$theme.'/style.css'.SET_CACHE_HASH);
+        Func::add_javascript(MOD_BOARD_THEME_DIR.'/board/'.$theme.'/script.js'.SET_CACHE_HASH);
 
         if ($mode == 'write') Func::add_javascript(PH_PLUGIN_DIR.'/'.PH_PLUGIN_CKEDITOR.'/ckeditor.js');
     }

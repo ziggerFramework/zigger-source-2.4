@@ -239,6 +239,14 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>SMTP Secure</th>
+                    <td>
+                        <label class="mr10"><input type="radio" name="use_smtp_secure" value="N" <?php echo $use_smtp_secure['N']; ?> /> HTTP</label>
+                        <label class="mr10"><input type="radio" name="use_smtp_secure" value="ssl" <?php echo $use_smtp_secure['ssl']; ?> /> SSL</label>
+                        <label><input type="radio" name="use_smtp_secure" value="tls" <?php echo $use_smtp_secure['tls']; ?> /> TLS</label>
+                    </td>
+                </tr>
+                <tr>
                     <th>Port</th>
                     <td>
                         <input type="text" name="smtp_port" class="inp w50" title="SMTP Port" value="<?php echo $write['smtp_port']; ?>" />

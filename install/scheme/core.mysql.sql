@@ -237,6 +237,7 @@ insert into `{$req['pfx']}config` (`cfg_type`, `cfg_key`, `cfg_value`, `cfg_regd
 ('engine', 'google_verific', '', now()),
 ('engine', 'theme', 'zigger-basic', now()),
 ('engine', 'use_smtp', 'N', now()),
+('engine', 'use_smtp_secure', 'N', now()),
 ('engine', 'smtp_server', '', now()),
 ('engine', 'smtp_port', '', now()),
 ('engine', 'smtp_id', '', now()),

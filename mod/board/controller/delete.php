@@ -198,12 +198,15 @@ class Delete extends \Controller\Make_Controller {
                 $f_arr = $sql->fetchs();
                 
                 if (!empty($f_arr['file_name'])) {
-                    $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id;
+                    // file lookup
+                    $fileinfo = Func::get_fileinfo($f_arr['file_name']);
+
+                    $uploader->path = PH_DATA_PATH.$fileinfo['filepath'];
                     $uploader->drop($f_arr['file_name']);
 
-                    if ($CONF['use_s3'] == 'N' && $uploader->isfile(MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/'.$f_arr['file'.$i])) {
-                        $uploader->path = MOD_BOARD_DATA_PATH.'/'.$board_id.'/thumb/';
-                        $uploader->drop($f_arr['filefile_name']);
+                    if ($CONF['use_s3'] == 'N' && $uploader->isfile(PH_DATA_PATH.$fileinfo['filepath'].'/thumb/'.$f_arr['file_name'])) {
+                        $uploader->path = PH_DATA_PATH.$fileinfo['filepath'].'/thumb';
+                        $uploader->drop($f_arr['file_name'], false);
                     }
                 }
 

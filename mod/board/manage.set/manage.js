@@ -319,7 +319,7 @@ ph_mod_board_manage = {
                         'ajax-action' : '/mod/board/controller/write/write-temporary-submit?rewritetype=submit',
                         'id' : 'board-writeTemporaryForm', 
                         'name' : 'board-writeTemporaryForm', 
-                    }).off().submit();
+                    }).submit();
 
                     // 원본 form 으로 다시 돌려 놓음
                     $ele.form.attr({

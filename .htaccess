@@ -19,7 +19,7 @@ RewriteRule ^install($|/.*) - [L]
 
 RewriteRule ^manage$ mng/index.php [L]
 RewriteRule ^manage/$ mng/index.php [L]
-RewriteRule ^manage/(.*\.\w+)$ /mng/$1 [L]
+RewriteRule ^manage/(.*\.\w+)$ mng/$1 [L]
 
 RewriteCond %{QUERY_STRING} ^(.*)$ [NC]
 RewriteRule ^(.*)/([0-9]+)$ index.php?rewritepage=$1&mode=view&read=$2&%1 [L]

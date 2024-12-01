@@ -74,7 +74,7 @@ class Latest_fetch extends \Controller\Make_Controller {
             
             if ($list['file2']) {
                 $fileinfo = Func::get_fileinfo($list['file2']);
-                $tmb = ($fileinfo['storage'] == 'Y') ? $fileinfo['replink'] : PH_DOMAIN.MOD_BOARD_DATA_DIR.'/'.$FETCH_CONF['id'].'/thumb/'.$list['file2'];
+                $tmb = ($fileinfo['storage'] == 'Y') ? $fileinfo['replink'] : PH_DOMAIN.PH_DATA_DIR.$fileinfo['filepath'].'/thumb/'.$list['file2'];
             }
             
             return $tmb;
