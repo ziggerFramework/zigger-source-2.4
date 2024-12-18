@@ -667,6 +667,35 @@ class Func {
         return str_shuffle($randomString.$microtime);
     }
 
+    // 올바른 ip인지 검증
+    static function chk_remote_addr($v = 'v4')
+    {
+        // ip v4
+        if ($v == 'v4') {
+            return (preg_match('/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/', MB_REMOTE_ADDR)) ? true : false;
+        }
+
+        // ip v6
+        if ($v == 'v6') {
+            return (preg_match('/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|' .
+                '([0-9a-fA-F]{1,4}:){1,7}:|' .
+                '([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|' .
+                '([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|' .
+                '([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|' .
+                '([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|' .
+                '([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|' .
+                '[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|' .
+                ':((:[0-9a-fA-F]{1,4}){1,7}|:)|' .
+                'fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|' .
+                '::(ffff(:0{1,4}){0,1}:){0,1}' .
+                '(([0-9]{1,3}\.){3,3}[0-9]{1,3})|' .
+                '([0-9a-fA-F]{1,4}:){1,4}:' .
+                '(([0-9]{1,3}\.){3,3}[0-9]{1,3}))$/', MB_REMOTE_ADDR)) ? true : false;
+        }
+
+        return false;
+    }
+
     // error : core error
     static public function core_err($msg, $exit = true)
     {

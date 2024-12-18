@@ -47,7 +47,7 @@ if ($uploader->chkbyte(SET_MAX_UPLOAD) !== true) {
 $directory = date('ym');
 
 //업로드
-$uploader->path = PH_PATH.'/data/'.PH_PLUGIN_CKEDITOR.'/'.$directory;
+$org_uploaded_path = $uploader->path = PH_PATH.'/data/'.PH_PLUGIN_CKEDITOR.'/'.$directory;
 $uploader->chkpath();
 $uploader->upload($file_name);
 
@@ -60,7 +60,7 @@ if ($fileinfo['storage'] == 'N') {
 
     $imgresize->set(
         array(
-            'orgimg' => PH_PATH.'/data/'.PH_PLUGIN_CKEDITOR.'/'.$file_name,
+            'orgimg' => $org_uploaded_path.'/'.$file_name,
             'newimg' => $uploader->path.'/'.$file_name,
             'width' => 1000
         )

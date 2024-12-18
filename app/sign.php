@@ -453,7 +453,7 @@ class signup_submit {
         // 이메일 인증 메일 발송
         if ($CONF['use_emailchk'] == 'Y') {
 
-            $chk_code = md5(date('YmdHis').$req['id']);
+            $chk_code = Func::make_random_char();
             $chk_url = PH_DOMAIN.PH_DIR.'/sign/emailchk?chk_code='.$chk_code;
             $mail->set(
                 array(

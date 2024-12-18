@@ -482,6 +482,9 @@ class Write_submit{
         // load config
         Write::$boardconf = $boardlib->load_conf($board_id);
 
+        // 올바른 ip가 수집 되었는지 검사
+        if (Func::chk_remote_addr() !== true) Valid::error('', '접속 ip가 올바르지 않아 글 작성이 제한됩니다.');
+
         // 수정 or 답글인 경우 원본 글 가져옴
         if ($req['wrmode'] == 'modify' || $req['wrmode'] == 'reply') {
             $sql->query(
@@ -910,10 +913,10 @@ class Write_submit{
             insert into {$sql->table("mod:board_data_".$board_id)}
             (`category`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `use_secret`, `use_notice`, `use_html`, `use_email`, `ip`, `ln`, `rn`, `file1`, `file2`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`, `regdate`)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, 'Y', :col11, '".MB_REMOTE_ADDR."', :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25, :col26)
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, 'Y', :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25, :col26, :col27)
             ",
             array(
-                $req['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], $ln_arr['ln_max'], 0, $req[0]['ufile_icon_type'], $req[0]['ufile_tmb_filename'],
+                $req['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], MB_REMOTE_ADDR, $ln_arr['ln_max'], 0, $req[0]['ufile_icon_type'], $req[0]['ufile_tmb_filename'],
                 $req['data_1'], $req['data_2'], $req['data_3'], $req['data_4'], $req['data_5'], $req['data_6'], $req['data_7'], $req['data_8'], $req['data_9'], $req['data_10'], $wdate
             )
         );
@@ -1038,12 +1041,12 @@ class Write_submit{
             "
             update {$sql->table("mod:board_data_".$board_id)}
             set `category`=:col2, `writer`=:col3, `pwd`=:col4, `email`=:col5, `article`=:col6, `subject`=:col7, `use_secret`=:col8, `use_notice`=:col9,
-            use_html='Y', `use_email`=:col10, `ip`='".MB_REMOTE_ADDR."', `file1`=:col11, `file2`=:col12, `regdate`=:col13, `data_1`=:col14, `data_2`=:col15, `data_3`=:col16, `data_4`=:col17, `data_5`=:col18, `data_6`=:col19, `data_7`=:col20, `data_8`=:col21, `data_9`=:col22, `data_10`=:col23
+            use_html='Y', `use_email`=:col10, `ip`=:col11, `file1`=:col12, `file2`=:col13, `regdate`=:col14, `data_1`=:col15, `data_2`=:col16, `data_3`=:col17, `data_4`=:col18, `data_5`=:col19, `data_6`=:col20, `data_7`=:col21, `data_8`=:col22, `data_9`=:col23, `data_10`=:col24
             where `idx`=:col1
             ",
             array(
                 $req['read'], $category, $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'],
-                $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], $req[0]['ufile_icon_type'], $req[0]['ufile_tmb_filename'], $wdate, $req['data_1'], $req['data_2'], $req['data_3'], $req['data_4'], $req['data_5'],
+                $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], MB_REMOTE_ADDR, $req[0]['ufile_icon_type'], $req[0]['ufile_tmb_filename'], $wdate, $req['data_1'], $req['data_2'], $req['data_3'], $req['data_4'], $req['data_5'],
                 $req['data_6'], $req['data_7'], $req['data_8'], $req['data_9'], $req['data_10']
             )
         );
@@ -1166,10 +1169,10 @@ class Write_submit{
             insert into {$sql->table("mod:board_data_".$board_id)}
             (`category`, `mb_idx`, `mb_id`, `writer`, `pwd`, `email`, `article`, `subject`, `file1`, `file2`, `use_secret`, `use_notice`, `use_html`, `use_email`, `ip`, `regdate`, `ln`, `rn`, `data_1`, `data_2`, `data_3`, `data_4`, `data_5`, `data_6`, `data_7`, `data_8`, `data_9`, `data_10`)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, '".MB_REMOTE_ADDR."', now(), :col14, :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25)
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, :col10, :col11, :col12, 'Y', :col13, :col14, now(), :col15, :col16, :col17, :col18, :col19, :col20, :col21, :col22, :col23, :col24, :col25, :col26)
             ",
             array(
-                $org_arr['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], $req[0]['ufile_icon_type'], $req[0]['ufile_tmb_filename'], $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], $ln_me, $rn_arr['rn_max'],
+                $org_arr['category'], $MB['idx'], $MB['id'], $req['writer'], $req['password'], $req['email'], $req['article'], $req['subject'], $req[0]['ufile_icon_type'], $req[0]['ufile_tmb_filename'], $wr_opt['secret'], $wr_opt['notice'], $wr_opt['email'], MB_REMOTE_ADDR, $ln_me, $rn_arr['rn_max'],
                 $req['data_1'], $req['data_2'], $req['data_3'], $req['data_4'], $req['data_5'], $req['data_6'], $req['data_7'], $req['data_8'], $req['data_9'], $req['data_10']
             )
         );

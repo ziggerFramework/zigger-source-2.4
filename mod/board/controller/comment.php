@@ -242,6 +242,9 @@ class Comment_submit {
         // load config
         $boardconf = $boardlib->load_conf($board_id);
 
+        // 올바른 ip가 수집 되었는지 검사
+        if (Func::chk_remote_addr() !== true) Valid::error('', '접속 ip가 올바르지 않아 글 작성이 제한됩니다.');
+
         // 원본 글 정보 불러옴
         $sql->query(
             "
@@ -341,10 +344,10 @@ class Comment_submit {
             insert into {$sql->table("mod:board_cmt_".$board_id)}
             (`ln`, `rn`, `bo_idx`, `mb_idx`, `writer`, `comment`, `ip`, `regdate`, `cmt_1`, `cmt_2`, `cmt_3`, `cmt_4`, `cmt_5`, `cmt_6`, `cmt_7`, `cmt_8`, `cmt_9`, `cmt_10`)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, '".MB_REMOTE_ADDR."', now(), :col7, :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16)
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, now(), :col8, :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17)
             ",
             array(
-                $ln_arr['ln_max'], 0, $req['read'], $mb_idx, $writer, $req['comment'], $req['cmt_1'], $req['cmt_2'],
+                $ln_arr['ln_max'], 0, $req['read'], $mb_idx, $writer, $req['comment'], MB_REMOTE_ADDR, $req['cmt_1'], $req['cmt_2'],
                 $req['cmt_3'], $req['cmt_4'], $req['cmt_5'], $req['cmt_6'], $req['cmt_7'], $req['cmt_8'], $req['cmt_9'], $req['cmt_10']
             )
         );
@@ -457,10 +460,10 @@ class Comment_submit {
             insert into {$sql->table("mod:board_cmt_".$board_id)}
             (`parent_mb_idx`, `parent_writer`, `ln`, `rn`, `bo_idx`, `mb_idx`, `writer`, `comment`, `ip`, `regdate`, `cmt_1`, `cmt_2`, `cmt_3`, `cmt_4`, `cmt_5`, `cmt_6`, `cmt_7`, `cmt_8`, `cmt_9`, `cmt_10`)
             values
-            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, '".MB_REMOTE_ADDR."', now(), :col9, :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18)
+            (:col1, :col2, :col3, :col4, :col5, :col6, :col7, :col8, :col9, now(), :col10, :col11, :col12, :col13, :col14, :col15, :col16, :col17, :col18, :col19)
             ",
             array(
-                $parent_mb_idx, $parent_writer, $ln_isrt, $rn_next, $req['read'], $mb_idx, $writer, $req['re_comment'], $req['cmt_1'], $req['cmt_2'], $req['cmt_3'], $req['cmt_4'], $req['cmt_5'],
+                $parent_mb_idx, $parent_writer, $ln_isrt, $rn_next, $req['read'], $mb_idx, $writer, $req['re_comment'], MB_REMOTE_ADDR, $req['cmt_1'], $req['cmt_2'], $req['cmt_3'], $req['cmt_4'], $req['cmt_5'],
                 $req['cmt_6'], $req['cmt_7'], $req['cmt_8'], $req['cmt_9'], $req['cmt_10']
             )
         );
@@ -533,11 +536,11 @@ class Comment_submit {
         $sql->query(
             "
             update {$sql->table("mod:board_cmt_".$board_id)}
-            set `writer`=:col2, `comment`=:col3, ip='".MB_REMOTE_ADDR."', `cmt_1`=:col4, `cmt_2`=:col5, `cmt_3`=:col6, `cmt_4`=:col7, `cmt_5`=:col8, `cmt_6`=:col9, `cmt_7`=:col10, `cmt_8`=:col11, `cmt_9`=:col12, `cmt_10`=:col13
+            set `writer`=:col2, `comment`=:col3, `ip`=:col4, `cmt_1`=:col5, `cmt_2`=:col6, `cmt_3`=:col7, `cmt_4`=:col8, `cmt_5`=:col9, `cmt_6`=:col10, `cmt_7`=:col11, `cmt_8`=:col12, `cmt_9`=:col13, `cmt_10`=:col14
             where `idx`=:col1
             ",
             array(
-                $req['cidx'], $writer, $req['re_comment'], $req['cmt_1'], $req['cmt_2'], $req['cmt_3'], $req['cmt_4'], $req['cmt_5'], $req['cmt_6'], $req['cmt_7'], $req['cmt_8'], $req['cmt_9'], $req['cmt_10']
+                $req['cidx'], $writer, $req['re_comment'], MB_REMOTE_ADDR, $req['cmt_1'], $req['cmt_2'], $req['cmt_3'], $req['cmt_4'], $req['cmt_5'], $req['cmt_6'], $req['cmt_7'], $req['cmt_8'], $req['cmt_9'], $req['cmt_10']
             )
         );
 
